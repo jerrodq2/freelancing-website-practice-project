@@ -17,7 +17,9 @@ DELETE	/platform/markets/{id}
 ```
 
 ## Environment Variables
+```
 _Does your PR add, remove, or change any environment variables? If so, list them out here with any required values._
+```
 
 ## Checklist
 - Does this PR have unit tests to cover the changes?
