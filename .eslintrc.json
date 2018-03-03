@@ -45,6 +45,14 @@
         ],
         "no-var": [
           "error"
-        ]
+        ],
+				"keyword-spacing": [
+					"error",
+					{ "after": true }
+				],
+				"no-multiple-empty-lines": [
+					"error",
+					{ "max": 2 }
+				]
     }
 }
