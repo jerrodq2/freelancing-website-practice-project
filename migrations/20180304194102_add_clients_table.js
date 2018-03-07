@@ -12,7 +12,7 @@ exports.up = (knex) => knex.schema.createTable('clients', (table) => {
 	table.text('summary').nullable();
 	table.string('state').nullable();
 	table.string('city').nullable();
-	table.string('zip').nullable();
+	table.string('zip').nullable().index();
 	table.string('phone').nullable();
 	table.date('dob').nullable();
 	table.timestamps();
