@@ -1,5 +1,6 @@
 'use strict';
 
+
 const freelancers = require(`${process.cwd()}/seeds/ids/freelancers`);
 
 exports.seed = (knex) => {

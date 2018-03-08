@@ -1,5 +1,6 @@
 'use strict';
 
+
 const freelancers = require(`${process.cwd()}/seeds/ids/freelancers`);
 const clients = require(`${process.cwd()}/seeds/ids/clients`);
 const jobs = require(`${process.cwd()}/seeds/ids/jobs`);

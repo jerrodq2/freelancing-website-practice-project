@@ -1,5 +1,6 @@
 'use strict';
 
+
 const { format } = require('date-fns');
 const freelancers = require(`${process.cwd()}/seeds/ids/freelancers`);
 
