@@ -9,7 +9,7 @@ exports.up = (knex) => knex.schema.createTable('freelancers', (table) => {
 	table.string('email').notNullable().unique();
 	table.string('job_title').notNullable().index();
 	table.integer('rate').notNullable().index();
-	table.enum('gender', ['male, female']).notNullable();
+	table.enum('gender', ['male', 'female']).notNullable();
 	table.uuid('field_id').notNullable().references('id').inTable('fields').onDelete('RESTRICT');
 	table.text('summary').nullable();
 	table.string('state').nullable();
@@ -20,7 +20,7 @@ exports.up = (knex) => knex.schema.createTable('freelancers', (table) => {
 	table.enum('experience_level', ['entry', 'intermediate', 'expert']).notNullable().index();
 	table.string('video_url').nullable();
 	table.string('portfolio_url').nullable();
-	table.boolean('available').notNullable().defaultTo(false).index();
+	table.boolean('available').notNullable().defaultTo(true).index();
 	table.timestamps();
 });
 
