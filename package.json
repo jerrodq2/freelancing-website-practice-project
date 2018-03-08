@@ -19,14 +19,18 @@
   "homepage": "https://github.com/jerrodq2/freelancing-website-practice-project#readme",
   "scripts": {
     "lint": "node ./node_modules/.bin/eslint .",
-    "db:reset": "node ./bin/database/reset-main-database.js",
-		"db:create-migration": "bnr knex migrate:make",
-		"db:migrate": "bnr knex migrate:latest",
-		"db:migrate:rollback": "bnr knex migrate:rollback"
+    "db:reset": "bnr create-db && bnr knex migrate:latest && bnr create-admin-and-fields && bnr knex seed:run",
+    "db:create-migration": "bnr knex migrate:make",
+    "db:migrate": "bnr knex migrate:latest",
+    "db:migrate:rollback": "bnr knex migrate:rollback",
+    "db:create-seed": "bnr knex seed:make",
+    "db:seeds:run": "bnr knex seed:run"
   },
-	"betterScripts": {
-		"knex": "./node_modules/.bin/knex"
-	},
+  "betterScripts": {
+    "knex": "./node_modules/.bin/knex",
+    "create-db": "node ./bin/database/create-database.js",
+    "create-admin-and-fields": "node ./bin/database/create-admin-and-fields.js"
+  },
   "devDependencies": {
     "eslint": "^4.18.1",
     "eslint-plugin-react": "^7.7.0"
@@ -34,6 +38,7 @@
   "dependencies": {
     "better-npm-run": "^0.1.0",
     "body-parser": "^1.18.2",
+    "date-fns": "^1.29.0",
     "dotenv": "^5.0.1",
     "express": "^4.16.2",
     "knex": "^0.14.4",

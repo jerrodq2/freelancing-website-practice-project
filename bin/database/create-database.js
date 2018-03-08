@@ -9,9 +9,12 @@ connectionOptions.connection.database = 'postgres';
 
 
 const knex = require('knex')(connectionOptions);
+
 console.log('New connection to default postgres database made');
 
+
 console.log('Terminating all other current connections to main database...');
+
 knex.raw(`select pg_terminate_backend(pid) from pg_stat_activity where datname = '${process.env.PG_DATABASE}'`)
 	.then(() => {
 		return knex.raw(`DROP DATABASE IF EXISTS ${process.env.PG_DATABASE};`);
