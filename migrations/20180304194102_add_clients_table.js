@@ -8,6 +8,7 @@ exports.up = (knex) => knex.schema.createTable('clients', (table) => {
 	table.string('username').notNullable().unique();
 	table.string('email').notNullable().unique();
 	table.enum('gender', ['male', 'female']).notNullable();
+	table.integer('age').notNullable();
 	table.uuid('field_id').notNullable().references('id').inTable('fields').onDelete('RESTRICT');
 	table.text('summary').nullable();
 	table.string('state').nullable();
