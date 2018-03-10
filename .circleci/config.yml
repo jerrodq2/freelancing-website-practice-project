@@ -10,6 +10,7 @@ jobs:
           PG_USER: jerrodq2
           PG_DATABASE: freelancing_project
           PG_PORT: 5432
+          NODE_ENV: development
 
       - image: postgres:10.3
         environment:
