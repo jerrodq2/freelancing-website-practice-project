@@ -23,6 +23,14 @@ jobs:
           - v1-dependencies-
 
       - run:
+          name: Create DB User
+          command: psql -c "create user jerrodq2"
+
+      - run:
+          name: Alter User
+          command: psql -c "alter role jerrodq2 with superuser;";
+
+      - run:
           name: Install local dependencies
           command: npm install
 
