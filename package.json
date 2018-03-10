@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/jerrodq2/freelancing-website-practice-project#readme",
   "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "node ./node_modules/.bin/eslint .",
     "db:reset": "bnr create-db && bnr knex migrate:latest && bnr create-admin-and-fields && bnr knex seed:run",
 		"db:create": "bnr create-db",
