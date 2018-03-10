@@ -28,11 +28,9 @@ jobs:
 
       - run:
           name: Create database
-          command: npm run db:create
+          command: npm run db:reset
 
-      - run:
-          name: Run Migrations
-          command: npm run db:migrate
+      
 
       - save_cache:
           paths:
