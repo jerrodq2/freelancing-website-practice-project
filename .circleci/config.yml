@@ -9,8 +9,8 @@ jobs:
 
       - image: postgres:10.3
         environment:
-          POSTGRES_USER: postgres
-          POSTGRES_DB: freelancing_project
+          PG_USER: postgres
+          PG_DATABASE: freelancing_project
 
     steps:
       - checkout
@@ -30,7 +30,7 @@ jobs:
           name: Create database
           command: npm run db:reset
 
-      
+
 
       - save_cache:
           paths:
