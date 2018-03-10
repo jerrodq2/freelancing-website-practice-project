@@ -12,6 +12,9 @@ jobs:
           PG_PORT: 5432
 
       - image: postgres:10.3
+        environment:
+          POSTGRES_USER: jerrodq2
+          POSTGRES_DB: freelancing_project
 
     steps:
       - checkout
