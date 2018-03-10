@@ -24,6 +24,11 @@ jobs:
       - run: npm install
 
       - run: npm run db:create
+
+      - run:
+          name: Wait for db
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+          
       - run: npm run db:migrate
 
       - save_cache:
