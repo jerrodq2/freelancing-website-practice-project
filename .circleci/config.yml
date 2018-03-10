@@ -1,26 +1,30 @@
 # Javascript Node CircleCI 2.0 configuration file
 #
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
-version: 1
-machine:
-  node:
-    version: 8.9.4
-  services:
-    - postgresql
-  timezone: America/Chicago
-  environment:
-    TAG: $CIRCLE_BRANCH-$CIRCLE_BUILD_NUM
-
-dependencies:
-  pre:
-    - psql -c "create user postgres with password 'password'";
-    - psql -c "alter role postgres with superuser;";
-
-test:
-  pre:
-    - npm run db:migrate
-
 jobs:
+  version: 1
+  machine:
+    node:
+      version: 8.9.4
+    services:
+      - postgresql
+    timezone: America/Chicago
+    environment:
+      TAG: $CIRCLE_BRANCH-$CIRCLE_BUILD_NUM
+
+  dependencies:
+    pre:
+      - psql -c "create user postgres with password 'password'";
+      - psql -c "alter role postgres with superuser;";
+
+  test:
+    pre:
+      - npm run db:migrate
+
+  deployment:
+    development:
+      branch: master
+      
   build:
     working_directory: ~/repo
 
@@ -44,9 +48,6 @@ jobs:
       # run tests!
       - run: npm test
 
-deployment:
-  development:
-    branch: master
 
 
 
