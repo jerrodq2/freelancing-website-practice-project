@@ -13,8 +13,12 @@ machine:
 
 dependencies:
   pre:
+    - node --version
+    - npm install -g npm
     - psql -c "create user postgres with password 'password'";
     - psql -c "alter role postgres with superuser;";
+  override:
+    - nvm install 6 && npm install
 
 test:
   pre:
