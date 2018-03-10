@@ -1,5 +1,6 @@
 'use strict';
 
+
 //The below code assumes that the main database doesn't currently exists. Therefore, we start by connecting to the default empty postgres database so we can make queries without any errors
 require('dotenv').config();
 
