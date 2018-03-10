@@ -9,6 +9,8 @@ module.exports = {
 
 	development: connectionOptions,
 
+	test: connectionOptions,
+
 	staging: connectionOptions,
 
 	production: connectionOptions

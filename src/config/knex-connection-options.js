@@ -1,5 +1,6 @@
 'use strict';
 
+
 module.exports = {
 	client: 'pg',
 	version: '7.4.1',

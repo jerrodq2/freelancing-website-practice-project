@@ -1,5 +1,6 @@
 'use strict';
 
+
 //The below code assumes that the main database doesn't currently exists. Therefore, we start by connecting to the default empty postgres database so we can make queries without any errors
 require('dotenv').config();
 
@@ -17,6 +18,8 @@ console.log('Terminating all other current connections to main database...');
 
 knex.raw(`select pg_terminate_backend(pid) from pg_stat_activity where datname = '${process.env.PG_DATABASE}'`)
 	.then(() => {
+		console.log('Connections Terminated');
+
 		return knex.raw(`DROP DATABASE IF EXISTS ${process.env.PG_DATABASE};`);
 	})
 	.then(() => {
