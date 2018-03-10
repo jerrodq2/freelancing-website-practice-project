@@ -1,6 +1,8 @@
 'use strict';
 
 
+const { ALL_STATES } = require(`${process.cwd()}/src/lib/regex-states`);
+
 exports.up = (knex) => knex.schema.createTable('jobs', (table) => {
 	table.uuid('id').notNullable().primary().defaultTo(knex.raw('gen_random_uuid()'));
 	table.string('title').notNullable().index();
@@ -10,7 +12,7 @@ exports.up = (knex) => knex.schema.createTable('jobs', (table) => {
 	table.integer('rate').notNullable().index();
 	table.enum('rate_type', ['hourly', 'flat']).notNullable().defaultTo('hourly').index();
 	table.text('description').notNullable();
-	table.string('state').nullable();
+	table.enum('state', ALL_STATES).nullable();
 	table.string('city').nullable();
 	table.string('zip').nullable().index();
 	table.boolean('onsite_required').notNullable().defaultTo(false);

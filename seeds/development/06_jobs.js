@@ -46,6 +46,8 @@ exports.seed = (knex) => {
 					experience_level_requested: 'intermediate',
 					field_id: fields.front_end,
 					client_id: clients.jack,
+					city: 'Dallas',
+					state: 'TX',
 					created_at: new Date()
 				},
 			]);
