@@ -1,5 +1,5 @@
 'use strict';
-
+console.log('User *******', `${process.env.PG_USER}`);
 module.exports = {
 	client: 'pg',
 	version: '7.4.1',
