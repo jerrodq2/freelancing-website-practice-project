@@ -11,6 +11,7 @@ jobs:
         environment:
         - POSTGRES_USER=jerrodq2
         - POSTGRES_DB=freelancing_project
+        - PG_USER=jerrodq3
         - PG_DATABASE=other
 
     steps:
