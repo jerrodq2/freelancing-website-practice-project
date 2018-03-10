@@ -9,8 +9,8 @@ jobs:
 
       - image: postgres:10.3
         environment:
-          PG_USER: jerrodq2
-          PG_DATABASE: freelancing_project
+          POSTGRES_USER: jerrodq2
+          POSTGRES_DB: freelancing_project
 
     steps:
       - checkout
@@ -21,14 +21,6 @@ jobs:
           - v1-dependencies-{{ checksum "package.json" }}
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
-
-      - run:
-          name: Create DB User
-          command: sudo -u postgres psql -p 5433 -c "create user jerrodq2"
-
-      - run:
-          name: Alter User
-          command: sudo -u postgres psql -p 5433 -c "alter role jerrodq2 with superuser;";
 
       - run:
           name: Install local dependencies
