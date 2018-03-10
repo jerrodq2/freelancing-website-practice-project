@@ -9,9 +9,9 @@ jobs:
 
       - image: postgres:10.3
         environment:
-        - POSTGRES_USER: jerrodq2
-        - POSTGRES_DB: freelancing_project
-        - PG_DATABASE: other
+        - POSTGRES_USER = ubuntu
+        - POSTGRES_DB = db_name
+        - PG_DATABASE = other
 
     steps:
       - checkout
