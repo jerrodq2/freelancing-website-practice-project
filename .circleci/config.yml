@@ -25,12 +25,12 @@ jobs:
           - v1-dependencies-
 
       - run:
-          name: Install dependencies
+          name: Install local dependencies
           command: npm install
 
       - run:
           name: Wait for install
-          command: dependencies -wait tcp://localhost:5432 -timeout 10m
+          command: dockerize -wait tcp://localhost:5432 -timeout 2m
 
       - run:
           name: Create database
