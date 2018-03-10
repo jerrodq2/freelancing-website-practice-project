@@ -6,6 +6,8 @@ jobs:
       - image: circleci/node:8.9.4
         environment:
           NODE_ENV: test
+          PG_USER: jerrodq2
+          PG_DATABASE: freelancing_project
 
       - image: postgres:10.3
         environment:
@@ -27,10 +29,6 @@ jobs:
       - run:
           name: Install local dependencies
           command: npm install
-
-      - run:
-          name: Wait for install
-          command: dockerize -wait tcp://localhost:5432 -timeout 2m
 
       - run:
           name: Create database
