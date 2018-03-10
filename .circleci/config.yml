@@ -13,7 +13,7 @@ machine:
 
 dependencies:
   pre:
-    - node --version
+    - brew install node@8.9.4
     - npm install -g npm
     - psql -c "create user postgres with password 'password'";
     - psql -c "alter role postgres with superuser;";
@@ -30,8 +30,7 @@ deployment:
 
 jobs:
   build:
-    docker:
-      - image: node:8.0
+    machine: true
 
     steps:
       - checkout
