@@ -9,7 +9,7 @@ jobs:
 
       - image: postgres:10.3
         environment:
-          PG_USER: postgres
+          PG_USER: jerrodq2
           PG_DATABASE: freelancing_project
 
     steps:
