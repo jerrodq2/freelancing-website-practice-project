@@ -9,6 +9,7 @@ jobs:
           NODE_ENV: test
           PG_USER: jerrodq2
           PG_DATABASE: freelancing_project
+          PG_PORT: 5432
 
       - image: postgres:10.3
         environment:
