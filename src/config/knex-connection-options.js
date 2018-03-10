@@ -1,5 +1,6 @@
 'use strict';
-console.log('User *******', `${process.env.PG_USER}`);
+console.log();
+console.log('CONNECTION OPTIONS!!!');
 module.exports = {
 	client: 'pg',
 	version: '7.4.1',
