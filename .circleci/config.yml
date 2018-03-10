@@ -24,11 +24,11 @@ jobs:
 
       - run:
           name: Create DB User
-          command: psql -c "create user jerrodq2"
+          command: sudo -u postgres psql -p 5433 -c "create user jerrodq2"
 
       - run:
           name: Alter User
-          command: psql -c "alter role jerrodq2 with superuser;";
+          command: sudo -u postgres psql -p 5433 -c "alter role jerrodq2 with superuser;";
 
       - run:
           name: Install local dependencies
