@@ -1,27 +1,54 @@
 # Javascript Node CircleCI 2.0 configuration file
 #
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
-version: 2
-jobs:
-  build:
-    working_directory: ~/repo
+machine:
+  node:
+    version: 8.9.4
+  services:
+    - postgresql
+  timezone: America/Chicago
+  environment:
+    TAG: $CIRCLE_BRANCH-$CIRCLE_BUILD_NUM
 
-    steps:
-      - checkout
+dependencies:
+  pre:
+    - psql -c "create user postgres with password 'password'";
+    - psql -c "alter role postgres with superuser;";
 
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+test:
+  pre:
+    - npm run db:migrate
 
-      - run: npm install
+deployment:
+  development:
+    branch: master
 
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
 
-      # run tests!
-      - run: npm test
+
+
+# The below code was the default code, I will be making changes to the above code once I setup my tests, so I will keep the below code for now as reference
+
+# version: 2
+# jobs:
+#   build:
+#     working_directory: ~/repo
+#
+#     steps:
+#       - checkout
+#
+#       # Download and cache dependencies
+#       - restore_cache:
+#           keys:
+#           - v1-dependencies-{{ checksum "package.json" }}
+#           # fallback to using the latest cache if no exact match is found
+#           - v1-dependencies-
+#
+#       - run: npm install
+#
+#       - save_cache:
+#           paths:
+#             - node_modules
+#           key: v1-dependencies-{{ checksum "package.json" }}
+#
+#       # run tests!
+#       - run: npm test
