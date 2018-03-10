@@ -30,7 +30,8 @@ deployment:
 
 jobs:
   build:
-    machine: true
+    docker:
+      - image: node:8.0
 
     steps:
       - checkout
