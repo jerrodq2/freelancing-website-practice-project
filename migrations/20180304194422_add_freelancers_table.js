@@ -1,7 +1,7 @@
 'use strict';
 
 
-const { ALL_STATES } = require(`${process.cwd()}/src/lib/regex-states`);
+const { ALL_STATES } = require(`${process.cwd()}/src/lib/constants`);
 
 exports.up = (knex) => knex.schema.createTable('freelancers', (table) => {
 	table.uuid('id').notNullable().primary().defaultTo(knex.raw('gen_random_uuid()'));
