@@ -5,6 +5,7 @@ const knex = require(`${process.cwd()}/src/config/knex`);
 const fields = require(`${process.cwd()}/seeds/ids/fields`);
 const { hashFunc } = require(`${process.cwd()}/src/lib/helper_functions`);
 
+
 const internals = {
 	createAdmin () {
 		return knex('admins').insert({
@@ -79,6 +80,6 @@ Promise.all([
 	internals.createFields(),
 ])
 	.then(() => {
-		console.log('Admin and inital fields created');
+		console.log('Admin and initial fields created');
 		return process.exit();
 	});
