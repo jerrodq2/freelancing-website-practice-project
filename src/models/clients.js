@@ -8,9 +8,9 @@ const _ = require('lodash');
 
 module.exports = {
 	findOne (id) {
-		return Clients.findOne(id)
-			.then((client) => _.omit(client, 'password'));
+		return Clients.findOneUser(id)
+			.then((client) => _.omit(client, 'password', 'field_id'));
 	},
 
-	
+
 };
