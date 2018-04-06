@@ -2,7 +2,7 @@
 
 
 const Model = require('./model');
-const Clients = new Model('clients');
+const Admins = new Model('admins');
 const { hashPassword } = require(`${process.cwd()}/src/lib/helper_functions`);
 const _ = require('lodash');
 
@@ -14,24 +14,24 @@ module.exports = {
 	},
 
 	findOne (id) {
-		return Clients.findOneUser(id)
-			.then((client) => _.omit(client, 'password', 'field_id', 'username'));
+		return Admins.findOne(id)
+			.then((client) => _.omit(client, 'password', 'username'));
 	},
 
 	create (data) {
 		// hash the password
 		data.password = hashPassword(data.password);
-		return Clients.create(data)
+		return Admins.create(data)
 			.then((client) => _.omit(client, 'password', 'username'));
 	},
 
 	update (id, data) {
-		return Clients.updateById(id, data)
+		return Admins.updateById(id, data)
 			.then((client) => _.omit(client, 'password', 'username'));
 	},
 
 	delete (id) {
-		return Clients.delete(id);
+		return Admins.delete(id);
 	}
 
 };
