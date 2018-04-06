@@ -3,7 +3,7 @@
 
 const fields = require(`${process.cwd()}/seeds/ids/fields`);
 const freelancers = require(`${process.cwd()}/seeds/ids/freelancers`);
-const { hashFunc } = require(`${process.cwd()}/src/lib/helper_functions`);
+const { hashPassword } = require(`${process.cwd()}/src/lib/helper_functions`);
 
 exports.seed = (knex) => {
 	// Deletes ALL existing entries
@@ -18,7 +18,7 @@ exports.seed = (knex) => {
 					last_name: 'Quintana',
 					username: 'jerrod',
 					email: 'j@j.com',
-					password: hashFunc('password'),
+					password: hashPassword('password'),
 					job_title: 'Full Stack Web Developer',
 					rate: 45,
 					gender: 'male',
@@ -37,7 +37,7 @@ exports.seed = (knex) => {
 					last_name: 'Quintana',
 					username: 'ryan',
 					email: 'r@r.com',
-					password: hashFunc('password'),
+					password: hashPassword('password'),
 					job_title: 'Front End Web Developer',
 					rate: 33,
 					gender: 'male',
@@ -56,7 +56,7 @@ exports.seed = (knex) => {
 					last_name: 'Jones',
 					username: 'jessica',
 					email: 'jjones@j.com',
-					password: hashFunc('password'),
+					password: hashPassword('password'),
 					job_title: 'database',
 					rate: 20,
 					age: 29,
@@ -74,7 +74,7 @@ exports.seed = (knex) => {
 					last_name: 'Uzumaki',
 					username: 'naruto',
 					email: 'n@u.com',
-					password: hashFunc('password'),
+					password: hashPassword('password'),
 					job_title: 'Wordpress Developer',
 					rate: 30,
 					gender: 'male',

@@ -3,7 +3,7 @@
 
 const knex = require(`${process.cwd()}/src/config/knex`);
 const fields = require(`${process.cwd()}/seeds/ids/fields`);
-const { hashFunc } = require(`${process.cwd()}/src/lib/helper_functions`);
+const { hashPassword } = require(`${process.cwd()}/src/lib/helper_functions`);
 
 
 const internals = {
@@ -13,7 +13,7 @@ const internals = {
 			last_name: `${process.env.ADMIN_LAST_NAME}`,
 			username: `${process.env.ADMIN_USERNAME}`,
 			email: `${process.env.ADMIN_EMAIL}`,
-			password: hashFunc(`${process.env.ADMIN_PASSWORD}`),
+			password: hashPassword(`${process.env.ADMIN_PASSWORD}`),
 			created_at: new Date() });
 	},
 

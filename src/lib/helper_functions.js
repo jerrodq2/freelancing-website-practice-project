@@ -4,11 +4,11 @@
 const bcrypt = require('bcrypt');
 
 
-const hashFunc = (password) => {
+const hashPassword = (password) => {
 	return bcrypt.hashSync(password, bcrypt.genSaltSync(12));
 };
 
 
 module.exports = {
-	hashFunc,
+	hashPassword,
 };

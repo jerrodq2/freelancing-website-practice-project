@@ -3,7 +3,7 @@
 
 const fields = require(`${process.cwd()}/seeds/ids/fields`);
 const clients = require(`${process.cwd()}/seeds/ids/clients`);
-const { hashFunc } = require(`${process.cwd()}/src/lib/helper_functions`);
+const { hashPassword } = require(`${process.cwd()}/src/lib/helper_functions`);
 
 exports.seed = (knex) => {
 	// Deletes ALL existing entries
@@ -18,7 +18,7 @@ exports.seed = (knex) => {
 					last_name: 'Reacher',
 					username: 'jackreacher',
 					email: 'jack@reacher.com',
-					password: hashFunc('password'),
+					password: hashPassword('password'),
 					gender: 'male',
 					age: 34,
 					field_id: fields.front_end,
@@ -35,7 +35,7 @@ exports.seed = (knex) => {
 					last_name: 'Holmes',
 					username: 'sherlockholmes',
 					email: 'sherlock@holmes.com',
-					password: hashFunc('password'),
+					password: hashPassword('password'),
 					gender: 'male',
 					age: 27,
 					field_id: fields.full_stack,
@@ -51,7 +51,7 @@ exports.seed = (knex) => {
 					last_name: 'Wayne',
 					username: 'brucewayne',
 					email: 'bruce@wayne.com',
-					password: hashFunc('password'),
+					password: hashPassword('password'),
 					gender: 'male',
 					age: 45,
 					field_id: fields.software,
