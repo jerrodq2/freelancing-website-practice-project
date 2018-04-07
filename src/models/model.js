@@ -12,9 +12,9 @@ class Model {
 	}
 	// select a single client or freelancer, also grabs their field (front end, web development, etc.)
 	findOneUser (id) {
-		const columns = [`${name}.*`, 'fields.field'];
+		const selectedColumns = [`${name}.*`, 'fields.field'];
 		return knex(name)
-			.select(columns)
+			.select(selectedColumns)
 			.where(knex.raw(`${name}.id = '${id}'`))
 			.innerJoin('fields', `${name}.field_id`, 'fields.id')
 			.then((result) => result[0]);
