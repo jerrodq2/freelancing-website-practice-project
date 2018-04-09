@@ -3,6 +3,7 @@
 
 const { ALL_STATES } = require(`${process.cwd()}/src/lib/constants`);
 
+// creates the clients table, these are users that post jobs for freelancers. They can also use the 'invitations' table to invite a freelancer to a specific job
 exports.up = (knex) => knex.schema.createTable('clients', (table) => {
 	table.uuid('id').notNullable().primary().defaultTo(knex.raw('gen_random_uuid()'));
 	table.string('first_name').notNullable();

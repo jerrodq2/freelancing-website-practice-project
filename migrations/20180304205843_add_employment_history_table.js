@@ -1,6 +1,7 @@
 'use strict';
 
 
+// creates the employment_history table, used just for freelancers to specify their relevant work history
 exports.up = (knex) => knex.schema.createTable('employment_history', (table) => {
 	table.uuid('id').notNullable().primary().defaultTo(knex.raw('gen_random_uuid()'));
 	table.string('title').notNullable();

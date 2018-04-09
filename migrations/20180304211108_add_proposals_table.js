@@ -1,6 +1,7 @@
 'use strict';
 
 
+// the proposals table is when a freelancer sends a 'proposal' to a client, basically trying to get the job/contract
 exports.up = (knex) => knex.schema.createTable('proposals', (table) => {
 	table.uuid('id').notNullable().primary().defaultTo(knex.raw('gen_random_uuid()'));
 	table.string('title').notNullable();

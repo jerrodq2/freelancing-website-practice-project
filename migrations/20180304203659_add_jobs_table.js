@@ -3,6 +3,7 @@
 
 const { ALL_STATES } = require(`${process.cwd()}/src/lib/constants`);
 
+// creates the jobs table. These are contracts/projects that are posted by clients and accepted by freelancers. 
 exports.up = (knex) => knex.schema.createTable('jobs', (table) => {
 	table.uuid('id').notNullable().primary().defaultTo(knex.raw('gen_random_uuid()'));
 	table.string('title').notNullable().index();

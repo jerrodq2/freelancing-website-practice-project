@@ -1,6 +1,7 @@
 'use strict';
 
 
+// the invitations table is for when a client invites a freelancer to do a job
 exports.up = (knex) => knex.schema.createTable('invitations', (table) => {
 	table.uuid('id').notNullable().primary().defaultTo(knex.raw('gen_random_uuid()'));
 	table.string('title').notNullable();

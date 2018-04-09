@@ -1,7 +1,7 @@
 'use strict';
 
 
-// This table is for reviews a client gives on a freelancer
+// creates the freelancer_reviews table. these are reviews that clients give about freelancers they have worked with
 exports.up = (knex) => knex.schema.createTable('freelancer_reviews', (table) => {
 	table.uuid('id').notNullable().primary().defaultTo(knex.raw('gen_random_uuid()'));
 	table.integer('rating').notNullable();
