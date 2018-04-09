@@ -7,7 +7,7 @@ const Proposals = new Model('proposals');
 
 
 module.exports = {
-
+	// /test
 	getAll () {
 		// to be setup with pagination later
 	},
