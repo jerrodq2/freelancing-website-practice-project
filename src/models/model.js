@@ -10,6 +10,7 @@ class Model {
 		// less typing
 		name = this.tableName;
 	}
+
 	// select a single client or freelancer, also grabs their field (front end, web development, etc.)
 	findOneUser (id) {
 		const selectedColumns = [`${name}.*`, 'fields.field'];
@@ -19,6 +20,7 @@ class Model {
 			.innerJoin('fields', `${name}.field_id`, 'fields.id')
 			.then((result) => result[0]);
 	}
+
 	// find one for any table other than client or freelancer
 	findOne (id) {
 		return knex(name).where({ id })
@@ -30,12 +32,14 @@ class Model {
 		return knex(name).insert(data).returning('*')
 			.then((result) => result[0]);
 	}
+
 	// add boom errors for not found, doesn't currently give any indication other than an empty object
 	updateById (id, data) {
 		data.updated_at = new Date();
 		return knex(name).where({ id }).update(data).returning('*')
 			.then((result) => result[0]);
 	}
+	
 	// test cascading delete (ex: delete a client, does that client's job dissappear as well?)
 	// setup Boom to deal with not found cases (doesn't error out, simply returns a 0)
 	delete (id) {

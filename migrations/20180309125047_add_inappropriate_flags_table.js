@@ -1,7 +1,7 @@
 'use strict';
 
 
-// creates the inappropriate_flags table. This is so that a job, client, freelancer, client/freelancer review, proposal, or invitation can be marked as inappropriate.
+// creates the inappropriate_flags table. This is so that a job, client, freelancer, review, proposal, or invitation can be marked as inappropriate.
 exports.up = (knex) => knex.schema.createTable('inappropriate_flags', (table) => {
 	table.uuid('id').notNullable().primary().defaultTo(knex.raw('gen_random_uuid()'));
 	table.uuid('job_id').nullable().references('id').inTable('jobs').onDelete('CASCADE');

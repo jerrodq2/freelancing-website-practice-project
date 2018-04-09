@@ -13,7 +13,7 @@ module.exports = {
 	},
 
 	findOne (id) {
-		// specify the fields I want from each table
+		// specify the columns I want from each table
 		const jobColumns = ['jobs.*' ];
 		const fieldColumns = ['fields.field'];
 		const clientColumns = ['c.first_name as client_first_name', ' c.last_name as clients_last_name'];

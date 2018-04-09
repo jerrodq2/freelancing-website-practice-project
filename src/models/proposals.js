@@ -7,12 +7,12 @@ const Proposals = new Model('proposals');
 
 
 module.exports = {
-	
+
 	getAll () {
 		// to be setup with pagination later
 	},
 	findOne (id) {
-		// specify the fields I want from each table
+		// specify the columns I want from each table
 		const proposalsColumns = ['proposals.*' ];
 		const jobColumns = ['j.title as job_title', 'j.rate as job_rate', 'j.rate_type as job_rate_type', 'j.description as job_description', 'j.experience_level_requested as job_experience_level_requested'];
 		const clientColumns = ['c.first_name as client_first_name', ' c.last_name as clients_last_name'];

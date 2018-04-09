@@ -15,19 +15,19 @@ module.exports = {
 
 	findOne (id) {
 		return Clients.findOneUser(id)
-			.then((client) => _.omit(client, 'password', 'field_id', 'username'));
+			.then((result) => _.omit(result, 'password', 'field_id', 'username'));
 	},
 
 	create (data) {
 		// hash the password
 		data.password = hashPassword(data.password);
 		return Clients.create(data)
-			.then((client) => _.omit(client, 'password', 'username'));
+			.then((result) => _.omit(result, 'password', 'username'));
 	},
 
 	update (id, data) {
 		return Clients.updateById(id, data)
-			.then((client) => _.omit(client, 'password', 'username'));
+			.then((result) => _.omit(result, 'password', 'username'));
 	},
 
 	delete (id) {
