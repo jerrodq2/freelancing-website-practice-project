@@ -6,7 +6,7 @@ const educationHistory = new Model('education_history');
 
 
 module.exports = {
-	// get all the employment_history for one user
+	// get all the education_history for one user
 	getAll (freelancer_id) {
 		return educationHistory.findHistory(freelancer_id);
 	},
