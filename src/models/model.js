@@ -32,6 +32,23 @@ class Model {
 		return knex(name).where({ freelancer_id: id });
 	}
 
+	// find a single client or freelancer review
+	findReview (id) {
+		const mainColumns = [`${name}.*`];
+		const clientColumns = ['c.first_name as client_first_name', 'c.last_name as clients_last_name'];
+		const freelancerColumns = ['f.first_name as freelancer_first_name', 'f.last_name as freelancer_last_name'];
+		const jobColumns = ['j.title as job_title', 'j.rate as job_rate', 'j.rate_type as job_rate_type', 'j.description as job_description', 'j.experience_level_requested as job_experience_level_requested'];
+
+		const selectedColumns = mainColumns.concat(clientColumns, freelancerColumns, jobColumns);
+		return knex(name)
+			.select(selectedColumns)
+			.where(knex.raw(`${name}.id = '${id}'`))
+			.innerJoin('clients as c', `${name}.client_id`, 'c.id')
+			.innerJoin('freelancers as f', `${name}.freelancer_id`, 'f.id')
+			.innerJoin('jobs as j', `${name}.job_id`, 'j.id')
+			.then((result) => result[0]);
+	}
+
 	create (data) {
 		data.created_at = data.created_at || new Date();
 		return knex(name).insert(data).returning('*')
