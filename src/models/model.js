@@ -32,9 +32,9 @@ class Model {
 	// find a single client or freelancer review
 	findReview (id) {
 		const mainColumns = [`${name}.*`];
-		const clientColumns = ['c.first_name as client_first_name', 'c.last_name as clients_last_name'];
-		const freelancerColumns = ['f.first_name as freelancer_first_name', 'f.last_name as freelancer_last_name'];
-		const jobColumns = ['j.title as job_title', 'j.rate as job_rate', 'j.rate_type as job_rate_type', 'j.description as job_description', 'j.experience_level_requested as job_experience_level_requested'];
+		const clientColumns = ['c.id as client_id', 'c.first_name as client_first_name', 'c.last_name as clients_last_name'];
+		const freelancerColumns = ['f.id as freelancer_id', 'f.first_name as freelancer_first_name', 'f.last_name as freelancer_last_name'];
+		const jobColumns = ['j.id as job_id', 'j.title as job_title', 'j.rate as job_rate', 'j.rate_type as job_rate_type', 'j.description as job_description', 'j.experience_level_requested as job_experience_level_requested'];
 
 		const selectedColumns = mainColumns.concat(clientColumns, freelancerColumns, jobColumns);
 		return knex(name)
