@@ -16,8 +16,8 @@ module.exports = {
 		// specify the columns I want from each table
 		const jobColumns = ['jobs.*' ];
 		const fieldColumns = ['fields.field'];
-		const clientColumns = ['c.first_name as client_first_name', ' c.last_name as clients_last_name'];
-		const freelancerColumns = ['f.first_name as freelancer_first_name', 'f.last_name as freelancer_last_name', 'f.job_title as freelancer_job_title', 'f.experience_level as freelancer_experience_level'];
+		const clientColumns = ['c.id as client_id', 'c.first_name as client_first_name', ' c.last_name as clients_last_name'];
+		const freelancerColumns = ['f.id as freelancer_id', 'f.first_name as freelancer_first_name', 'f.last_name as freelancer_last_name', 'f.job_title as freelancer_job_title', 'f.experience_level as freelancer_experience_level'];
 
 		const selectedColumns = jobColumns.concat(fieldColumns, clientColumns, freelancerColumns);
 		return knex('jobs')
