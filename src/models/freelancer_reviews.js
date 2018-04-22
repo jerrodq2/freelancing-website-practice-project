@@ -3,7 +3,6 @@
 
 const Model = require('./model');
 const Freelancer_reviews = new Model('freelancer_reviews');
-const _ = require('lodash');
 
 
 module.exports = {
@@ -22,8 +21,7 @@ module.exports = {
 	},
 
 	update (id, data) {
-		return Freelancer_reviews.updateById(id, data)
-			.then((result) => _.omit(result, 'password', 'username'));
+		return Freelancer_reviews.updateById(id, data);
 	},
 
 	delete (id) {
