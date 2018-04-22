@@ -11,7 +11,7 @@ module.exports = {
 	getAll (id) {
 		const jobActivityColumns = ['job_activity.*'];
 		const jobColumns = ['j.title as job_title', 'j.rate as job_rate', 'j.rate_type as job_rate_type', 'j.description as job_description', 'j.experience_level_requested as job_experience_level_requested'];
-		const clientColumns = ['c.first_name as client_first_name', 'c.last_name as clients_last_name'];
+		const clientColumns = ['c.first_name as client_first_name', 'c.last_name as client_last_name'];
 		const selectedColumns = jobActivityColumns.concat(jobColumns, clientColumns);
 		return knex('job_activity')
 			.select(selectedColumns)
