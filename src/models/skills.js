@@ -1,6 +1,7 @@
 'use strict';
 
 
+const knex = require('../config/knex');
 const Model = require('./model');
 const Skills = new Model('skills');
 
@@ -15,7 +16,13 @@ module.exports = {
 		return Skills.findOne(id);
 	},
 
-	create (data) {
+	findByName (name) {
+		return knex('skills').where({ skill: name })
+			.then((result) => result[0]);
+	},
+
+	create (skill) {
+		const data = { skill };
 		return Skills.create(data);
 	},
 

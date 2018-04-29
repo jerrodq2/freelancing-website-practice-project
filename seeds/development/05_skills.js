@@ -9,59 +9,59 @@ exports.seed = (knex) => {
 		// Inserts seed entries
 			return knex('skills').insert([
 				{
-					skill: 'MEAN',
+					skill: 'mean',
 					created_at: new Date()
 				},
 				{
-					skill: 'NodeJS',
+					skill: 'nodejs',
 					created_at: new Date()
 				},
 				{
-					skill: 'Ruby on Rails',
+					skill: 'ruby on rails',
 					created_at: new Date()
 				},
 				{
-					skill: 'ReactJS',
+					skill: 'reactjs',
 					created_at: new Date()
 				},
 				{
-					skill: 'AngularJS',
+					skill: 'angularjs',
 					created_at: new Date()
 				},
 				{
-					skill: '.Net',
+					skill: '.net',
 					created_at: new Date()
 				},
 				{
-					skill: 'HTML',
+					skill: 'html',
 					created_at: new Date()
 				},
 				{
-					skill: 'CSS',
+					skill: 'css',
 					created_at: new Date()
 				},
 				{
-					skill: 'Bootstrap',
+					skill: 'bootstrap',
 					created_at: new Date()
 				},
 				{
-					skill: 'jQuery',
+					skill: 'jquery',
 					created_at: new Date()
 				},
 				{
-					skill: 'SQL',
+					skill: 'sql',
 					created_at: new Date()
 				},
 				{
-					skill: 'MySQL',
+					skill: 'mysql',
 					created_at: new Date()
 				},
 				{
-					skill: 'Analyst',
+					skill: 'analyst',
 					created_at: new Date()
 				},
 				{
-					skill: 'Wordpress',
+					skill: 'wordpress',
 					created_at: new Date()
 				},
 			]);
