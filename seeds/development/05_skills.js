@@ -1,8 +1,6 @@
 'use strict';
 
 
-const freelancers = require(`${process.cwd()}/seeds/ids/freelancers`);
-
 exports.seed = (knex) => {
 	// Deletes ALL existing entries
 	return knex('skills').del()
@@ -11,98 +9,59 @@ exports.seed = (knex) => {
 		// Inserts seed entries
 			return knex('skills').insert([
 				{
-					skill: 'MEAN',
-					freelancer_id: freelancers.jerrod,
+					skill: 'mean',
 					created_at: new Date()
 				},
 				{
-					skill: 'NodeJS',
-					freelancer_id: freelancers.jerrod,
+					skill: 'nodejs',
 					created_at: new Date()
 				},
 				{
-					skill: 'Ruby on Rails',
-					freelancer_id: freelancers.jerrod,
+					skill: 'ruby on rails',
 					created_at: new Date()
 				},
 				{
-					skill: 'ReactJS',
-					freelancer_id: freelancers.jerrod,
+					skill: 'reactjs',
 					created_at: new Date()
 				},
 				{
-					skill: 'AngularJS',
-					freelancer_id: freelancers.jerrod,
+					skill: 'angularjs',
 					created_at: new Date()
 				},
 				{
-					skill: '.Net',
-					freelancer_id: freelancers.jerrod,
+					skill: '.net',
 					created_at: new Date()
 				},
 				{
-					skill: 'HTML',
-					freelancer_id: freelancers.ryan,
+					skill: 'html',
 					created_at: new Date()
 				},
 				{
-					skill: 'CSS',
-					freelancer_id: freelancers.ryan,
+					skill: 'css',
 					created_at: new Date()
 				},
 				{
-					skill: 'Bootstrap',
-					freelancer_id: freelancers.ryan,
+					skill: 'bootstrap',
 					created_at: new Date()
 				},
 				{
-					skill: 'jQuery',
-					freelancer_id: freelancers.ryan,
+					skill: 'jquery',
 					created_at: new Date()
 				},
 				{
-					skill: 'SQL',
-					freelancer_id: freelancers.jessica,
+					skill: 'sql',
 					created_at: new Date()
 				},
 				{
-					skill: 'MySQL',
-					freelancer_id: freelancers.jessica,
+					skill: 'mysql',
 					created_at: new Date()
 				},
 				{
-					skill: 'Analyst',
-					freelancer_id: freelancers.jessica,
+					skill: 'analyst',
 					created_at: new Date()
 				},
 				{
-					skill: 'Wordpress',
-					freelancer_id: freelancers.naruto,
-					created_at: new Date()
-				},
-				{
-					skill: 'Taijutsu',
-					freelancer_id: freelancers.naruto,
-					created_at: new Date()
-				},
-				{
-					skill: 'Ninjutsu',
-					freelancer_id: freelancers.naruto,
-					created_at: new Date()
-				},
-				{
-					skill: 'Chakra Control',
-					freelancer_id: freelancers.naruto,
-					created_at: new Date()
-				},
-				{
-					skill: 'Kage Bunshin No Jutsu',
-					freelancer_id: freelancers.naruto,
-					created_at: new Date()
-				},
-				{
-					skill: 'Being the number one ninja',
-					freelancer_id: freelancers.naruto,
+					skill: 'wordpress',
 					created_at: new Date()
 				},
 			]);
