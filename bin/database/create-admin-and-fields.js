@@ -1,11 +1,9 @@
 'use strict';
 
 
-const knex = require(`${process.cwd()}/src/config/knex`);
 const Admins = require(`${process.cwd()}/src/models/admins`);
 const Fields = require(`${process.cwd()}/src/models/fields`);
-const fields = require(`${process.cwd()}/seeds/ids/fields`);
-const { hashPassword } = require(`${process.cwd()}/src/lib/helper_functions`);
+const fieldIds = require(`${process.cwd()}/seeds/ids/fields`);
 
 const internals = {
 	createAdmin () {
@@ -21,43 +19,43 @@ const internals = {
 	createFields () {
 		const queries = [
 			Fields.create({
-				id: fields.full_stack,
+				id: fieldIds.full_stack,
 				field: 'Full Stack Web Development'
 			}),
 			Fields.create({
-				id: fields.front_end,
+				id: fieldIds.front_end,
 				field: 'Front End Web Development'
 			}),
 			Fields.create({
-				id: fields.back_end,
+				id: fieldIds.back_end,
 				field: 'Back End Web Development'
 			}),
 			Fields.create({
-				id: fields.software,
+				id: fieldIds.software,
 				field: 'Software Engineering'
 			}),
 			Fields.create({
-				id: fields.mobile_app,
+				id: fieldIds.mobile_app,
 				field: 'Mobile App Development'
 			}),
 			Fields.create({
-				id: fields.web_and_mobile,
+				id: fieldIds.web_and_mobile,
 				field: 'Web & Mobile Design'
 			}),
 			Fields.create({
-				id: fields.database,
+				id: fieldIds.database,
 				field: 'Database Administration'
 			}),
 			Fields.create({
-				id: fields.ecommerce,
+				id: fieldIds.ecommerce,
 				field: 'Ecommerce Development'
 			}),
 			Fields.create({
-				id: fields.qa,
+				id: fieldIds.qa,
 				field: 'QA & Testing'
 			}),
 			Fields.create({
-				id: fields.other,
+				id: fieldIds.other,
 				field: 'Other'
 			}),
 		];
