@@ -1,25 +1,22 @@
 'use strict';
 
 
-const freelancers = require(`${process.cwd()}/seeds/ids/freelancers`);
-const clients = require(`${process.cwd()}/seeds/ids/clients`);
-const jobs = require(`${process.cwd()}/seeds/ids/jobs`);
+const freelancerIds = require(`${process.cwd()}/seeds/ids/freelancers`);
+const clientIds = require(`${process.cwd()}/seeds/ids/clients`);
+const jobIds = require(`${process.cwd()}/seeds/ids/jobs`);
+const FreelancerReviews = require(`${process.cwd()}/src/models/freelancer_reviews`);
 
-exports.seed = (knex) => {
+exports.seed = async (knex) => {
 	// Deletes ALL existing entries
-	return knex('freelancer_reviews').del()
-
-		.then(function () {
-		// Inserts seed entries
-			return knex('freelancer_reviews').insert([
-				{
-					rating: 5,
-					review: 'Naruto was amazing, really knew what he was doing, and man was he great at multitasking!',
-					freelancer_id: freelancers.naruto,
-					client_id: clients.sherlock,
-					job_id: jobs.wordpress,
-					created_at: new Date()
-				},
-			]);
-		});
+	await knex('freelancer_reviews').del();
+	// Inserts seed entries
+	return Promise.all([
+		FreelancerReviews.create({
+			rating: 5,
+			review: 'Naruto was amazing, really knew what he was doing, and man was he great at multitasking!',
+			freelancer_id: freelancerIds.naruto,
+			client_id: clientIds.sherlock,
+			job_id: jobIds.wordpress
+		}),
+	]);
 };
