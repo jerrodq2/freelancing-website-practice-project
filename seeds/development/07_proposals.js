@@ -1,49 +1,46 @@
 'use strict';
 
 
-const freelancers = require(`${process.cwd()}/seeds/ids/freelancers`);
-const clients = require(`${process.cwd()}/seeds/ids/clients`);
-const jobs = require(`${process.cwd()}/seeds/ids/jobs`);
+const freelancerIds = require(`${process.cwd()}/seeds/ids/freelancers`);
+const clientIds = require(`${process.cwd()}/seeds/ids/clients`);
+const jobIds = require(`${process.cwd()}/seeds/ids/jobs`);
+const Proposals = require(`${process.cwd()}/src/models/proposals`);
 
-exports.seed = (knex) => {
+exports.seed = async (knex) => {
 	// Deletes ALL existing entries
-	return knex('proposals').del()
+	await knex('proposals').del();
+	// Inserts seed entries
+	return Promise.all([
+		Proposals.create({
+			title: 'I can do it dattebayo',
+			description: 'I can do it easily',
+			freelancer_id: freelancerIds.naruto,
+			client_id: clientIds.sherlock,
+			job_id: jobIds.wordpress
+		}),
 
-		.then(function () {
-		// Inserts seed entries
-			return knex('proposals').insert([
-				{
-					title: 'I can do it dattebayo',
-					description: 'I can do it easily',
-					freelancer_id: freelancers.naruto,
-					client_id: clients.sherlock,
-					job_id: jobs.wordpress,
-					created_at: new Date()
-				},
-				{
-					title: 'I can deal with it',
-					description: 'Let me help you',
-					freelancer_id: freelancers.jerrod,
-					client_id: clients.bruce,
-					job_id: jobs.batwing,
-					created_at: new Date()
-				},
-				{
-					title: 'I can solve your problem',
-					description: 'I am a master at front end',
-					freelancer_id: freelancers.ryan,
-					client_id: clients.jack,
-					job_id: jobs.basic_website,
-					created_at: new Date()
-				},
-				{
-					title: 'I can do it better than ryan',
-					description: 'Always do',
-					freelancer_id: freelancers.jerrod,
-					client_id: clients.jack,
-					job_id: jobs.basic_website,
-					created_at: new Date()
-				},
-			]);
-		});
+		Proposals.create({
+			title: 'I can deal with it',
+			description: 'Let me help you',
+			freelancer_id: freelancerIds.jerrod,
+			client_id: clientIds.bruce,
+			job_id: jobIds.batwing
+		}),
+
+		Proposals.create({
+			title: 'I can solve your problem',
+			description: 'I am a master at front end',
+			freelancer_id: freelancerIds.ryan,
+			client_id: clientIds.jack,
+			job_id: jobIds.basic_website
+		}),
+
+		Proposals.create({
+			title: 'I can do it better than ryan',
+			description: 'Always do',
+			freelancer_id: freelancerIds.jerrod,
+			client_id: clientIds.jack,
+			job_id: jobIds.basic_website
+		})
+	]);
 };
