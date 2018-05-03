@@ -2,29 +2,29 @@
 
 
 const Model = require('./model');
-const employmentHistory = new Model('employment_history');
+const EmploymentHistory = new Model('employment_history');
 
 
 module.exports = {
 	// get all the employment_history for one user
 	getAll (freelancer_id) {
-		return employmentHistory.findHistory(freelancer_id);
+		return EmploymentHistory.findHistory(freelancer_id);
 	},
 
 	findOne (id) {
-		return employmentHistory.findOne(id);
+		return EmploymentHistory.findOne(id);
 	},
 
 	create (data) {
-		return employmentHistory.create(data);
+		return EmploymentHistory.create(data);
 	},
 
 	update (id, data) {
-		return employmentHistory.updateById(id, data);
+		return EmploymentHistory.updateById(id, data);
 	},
 
 	delete (id) {
-		return employmentHistory.delete(id);
+		return EmploymentHistory.delete(id);
 	}
 
 };

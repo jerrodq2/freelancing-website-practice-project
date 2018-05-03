@@ -3,14 +3,14 @@
 
 const knex = require('../config/knex');
 const Model = require('./model');
-const Saved_freelancers = new Model('saved_freelancers');
+const SavedFreelancers = new Model('saved_freelancers');
 
 
 module.exports = {
 
 
 	getAll () {
-		// to be setup with pagination later
+		// TODO: to be setup with pagination later
 	},
 
 	findOne (id) {
@@ -27,15 +27,15 @@ module.exports = {
 	},
 
 	create (data) {
-		return Saved_freelancers.create(data);
+		return SavedFreelancers.create(data);
 	},
 
 	update (id, data) {
-		return Saved_freelancers.updateById(id, data);
+		return SavedFreelancers.updateById(id, data);
 	},
 
 	delete (id) {
-		return Saved_freelancers.delete(id);
+		return SavedFreelancers.delete(id);
 	}
 
 };

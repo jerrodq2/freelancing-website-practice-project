@@ -2,29 +2,29 @@
 
 
 const Model = require('./model');
-const educationHistory = new Model('education_history');
+const EducationHistory = new Model('education_history');
 
 
 module.exports = {
 	// get all the education_history for one user
 	getAll (freelancer_id) {
-		return educationHistory.findHistory(freelancer_id);
+		return EducationHistory.findHistory(freelancer_id);
 	},
 
 	findOne (id) {
-		return educationHistory.findOne(id);
+		return EducationHistory.findOne(id);
 	},
 
 	create (data) {
-		return educationHistory.create(data);
+		return EducationHistory.create(data);
 	},
 
 	update (id, data) {
-		return educationHistory.updateById(id, data);
+		return EducationHistory.updateById(id, data);
 	},
 
 	delete (id) {
-		return educationHistory.delete(id);
+		return EducationHistory.delete(id);
 	}
 
 };

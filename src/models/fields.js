@@ -8,7 +8,7 @@ const Fields = new Model('fields');
 module.exports = {
 
 	getAll () {
-		// determine if this is necessary
+		// TODO: determine if this is necessary
 	},
 
 	findOne (id) {

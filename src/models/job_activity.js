@@ -3,7 +3,7 @@
 
 const knex = require('../config/knex');
 const Model = require('./model');
-const jobActivity = new Model('job_activity');
+const JobActivity = new Model('job_activity');
 
 
 module.exports = {
@@ -19,21 +19,21 @@ module.exports = {
 			.innerJoin('jobs as j', 'job_activity.job_id', 'j.id')
 			.innerJoin('clients as c', 'job_activity.client_id', 'c.id');
 	},
-	// may make adjustments to include the joins used above
+	// TODO: may make adjustments to include the joins used above
 	findOne (id) {
-		return jobActivity.findOne(id);
+		return JobActivity.findOne(id);
 	},
 
 	create (data) {
-		return jobActivity.create(data);
+		return JobActivity.create(data);
 	},
 
 	update (id, data) {
-		return jobActivity.updateById(id, data);
+		return JobActivity.updateById(id, data);
 	},
 
 	delete (id) {
-		return jobActivity.delete(id);
+		return JobActivity.delete(id);
 	}
 
 };

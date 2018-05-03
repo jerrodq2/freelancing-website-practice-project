@@ -58,7 +58,7 @@ class Model {
 	}
 
 
-	// add boom errors for not found, doesn't currently give any indication other than an empty object
+	// TODO: add boom errors for not found, doesn't currently give any indication other than an empty object
 	updateById (id, data) {
 		data.updated_at = new Date();
 		return knex(this.tableName).where({ id }).update(data).returning('*')
@@ -66,8 +66,8 @@ class Model {
 	}
 
 
-	// test cascading delete (ex: delete a client, does that client's job dissappear as well?)
-	// setup Boom to deal with not found cases (doesn't error out, simply returns a 0)
+	// TODO: test cascading delete (ex: delete a client, does that client's job dissappear as well?)
+	// TODO: setup Boom to deal with not found cases (doesn't error out, simply returns a 0)
 	delete (id) {
 		return knex(this.tableName).where({ id }).del()
 			// temporary, returns 1 if successful or 0 if not found

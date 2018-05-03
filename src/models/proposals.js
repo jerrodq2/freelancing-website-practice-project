@@ -9,7 +9,7 @@ const Proposals = new Model('proposals');
 module.exports = {
 
 	getAll () {
-		// to be setup with pagination later
+		// TODO: to be setup with pagination later
 	},
 	findOne (id) {
 		// specify the columns I want from each table
