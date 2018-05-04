@@ -1,65 +1,61 @@
 'use strict';
 
 
-const fields = require(`${process.cwd()}/seeds/ids/fields`);
-const clients = require(`${process.cwd()}/seeds/ids/clients`);
-const { hashPassword } = require(`${process.cwd()}/src/lib/helper_functions`);
+const fieldIds = require(`${process.cwd()}/seeds/ids/fields`);
+const clientIds = require(`${process.cwd()}/seeds/ids/clients`);
+const Clients = require(`${process.cwd()}/src/models/clients`);
 
-exports.seed = (knex) => {
+exports.seed = async (knex) => {
 	// Deletes ALL existing entries
-	return knex('clients').del()
+	await knex('clients').del();
+	// Inserts seed entries
+	return Promise.all([
+		Clients.create({
+			id: clientIds.jack,
+			first_name: 'Jack',
+			last_name: 'Reacher',
+			username: 'jackreacher',
+			email: 'jack@reacher.com',
+			password: 'password',
+			gender: 'male',
+			age: 34,
+			field_id: fieldIds.front_end,
+			summary: 'Great client, I am very smart',
+			state: 'TX',
+			city: 'Dallas',
+			zip: '75289'
+		}),
 
-		.then(function () {
-		// Inserts seed entries
-			return knex('clients').insert([
-				{
-					id: clients.jack,
-					first_name: 'Jack',
-					last_name: 'Reacher',
-					username: 'jackreacher',
-					email: 'jack@reacher.com',
-					password: hashPassword('password'),
-					gender: 'male',
-					age: 34,
-					field_id: fields.front_end,
-					summary: 'Great client, I am very smart',
-					state: 'TX',
-					city: 'Dallas',
-					zip: '75289',
-					created_at: new Date()
-				},
+		Clients.create({
+			id: clientIds.sherlock,
+			first_name: 'Sherlock',
+			last_name: 'Holmes',
+			username: 'sherlockholmes',
+			email: 'sherlock@holmes.com',
+			password: 'password',
+			gender: 'male',
+			age: 27,
+			field_id: fieldIds.full_stack,
+			summary: 'Got sick of Watson',
+			state: 'TX',
+			city: 'San Antonio',
+			zip: '75050'
+		}),
 
-				{
-					id: clients.sherlock,
-					first_name: 'Sherlock',
-					last_name: 'Holmes',
-					username: 'sherlockholmes',
-					email: 'sherlock@holmes.com',
-					password: hashPassword('password'),
-					gender: 'male',
-					age: 27,
-					field_id: fields.full_stack,
-					summary: 'Got sick of Watson',
-					state: 'TX',
-					city: 'San Antonio',
-					created_at: new Date()
-				},
-
-				{
-					id: clients.bruce,
-					first_name: 'Bruce',
-					last_name: 'Wayne',
-					username: 'brucewayne',
-					email: 'bruce@wayne.com',
-					password: hashPassword('password'),
-					gender: 'male',
-					age: 45,
-					field_id: fields.software,
-					summary: 'I expect the best.',
-					state: 'TX',
-					city: 'Gotham',
-					created_at: new Date()
-				}
-			]);
-		});
+		Clients.create({
+			id: clientIds.bruce,
+			first_name: 'Bruce',
+			last_name: 'Wayne',
+			username: 'brucewayne',
+			email: 'bruce@wayne.com',
+			password: 'password',
+			gender: 'male',
+			age: 45,
+			field_id: fieldIds.software,
+			summary: 'I expect the best.',
+			state: 'TX',
+			city: 'Gotham',
+			zip: '75289'
+		}),
+	]);
 };

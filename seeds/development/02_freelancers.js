@@ -1,91 +1,84 @@
 'use strict';
 
 
-const fields = require(`${process.cwd()}/seeds/ids/fields`);
-const freelancers = require(`${process.cwd()}/seeds/ids/freelancers`);
-const { hashPassword } = require(`${process.cwd()}/src/lib/helper_functions`);
+const fieldIds = require(`${process.cwd()}/seeds/ids/fields`);
+const freelancerIds = require(`${process.cwd()}/seeds/ids/freelancers`);
+const Freelancers = require(`${process.cwd()}/src/models/freelancers`);
 
-exports.seed = (knex) => {
+exports.seed = async (knex) => {
 	// Deletes ALL existing entries
-	return knex('freelancers').del()
+	await knex('freelancers').del();
+	// Inserts seed entries
+	return Promise.all([
+		Freelancers.create({
+			id: freelancerIds.jerrod,
+			first_name: 'Jerrod',
+			last_name: 'Quintana',
+			username: 'jerrod',
+			email: 'j@j.com',
+			password: 'password',
+			job_title: 'Full Stack Web Developer',
+			rate: 45,
+			gender: 'male',
+			age: 25,
+			field_id: fieldIds.full_stack,
+			summary: 'full stack web developer proficient with Node.js, Ruby on Rails, .Net, React, Angular, and Wordpress',
+			state: 'TX',
+			city: 'Dallas',
+			experience_level: 'expert'
+		}),
 
-		.then(function () {
-		// Inserts seed entries
-			return knex('freelancers').insert([
-				{
-					id: freelancers.jerrod,
-					first_name: 'Jerrod',
-					last_name: 'Quintana',
-					username: 'jerrod',
-					email: 'j@j.com',
-					password: hashPassword('password'),
-					job_title: 'Full Stack Web Developer',
-					rate: 45,
-					gender: 'male',
-					age: 25,
-					field_id: fields.full_stack,
-					summary: 'full stack web developer proficient with Node.js, Ruby on Rails, .Net, React, Angular, and Wordpress',
-					state: 'TX',
-					city: 'Dallas',
-					experience_level: 'expert',
-					created_at: new Date()
-				},
+		Freelancers.create({
+			id: freelancerIds.ryan,
+			first_name: 'Ryan',
+			last_name: 'Quintana',
+			username: 'ryan',
+			email: 'r@r.com',
+			password: 'password',
+			job_title: 'Front End Web Developer',
+			rate: 33,
+			gender: 'male',
+			age: 25,
+			field_id: fieldIds.front_end,
+			summary: '7 years of experience building breathtaking front end websites',
+			state: 'TX',
+			city: 'Dallas',
+			experience_level: 'intermediate'
+		}),
 
-				{
-					id: freelancers.ryan,
-					first_name: 'Ryan',
-					last_name: 'Quintana',
-					username: 'ryan',
-					email: 'r@r.com',
-					password: hashPassword('password'),
-					job_title: 'Front End Web Developer',
-					rate: 33,
-					gender: 'male',
-					age: 25,
-					field_id: fields.front_end,
-					summary: '7 years of experience building breathtaking front end websites',
-					state: 'TX',
-					city: 'Dallas',
-					experience_level: 'intermediate',
-					created_at: new Date()
-				},
+		Freelancers.create({
+			id: freelancerIds.jessica,
+			first_name: 'Jessica',
+			last_name: 'Jones',
+			username: 'jessica',
+			email: 'jjones@j.com',
+			password: 'password',
+			job_title: 'database',
+			rate: 20,
+			age: 29,
+			gender: 'female',
+			field_id: fieldIds.database,
+			state: 'TX',
+			city: 'Austin',
+			experience_level: 'entry'
+		}),
 
-				{
-					id: freelancers.jessica,
-					first_name: 'Jessica',
-					last_name: 'Jones',
-					username: 'jessica',
-					email: 'jjones@j.com',
-					password: hashPassword('password'),
-					job_title: 'database',
-					rate: 20,
-					age: 29,
-					gender: 'female',
-					field_id: fields.database,
-					state: 'TX',
-					city: 'Austin',
-					experience_level: 'entry',
-					created_at: new Date()
-				},
-
-				{
-					id: freelancers.naruto,
-					first_name: 'Naruto',
-					last_name: 'Uzumaki',
-					username: 'naruto',
-					email: 'n@u.com',
-					password: hashPassword('password'),
-					job_title: 'Wordpress Developer',
-					rate: 30,
-					gender: 'male',
-					age: 32,
-					field_id: fields.front_end,
-					summary: 'I specialize in all things Wordpress, taijutsu, ninjutsu, talk no jutsu, etc.',
-					state: 'TX',
-					city: 'Dallas',
-					experience_level: 'expert',
-					created_at: new Date()
-				}
-			]);
-		});
+		Freelancers.create({
+			id: freelancerIds.naruto,
+			first_name: 'Naruto',
+			last_name: 'Uzumaki',
+			username: 'naruto',
+			email: 'n@u.com',
+			password: 'password',
+			job_title: 'Wordpress Developer',
+			rate: 30,
+			gender: 'male',
+			age: 32,
+			field_id: fieldIds.front_end,
+			summary: 'I specialize in all things Wordpress, taijutsu, ninjutsu, talk no jutsu, etc.',
+			state: 'TX',
+			city: 'Dallas',
+			experience_level: 'expert'
+		})
+	]);
 };

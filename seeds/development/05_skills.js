@@ -1,69 +1,26 @@
 'use strict';
 
 
-exports.seed = (knex) => {
-	// Deletes ALL existing entries
-	return knex('skills').del()
+const Skills = require(`${process.cwd()}/src/models/skills`);
 
-		.then(function () {
-		// Inserts seed entries
-			return knex('skills').insert([
-				{
-					skill: 'mean',
-					created_at: new Date()
-				},
-				{
-					skill: 'nodejs',
-					created_at: new Date()
-				},
-				{
-					skill: 'ruby on rails',
-					created_at: new Date()
-				},
-				{
-					skill: 'reactjs',
-					created_at: new Date()
-				},
-				{
-					skill: 'angularjs',
-					created_at: new Date()
-				},
-				{
-					skill: '.net',
-					created_at: new Date()
-				},
-				{
-					skill: 'html',
-					created_at: new Date()
-				},
-				{
-					skill: 'css',
-					created_at: new Date()
-				},
-				{
-					skill: 'bootstrap',
-					created_at: new Date()
-				},
-				{
-					skill: 'jquery',
-					created_at: new Date()
-				},
-				{
-					skill: 'sql',
-					created_at: new Date()
-				},
-				{
-					skill: 'mysql',
-					created_at: new Date()
-				},
-				{
-					skill: 'analyst',
-					created_at: new Date()
-				},
-				{
-					skill: 'wordpress',
-					created_at: new Date()
-				},
-			]);
-		});
+exports.seed = async (knex) => {
+	// Deletes ALL existing entries
+	await knex('skills').del();
+	// Inserts seed entries
+	return Promise.all([
+		Skills.create('mean'),
+		Skills.create('nodejs'),
+		Skills.create('ruby on rails'),
+		Skills.create('reactjs'),
+		Skills.create('angularjs'),
+		Skills.create('.net'),
+		Skills.create('html'),
+		Skills.create('css'),
+		Skills.create('bootstrap'),
+		Skills.create('jquery'),
+		Skills.create('sql'),
+		Skills.create('mysql'),
+		Skills.create('analyst'),
+		Skills.create('wordpress'),
+	]);
 };

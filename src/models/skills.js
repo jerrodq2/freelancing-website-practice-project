@@ -9,7 +9,7 @@ const Skills = new Model('skills');
 module.exports = {
 
 	getAll () {
-		// determine if this is necessary
+		// TODO: determine if this is necessary
 	},
 
 	findOne (id) {

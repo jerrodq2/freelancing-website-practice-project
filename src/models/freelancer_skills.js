@@ -4,18 +4,18 @@
 const knex = require('../config/knex');
 const Model = require('./model');
 const Skills = require('./skills');
-const Freelancer_skills = new Model('freelancer_skills');
+const FreelancerSkills = new Model('freelancer_skills');
 
 
 module.exports = {
 
 	getAll () {
-		// determine if this is necessary, perhaps a getAll by freelancer id? Or another getAll method by skill id?
+		// TODO: determine if this is necessary, perhaps a getAll by freelancer id? Or another getAll method by skill id?
 	},
 
 
 	findOne (id) {
-		return Freelancer_skills.findOne(id);
+		return FreelancerSkills.findOne(id);
 	},
 
 
@@ -40,17 +40,17 @@ module.exports = {
 			// if the freelancer already has this skill we return
 			if (checkOnFreelancer) return false; // look into more appropriate message upon return
 		}
-		return Freelancer_skills.create(finalData);
+		return FreelancerSkills.create(finalData);
 	},
 
 
 	update (id, data) {
-		return Freelancer_skills.updateById(id, data);
+		return FreelancerSkills.updateById(id, data);
 	},
 
 
 	delete (id) {
-		return Freelancer_skills.delete(id);
+		return FreelancerSkills.delete(id);
 	}
 
 };

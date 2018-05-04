@@ -1,73 +1,62 @@
 'use strict';
 
 
-const knex = require(`${process.cwd()}/src/config/knex`);
-const fields = require(`${process.cwd()}/seeds/ids/fields`);
-const { hashPassword } = require(`${process.cwd()}/src/lib/helper_functions`);
-
+const Admins = require(`${process.cwd()}/src/models/admins`);
+const Fields = require(`${process.cwd()}/src/models/fields`);
+const fieldIds = require(`${process.cwd()}/seeds/ids/fields`);
 
 const internals = {
 	createAdmin () {
-		return knex('admins').insert({
+		return Admins.create({
 			first_name: `${process.env.ADMIN_FIRST_NAME}`,
 			last_name: `${process.env.ADMIN_LAST_NAME}`,
 			username: `${process.env.ADMIN_USERNAME}`,
 			email: `${process.env.ADMIN_EMAIL}`,
-			password: hashPassword(`${process.env.ADMIN_PASSWORD}`),
-			created_at: new Date() });
+			password: `${process.env.ADMIN_PASSWORD}`
+		});
 	},
 
 	createFields () {
 		const queries = [
-			knex('fields').insert({
-				id: fields.full_stack,
-				field: 'Full Stack Web Development',
-				created_at: new Date()
+			Fields.create({
+				id: fieldIds.full_stack,
+				field: 'Full Stack Web Development'
 			}),
-			knex('fields').insert({
-				id: fields.front_end,
-				field: 'Front End Web Development',
-				created_at: new Date()
+			Fields.create({
+				id: fieldIds.front_end,
+				field: 'Front End Web Development'
 			}),
-			knex('fields').insert({
-				id: fields.back_end,
-				field: 'Back End Web Development',
-				created_at: new Date()
+			Fields.create({
+				id: fieldIds.back_end,
+				field: 'Back End Web Development'
 			}),
-			knex('fields').insert({
-				id: fields.software,
-				field: 'Software Engineering',
-				created_at: new Date()
+			Fields.create({
+				id: fieldIds.software,
+				field: 'Software Engineering'
 			}),
-			knex('fields').insert({
-				id: fields.mobile_app,
-				field: 'Mobile App Development',
-				created_at: new Date()
+			Fields.create({
+				id: fieldIds.mobile_app,
+				field: 'Mobile App Development'
 			}),
-			knex('fields').insert({
-				id: fields.web_and_mobile,
-				field: 'Web & Mobile Design',
-				created_at: new Date()
+			Fields.create({
+				id: fieldIds.web_and_mobile,
+				field: 'Web & Mobile Design'
 			}),
-			knex('fields').insert({
-				id: fields.database,
-				field: 'Database Administration',
-				created_at: new Date()
+			Fields.create({
+				id: fieldIds.database,
+				field: 'Database Administration'
 			}),
-			knex('fields').insert({
-				id: fields.ecommerce,
-				field: 'Ecommerce Development',
-				created_at: new Date()
+			Fields.create({
+				id: fieldIds.ecommerce,
+				field: 'Ecommerce Development'
 			}),
-			knex('fields').insert({
-				id: fields.qa,
-				field: 'QA & Testing',
-				created_at: new Date()
+			Fields.create({
+				id: fieldIds.qa,
+				field: 'QA & Testing'
 			}),
-			knex('fields').insert({
-				id: fields.other,
-				field: 'Other',
-				created_at: new Date()
+			Fields.create({
+				id: fieldIds.other,
+				field: 'Other'
 			}),
 		];
 

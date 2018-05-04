@@ -9,7 +9,7 @@ const Jobs = new Model('jobs');
 module.exports = {
 
 	getAll () {
-		// to be setup with pagination later
+		// TODO: to be setup with pagination later
 	},
 
 	findOne (id) {

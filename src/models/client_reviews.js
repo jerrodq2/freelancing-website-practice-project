@@ -2,30 +2,31 @@
 
 
 const Model = require('./model');
-const Client_reviews = new Model('client_reviews');
+const ClientReviews = new Model('client_reviews');
 
 
 module.exports = {
-	// Should we have more specific methods, like finding all reviews that have been written by a freelancer or about a client?
+	// TODO: Should we have more specific methods? like finding all reviews that have been written by a freelancer or about a client?
 
 	getAll () {
-		// need to determine what I will pull from get all, client/freelancer names? Anything? Or just the review/rating?
+		// TODO: need to determine what I will pull from get all, client/freelancer names? Anything? Or just the review/rating?
 	},
 
 	findOne (id) {
-		return Client_reviews.findReview(id);
+		return ClientReviews.findReview(id);
 	},
 
+	// TODO: ensure that there can only be on review per client-job-freelancer. Meaning a freelancer can only write a review for a client once per relevant job. They can only write a second review about that client if they take another job with that client. 
 	create (data) {
-		return Client_reviews.create(data);
+		return ClientReviews.create(data);
 	},
 
 	update (id, data) {
-		return Client_reviews.updateById(id, data);
+		return ClientReviews.updateById(id, data);
 	},
 
 	delete (id) {
-		return Client_reviews.delete(id);
+		return ClientReviews.delete(id);
 	}
 
 };
