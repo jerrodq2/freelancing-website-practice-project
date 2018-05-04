@@ -8,19 +8,19 @@ exports.seed = async (knex) => {
 	await knex('skills').del();
 	// Inserts seed entries
 	return Promise.all([
-		Skills.create({ skill: 'mean' }),
-		Skills.create({ skill: 'nodejs' }),
-		Skills.create({ skill: 'ruby on rails' }),
-		Skills.create({ skill: 'reactjs' }),
-		Skills.create({ skill: 'angularjs' }),
-		Skills.create({ skill: '.net' }),
-		Skills.create({ skill: 'html' }),
-		Skills.create({ skill: 'css' }),
-		Skills.create({ skill: 'bootstrap' }),
-		Skills.create({ skill: 'jquery' }),
-		Skills.create({ skill: 'sql' }),
-		Skills.create({ skill: 'mysql' }),
-		Skills.create({ skill: 'analyst' }),
-		Skills.create({ skill: 'wordpress' }),
+		Skills.create('mean'),
+		Skills.create('nodejs'),
+		Skills.create('ruby on rails'),
+		Skills.create('reactjs'),
+		Skills.create('angularjs'),
+		Skills.create('.net'),
+		Skills.create('html'),
+		Skills.create('css'),
+		Skills.create('bootstrap'),
+		Skills.create('jquery'),
+		Skills.create('sql'),
+		Skills.create('mysql'),
+		Skills.create('analyst'),
+		Skills.create('wordpress'),
 	]);
 };
