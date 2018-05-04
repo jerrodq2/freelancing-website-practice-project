@@ -6,6 +6,7 @@ const clientIds = require(`${process.cwd()}/seeds/ids/clients`);
 const jobIds = require(`${process.cwd()}/seeds/ids/jobs`);
 const FreelancerReviews = require(`${process.cwd()}/src/models/freelancer_reviews`);
 
+// TODO: More seed reviews
 exports.seed = async (knex) => {
 	// Deletes ALL existing entries
 	await knex('freelancer_reviews').del();

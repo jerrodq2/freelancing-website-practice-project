@@ -22,6 +22,7 @@ exports.seed = async (knex) => {
 		EmploymentHistory.create({
 			title: 'Front end developer',
 			company: 'Google',
+			summary: 'Greatest job i\'ve ever had...',
 			start_date: format(new Date(2015, 5, 1), 'YYYY-MM-DD'),
 			end_date: format(new Date(2016, 1, 1), 'YYYY-MM-DD'),
 			freelancer_id: freelancerIds.ryan
@@ -29,6 +30,7 @@ exports.seed = async (knex) => {
 		EmploymentHistory.create({
 			title: 'Front end developer',
 			company: 'Verizon',
+			summary: 'Was secondary team lead',
 			start_date: format(new Date(2016, 2, 1), 'YYYY-MM-DD'),
 			present_job: true,
 			freelancer_id: freelancerIds.ryan
@@ -36,6 +38,7 @@ exports.seed = async (knex) => {
 		EmploymentHistory.create({
 			title: 'Database developer',
 			company: 'CREF',
+			summary: 'worked entirely in database', 
 			start_date: format(new Date(2017, 5, 1), 'YYYY-MM-DD'),
 			end_date: format(new Date(2018, 2, 1), 'YYYY-MM-DD'),
 			freelancer_id: freelancerIds.jessica

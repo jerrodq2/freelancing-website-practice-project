@@ -14,7 +14,8 @@ module.exports = {
 	findOne (id) {
 		return EmploymentHistory.findOne(id);
 	},
-
+	
+	// TODO: Limit on number of records per freelancer?
 	create (data) {
 		return EmploymentHistory.create(data);
 	},

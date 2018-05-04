@@ -14,6 +14,7 @@ exports.seed = async (knex) => {
 			degree: 'Bachelors',
 			school: 'Texas Tech University',
 			area_of_study: 'IT',
+			description: 'Good school',
 			start_date: format(new Date(2011, 8, 1), 'YYYY-MM-DD'),
 			end_date: format(new Date(2015, 3, 1), 'YYYY-MM-DD'),
 			freelancer_id: freelancerIds.jerrod
@@ -23,6 +24,7 @@ exports.seed = async (knex) => {
 			degree: 'n/a',
 			school: 'Coding Dojo',
 			area_of_study: 'Full Stack Wev Development',
+			description: 'Coding Bootcamp that teaches 3 full stacks',
 			start_date: format(new Date(2016, 8, 1), 'YYYY-MM-DD'),
 			end_date: format(new Date(2016, 12, 24), 'YYYY-MM-DD'),
 			freelancer_id: freelancerIds.jerrod
@@ -32,6 +34,7 @@ exports.seed = async (knex) => {
 			degree: 'Masters',
 			school: 'Texas Tech University',
 			area_of_study: 'IT',
+			description: 'Great campus',
 			start_date: format(new Date(2011, 8, 1), 'YYYY-MM-DD'),
 			end_date: format(new Date(2015, 3, 1), 'YYYY-MM-DD'),
 			freelancer_id: freelancerIds.ryan
@@ -41,6 +44,7 @@ exports.seed = async (knex) => {
 			degree: 'Bachelors',
 			school: 'University Of North Texas',
 			area_of_study: 'IT',
+			description: 'Joined the honor society',
 			start_date: format(new Date(2011, 8, 1), 'YYYY-MM-DD'),
 			end_date: format(new Date(2015, 3, 1), 'YYYY-MM-DD'),
 			freelancer_id: freelancerIds.jessica

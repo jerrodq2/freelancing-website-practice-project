@@ -15,6 +15,7 @@ module.exports = {
 		return EducationHistory.findOne(id);
 	},
 
+	// TODO: Limit on number of records per freelancer?
 	create (data) {
 		return EducationHistory.create(data);
 	},

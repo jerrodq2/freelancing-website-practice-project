@@ -16,6 +16,7 @@ module.exports = {
 		return ClientReviews.findReview(id);
 	},
 
+	// TODO: ensure that there can only be on review per client-job-freelancer. Meaning a freelancer can only write a review for a client once per relevant job. They can only write a second review about that client if they take another job with that client. 
 	create (data) {
 		return ClientReviews.create(data);
 	},
