@@ -10,7 +10,7 @@ module.exports = {
 	mobile_app: '7bfd5e24-e5ed-4279-a08f-3f8926741ea3',
 	teaching: '21dac11f-4fad-4b0e-bcd8-19ac5645cfac',
 	hs_website: '298e8970-e7e0-4416-a82e-ce9d863c9e12',
-	ecommerce_repaire_site: '1dbd3e4e-b9bb-4950-9faa-0ef970b20e97',
+	ecommerce_repair_site: '1dbd3e4e-b9bb-4950-9faa-0ef970b20e97',
 	software_project: '556818f9-4833-45d1-b1cc-e4aba0c18aa0',
 	front_end_site: '30a698e1-afad-4d31-b5db-498c143f47af',
 	front_end_app: '0c755b5e-bf28-4168-95f3-ccdce0b347bb',

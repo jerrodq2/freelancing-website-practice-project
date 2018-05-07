@@ -109,7 +109,7 @@ exports.seed = async (knex) => {
 		}),
 
 		Jobs.create({
-			id: jobIds.ecommerce_repaire_site,
+			id: jobIds.ecommerce_repair_site,
 			title: 'Setting up ecommerce site to repari things',
 			rate: 15,
 			description: 'I want to setup an ecommerce site so I can sell small gizmos',
