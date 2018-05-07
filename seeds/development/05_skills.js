@@ -10,7 +10,9 @@ exports.seed = async (knex) => {
 	return Promise.all([
 		Skills.create('mean'),
 		Skills.create('nodejs'),
+		Skills.create('hapijs'),
 		Skills.create('ruby on rails'),
+		Skills.create('ruby'),
 		Skills.create('reactjs'),
 		Skills.create('angularjs'),
 		Skills.create('.net'),
@@ -18,8 +20,10 @@ exports.seed = async (knex) => {
 		Skills.create('css'),
 		Skills.create('bootstrap'),
 		Skills.create('jquery'),
+		Skills.create('ajax'),
 		Skills.create('sql'),
 		Skills.create('mysql'),
+		Skills.create('mongodb'),
 		Skills.create('analyst'),
 		Skills.create('wordpress'),
 	]);
