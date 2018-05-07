@@ -43,11 +43,60 @@ exports.seed = async (knex) => {
 		EducationHistory.create({
 			degree: 'Bachelors',
 			school: 'University Of North Texas',
-			area_of_study: 'IT',
+			area_of_study: 'Systems Administration',
 			description: 'Joined the honor society',
 			start_date: format(new Date(2011, 8, 1), 'YYYY-MM-DD'),
 			end_date: format(new Date(2015, 3, 1), 'YYYY-MM-DD'),
 			freelancer_id: freelancerIds.jessica
-		})
+		}),
+
+		EducationHistory.create({
+			degree: 'Bachelors',
+			school: 'Konoha - Ninja Academy',
+			area_of_study: 'n/a',
+			description: 'A pain but got my degree',
+			start_date: format(new Date(2011, 8, 1), 'YYYY-MM-DD'),
+			end_date: format(new Date(2015, 3, 1), 'YYYY-MM-DD'),
+			freelancer_id: freelancerIds.naruto
+		}),
+
+		EducationHistory.create({
+			degree: 'Associates',
+			school: 'Devry University',
+			area_of_study: 'Computer Science and Programming',
+			start_date: format(new Date(2011, 8, 1), 'YYYY-MM-DD'),
+			end_date: format(new Date(2015, 3, 1), 'YYYY-MM-DD'),
+			freelancer_id: freelancerIds.ichigo
+		}),
+
+		EducationHistory.create({
+			degree: 'Masters',
+			school: 'UA Academy',
+			area_of_study: 'IT',
+			description: 'Taught me the essentails of the IT field, also where I chose the hero name deku',
+			start_date: format(new Date(2005, 8, 1), 'YYYY-MM-DD'),
+			end_date: format(new Date(2009, 3, 1), 'YYYY-MM-DD'),
+			freelancer_id: freelancerIds.izuku
+		}),
+
+		EducationHistory.create({
+			degree: 'Bachelors',
+			school: 'New York University',
+			area_of_study: 'Art History',
+			description: '',
+			start_date: format(new Date(2002, 8, 1), 'YYYY-MM-DD'),
+			end_date: format(new Date(2006, 3, 1), 'YYYY-MM-DD'),
+			freelancer_id: freelancerIds.leon
+		}),
+
+		EducationHistory.create({
+			degree: 'Certification',
+			school: 'Hack Reactor',
+			area_of_study: 'IT',
+			description: 'Prestigous tech school',
+			start_date: format(new Date(2012, 5, 17), 'YYYY-MM-DD'),
+			end_date: format(new Date(2012, 9, 20), 'YYYY-MM-DD'),
+			freelancer_id: freelancerIds.leon
+		}),
 	]);
 };
