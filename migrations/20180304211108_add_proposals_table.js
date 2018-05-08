@@ -7,6 +7,7 @@ exports.up = (knex) => knex.schema.createTable('proposals', (table) => {
 	table.string('title').notNullable();
 	table.text('description').notNullable();
 	table.date('estimated_time_limit').nullable().index();
+	table.enum('status', ['pending', 'accepted', 'rejected']).notNullable().defaultTo('pending');
 	table.uuid('freelancer_id').notNullable().references('id').inTable('freelancers').onDelete('CASCADE');
 	table.uuid('client_id').notNullable().references('id').inTable('clients').onDelete('CASCADE');
 	table.uuid('job_id').notNullable().references('id').inTable('jobs').onDelete('CASCADE');

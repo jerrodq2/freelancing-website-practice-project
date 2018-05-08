@@ -5,7 +5,7 @@ const { ALL_STATES } = require(`${process.cwd()}/src/lib/constants`);
 
 // creates the freelancers table. These are users that accept jobs from clients. They can use the 'proposals' table to send a proposal for a job, basically saying why they should get the job and asking the client to give them that job
 
-// TODO: Possibly add Regex for phone, zipcode, dob, and email
+// TODO: setup Regex for phone, zipcode, dob, and email via routes and Joi
 exports.up = (knex) => knex.schema.createTable('freelancers', (table) => {
 	table.uuid('id').notNullable().primary().defaultTo(knex.raw('gen_random_uuid()'));
 	table.string('first_name').notNullable();
