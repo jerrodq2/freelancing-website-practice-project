@@ -29,6 +29,14 @@ exports.seed = async (knex) => {
 
 		FreelancerReviews.create({
 			rating: 4,
+			review: 'Very fast, he was able to answer all my questions and was very receptive. A few small bugs that had to be worked out in the beginning, nothing major.',
+			freelancer_id: freelancerIds.naruto,
+			client_id: clientIds.bruce,
+			job_id: jobIds.personal_website
+		}),
+
+		FreelancerReviews.create({
+			rating: 4,
 			review: 'Very knowledgeable and skilled',
 			freelancer_id: freelancerIds.izuku,
 			client_id: clientIds.peter,
