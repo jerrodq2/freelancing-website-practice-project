@@ -112,5 +112,15 @@ exports.seed = async (knex) => {
 			client_id: clientIds.natasha,
 			job_id: jobIds.wordpress_site
 		}),
+
+		Proposals.create({
+			title: 'I can build you a great site!',
+			description: 'I specialize in the database, and I have experience in full stack development.',
+			status: 'accepted',
+			estimated_time_limit: futureDateOne,
+			freelancer_id: freelancerIds.jessica,
+			client_id: clientIds.natasha,
+			job_id: jobIds.full_stack_site
+		}),
 	]);
 };

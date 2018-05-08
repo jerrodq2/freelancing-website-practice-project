@@ -187,6 +187,18 @@ exports.seed = async (knex) => {
 			client_id: clientIds.natasha,
 		}),
 
+		Jobs.create({
+			id: jobIds.full_stack_site,
+			title: 'Need website, database and front end expert needed',
+			rate: 40,
+			description: 'I\'m in need of a website, need all of the pieces, database, front end, etc.',
+			experience_level_requested: 'expert',
+			field_id: fieldIds.database,
+			client_id: clientIds.natasha,
+			freelancer_id: clientIds.jessica,
+			open: false
+		}),
+
 
 	]);
 };

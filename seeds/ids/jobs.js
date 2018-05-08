@@ -17,4 +17,5 @@ module.exports = {
 	testing_app: 'e571ca50-6a9b-4fae-a6f6-3dbee44e29bc',
 	wordpress_site: 'b39add5e-ab0e-4090-ab04-ea36c27faf1d',
 	database_for_app: '16b3cf22-3b26-411e-8a54-b0cb8bbabc38',
+	full_stack_site: '9518859a-50ef-4739-908c-c19d656be349',
 };
