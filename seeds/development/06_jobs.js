@@ -116,7 +116,7 @@ exports.seed = async (knex) => {
 			experience_level_requested: 'any',
 			field_id: fieldIds.ecommerce,
 			client_id: clientIds.peter,
-			freelancer_id: clientIds.izuku,
+			freelancer_id: freelancerIds.izuku,
 			open: false,
 		}),
 
@@ -173,7 +173,7 @@ exports.seed = async (knex) => {
 			experience_level_requested: 'any',
 			field_id: fieldIds.front_end,
 			client_id: clientIds.natasha,
-			freelancer_id: clientIds.jerrod,
+			freelancer_id: freelancerIds.jerrod,
 			open: false
 		}),
 
@@ -195,7 +195,7 @@ exports.seed = async (knex) => {
 			experience_level_requested: 'expert',
 			field_id: fieldIds.database,
 			client_id: clientIds.natasha,
-			freelancer_id: clientIds.jessica,
+			freelancer_id: freelancerIds.jessica,
 			open: false
 		}),
 
