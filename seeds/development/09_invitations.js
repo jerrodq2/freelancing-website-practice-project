@@ -20,6 +20,15 @@ exports.seed = async (knex) => {
 	// Inserts seed entries
 	return Promise.all([
 		Invitations.create({
+			title: 'Basic website needed',
+			description: 'Saw you were an experienced freelancer, I need help with a website to market my business.',
+			status: 'pending',
+			freelancer_id: freelancerIds.dick,
+			client_id: clientIds.jack,
+			job_id: jobIds.basic_website
+		}),
+
+		Invitations.create({
 			title: 'Desperately need a wordpress developer',
 			description: 'Need some help, can you do it?',
 			status: 'accepted',
@@ -27,6 +36,33 @@ exports.seed = async (knex) => {
 			freelancer_id: freelancerIds.naruto,
 			client_id: clientIds.bruce,
 			job_id: jobIds.personal_website
+		}),
+
+		Invitations.create({
+			title: 'Saw you had some experience',
+			description: 'Need an ecommerce site where I can sell repaired items, saw you\'ve done similar projects in the past.',
+			status: 'accepted',
+			freelancer_id: freelancerIds.izuku,
+			client_id: clientIds.peter,
+			job_id: jobIds.ecommerce_repair_site
+		}),
+
+		Invitations.create({
+			title: 'Need someone to show me the ropes',
+			description: 'Can you help?',
+			status: 'pending',
+			freelancer_id: freelancerIds.leon,
+			client_id: clientIds.steve,
+			job_id: jobIds.teaching
+		}),
+
+		Invitations.create({
+			title: 'Need someone to show me the ropes',
+			description: 'Can you help?',
+			status: 'rejected',
+			freelancer_id: freelancerIds.jerrod,
+			client_id: clientIds.steve,
+			job_id: jobIds.teaching
 		}),
 
 	]);
