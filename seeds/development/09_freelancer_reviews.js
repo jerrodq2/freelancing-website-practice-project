@@ -6,6 +6,7 @@ const clientIds = require(`${process.cwd()}/seeds/ids/clients`);
 const jobIds = require(`${process.cwd()}/seeds/ids/jobs`);
 const FreelancerReviews = require(`${process.cwd()}/src/models/freelancer_reviews`);
 
+// TODO: perhaps refactor these seeds to be similar to how I intended to make the route. by creating up to 5 skills at a time for freelancers, so perhaps sending an array with up to 5 skills? Though this may only happen in the route, hitting the model once per index of the array. Will become more clear when I work on the route.
 exports.seed = async (knex) => {
 	// Deletes ALL existing entries
 	await knex('freelancer_reviews').del();
