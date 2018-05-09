@@ -33,13 +33,14 @@ module.exports = {
 			skillId = skill.id;
 		}
 		// If we just created the given skill, then the freelancer can't already have the skill so the below check is meaningless and we skip
-		const finalData = { freelancer_id: data.freelancer_id, skill_id: skillId, skill_alias: data.skill };
+		const finalData = { freelancer_id: data.freelancer_id, skill_id: skillId };
 		if (!wasSkillCreated) {
 			// now that we have the skillId, we make sure that the freelancer doesn't already have this skill
 			const checkOnFreelancer = await knex('freelancer_skills').where(finalData).then((result) => result[0]);
 			// if the freelancer already has this skill we return
 			if (checkOnFreelancer) return false; // look into more appropriate message upon return
 		}
+		finalData.skill_alias = data.skill;
 		return FreelancerSkills.create(finalData);
 	},
 
