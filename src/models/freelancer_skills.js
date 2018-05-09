@@ -22,11 +22,11 @@ module.exports = {
 	async create (data) {
 		let skillId, wasSkillCreated = false;
 		// first we check to see if this skill already exists in the db, if not, we create it
-		data.skill = data.skill.toLowerCase();
-		const skill = await Skills.findByName(data.skill);
+		const lowercase = data.skill.toLowerCase();
+		const skill = await Skills.findByName(lowercase);
 
 		if (!skill) {
-			const newSkill = await Skills.create(data.skill);
+			const newSkill = await Skills.create(lowercase);
 			wasSkillCreated = true;
 			skillId = newSkill.id;
 		} else {
@@ -40,6 +40,7 @@ module.exports = {
 			// if the freelancer already has this skill we return
 			if (checkOnFreelancer) return false; // look into more appropriate message upon return
 		}
+		finalData.skill_alias = data.skill;
 		return FreelancerSkills.create(finalData);
 	},
 

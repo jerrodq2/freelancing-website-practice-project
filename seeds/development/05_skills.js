@@ -26,5 +26,6 @@ exports.seed = async (knex) => {
 		Skills.create('mongodb'),
 		Skills.create('analyst'),
 		Skills.create('wordpress'),
+		Skills.create('database'),
 	]);
 };
