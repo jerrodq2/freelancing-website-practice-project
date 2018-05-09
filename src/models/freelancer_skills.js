@@ -22,18 +22,18 @@ module.exports = {
 	async create (data) {
 		let skillId, wasSkillCreated = false;
 		// first we check to see if this skill already exists in the db, if not, we create it
-		data.skill = data.skill.toLowerCase();
-		const skill = await Skills.findByName(data.skill);
+		const lowercase = data.skill.toLowerCase();
+		const skill = await Skills.findByName(lowercase);
 
 		if (!skill) {
-			const newSkill = await Skills.create(data.skill);
+			const newSkill = await Skills.create(lowercase);
 			wasSkillCreated = true;
 			skillId = newSkill.id;
 		} else {
 			skillId = skill.id;
 		}
 		// If we just created the given skill, then the freelancer can't already have the skill so the below check is meaningless and we skip
-		const finalData = { freelancer_id: data.freelancer_id, skill_id: skillId };
+		const finalData = { freelancer_id: data.freelancer_id, skill_id: skillId, skill_alias: data.skill };
 		if (!wasSkillCreated) {
 			// now that we have the skillId, we make sure that the freelancer doesn't already have this skill
 			const checkOnFreelancer = await knex('freelancer_skills').where(finalData).then((result) => result[0]);
