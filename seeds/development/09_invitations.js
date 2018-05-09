@@ -16,7 +16,7 @@ futureDateTwo.setDate(today.getDate()+10);
 
 exports.seed = async (knex) => {
 	// Deletes ALL existing entries
-	await knex('proposals').del();
+	await knex('invitations').del();
 	// Inserts seed entries
 	return Promise.all([
 		Invitations.create({

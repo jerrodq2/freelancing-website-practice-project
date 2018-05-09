@@ -3,7 +3,7 @@
 
 const { ALL_STATES } = require(`${process.cwd()}/src/lib/constants`);
 
-// creates the jobs table. These are contracts/projects that are posted by clients and accepted by freelancers. 
+// creates the jobs table. These are contracts/projects that are posted by clients and accepted by freelancers.
 exports.up = (knex) => knex.schema.createTable('jobs', (table) => {
 	table.uuid('id').notNullable().primary().defaultTo(knex.raw('gen_random_uuid()'));
 	table.string('title').notNullable().index();
@@ -17,7 +17,8 @@ exports.up = (knex) => knex.schema.createTable('jobs', (table) => {
 	table.string('city').nullable();
 	table.string('zip').nullable().index();
 	table.boolean('onsite_required').notNullable().defaultTo(false);
-	table.boolean('open').notNullable().defaultTo(true).index();
+	table.boolean('available').notNullable().defaultTo(true).index(); // to show if the job is currently open to new freelancers
+	table.boolean('closed').notNullable().defaultTo(false).index(); // to show if the job is currently closed, or has been finished
 	table.enum('experience_level_requested', ['entry', 'intermediate', 'expert', 'any']).notNullable().defaultTo('any').index();
 	table.timestamps();
 });
