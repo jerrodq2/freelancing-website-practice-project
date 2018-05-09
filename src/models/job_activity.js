@@ -5,7 +5,7 @@ const knex = require('../config/knex');
 const Model = require('./model');
 const JobActivity = new Model('job_activity');
 
-
+// TODO: determine when a job is added to a freelancer's job activity. Once accepted? Once finished?
 module.exports = {
 	// get all the job_activity for one user
 	getAll (id) {
