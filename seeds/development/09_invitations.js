@@ -10,9 +10,6 @@ const today = new Date();
 // Create a date 2 weeks from now
 const futureDateOne = new Date();
 futureDateOne.setDate(today.getDate()+14);
-// Create a date 10 days from now
-const futureDateTwo = new Date();
-futureDateTwo.setDate(today.getDate()+10);
 
 exports.seed = async (knex) => {
 	// Deletes ALL existing entries
