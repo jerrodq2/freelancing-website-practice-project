@@ -3,12 +3,41 @@
 
 const freelancerIds = require(`${process.cwd()}/seeds/ids/freelancers`);
 const clientIds = require(`${process.cwd()}/seeds/ids/clients`);
-const jobIds = require(`${process.cwd()}/seeds/ids/jobs`);
 const SavedFreelancers = require(`${process.cwd()}/src/models/saved_freelancers`);
 
 exports.seed = async (knex) => {
 	// Deletes ALL existing entries
 	await knex('saved_freelancers').del();
 	// Inserts seed entries
+	return Promise.all([
+		SavedFreelancers.create({
+			freelancer_id: freelancerIds.naruto,
+			client_id: clientIds.sherlock,
+		}),
 
+		SavedFreelancers.create({
+			freelancer_id: freelancerIds.dick,
+			client_id: clientIds.bruce,
+		}),
+
+		SavedFreelancers.create({
+			freelancer_id: freelancerIds.naruto,
+			client_id: clientIds.bruce,
+		}),
+
+		SavedFreelancers.create({
+			freelancer_id: freelancerIds.izuku,
+			client_id: clientIds.jack,
+		}),
+
+		SavedFreelancers.create({
+			freelancer_id: freelancerIds.leon,
+			client_id: clientIds.natasha,
+		}),
+
+		SavedFreelancers.create({
+			freelancer_id: freelancerIds.jerrod,
+			client_id: clientIds.natasha,
+		}),
+	]);
 };
