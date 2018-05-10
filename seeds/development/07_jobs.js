@@ -33,7 +33,8 @@ exports.seed = async (knex) => {
 			field_id: fieldIds.front_end,
 			client_id: clientIds.sherlock,
 			freelancer_id: freelancerIds.naruto,
-			open: false
+			available: false,
+			closed: true,
 		}),
 
 		Jobs.create({
@@ -48,7 +49,8 @@ exports.seed = async (knex) => {
 			field_id: fieldIds.full_stack,
 			client_id: clientIds.bruce,
 			freelancer_id: freelancerIds.dick,
-			open: false,
+			available: false,
+			closed: true,
 		}),
 
 		Jobs.create({
@@ -62,7 +64,8 @@ exports.seed = async (knex) => {
 			field_id: fieldIds.front_end,
 			client_id: clientIds.bruce,
 			freelancer_id: freelancerIds.naruto,
-			open: false,
+			available: false,
+			closed: true,
 		}),
 
 		Jobs.create({
@@ -117,7 +120,8 @@ exports.seed = async (knex) => {
 			field_id: fieldIds.ecommerce,
 			client_id: clientIds.peter,
 			freelancer_id: freelancerIds.izuku,
-			open: false,
+			available: false,
+			closed: true,
 		}),
 
 		Jobs.create({
@@ -174,7 +178,8 @@ exports.seed = async (knex) => {
 			field_id: fieldIds.front_end,
 			client_id: clientIds.natasha,
 			freelancer_id: freelancerIds.jerrod,
-			open: false
+			available: false,
+			closed: true,
 		}),
 
 		Jobs.create({
@@ -196,7 +201,8 @@ exports.seed = async (knex) => {
 			field_id: fieldIds.database,
 			client_id: clientIds.natasha,
 			freelancer_id: freelancerIds.jessica,
-			open: false
+			available: false,
+			closed: true,
 		}),
 
 

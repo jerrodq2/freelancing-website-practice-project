@@ -6,7 +6,6 @@ const clientIds = require(`${process.cwd()}/seeds/ids/clients`);
 const jobIds = require(`${process.cwd()}/seeds/ids/jobs`);
 const Proposals = require(`${process.cwd()}/src/models/proposals`);
 
-// A date two weeks from now
 const today = new Date();
 // Create a date 2 weeks from now
 const futureDateOne = new Date();
