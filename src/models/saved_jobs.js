@@ -7,7 +7,7 @@ const SavedJobs = new Model('saved_jobs');
 
 
 module.exports = {
-	// TODO: Add in functionality to filter by job status, meaning a freelancer can see all of their saved jobs or just the ones that are not closes/still available
+	// TODO: Add in functionality to filter by job status, meaning a freelancer can see all of their saved jobs or just the ones that are not closed/still available
 
 	getAll () {
 		// TODO: to be setup with pagination later
