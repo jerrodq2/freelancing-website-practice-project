@@ -4,6 +4,7 @@
 const freelancerIds = require(`${process.cwd()}/seeds/ids/freelancers`);
 const clientIds = require(`${process.cwd()}/seeds/ids/clients`);
 const jobIds = require(`${process.cwd()}/seeds/ids/jobs`);
+const otherIds = require(`${process.cwd()}/seeds/ids/misc`);
 const Invitations = require(`${process.cwd()}/src/models/invitations`);
 
 const today = new Date();
@@ -60,6 +61,16 @@ exports.seed = async (knex) => {
 			freelancer_id: freelancerIds.jerrod,
 			client_id: clientIds.steve,
 			job_id: jobIds.teaching
+		}),
+
+		Invitations.create({
+			id: otherIds.loki_invitation,
+			title: 'Need great website!',
+			description: 'Can you help?',
+			status: 'pending',
+			freelancer_id: freelancerIds.leon,
+			client_id: clientIds.loki,
+			job_id: jobIds.bad_database
 		}),
 
 	]);

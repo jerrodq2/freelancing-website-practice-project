@@ -4,6 +4,7 @@
 const freelancerIds = require(`${process.cwd()}/seeds/ids/freelancers`);
 const clientIds = require(`${process.cwd()}/seeds/ids/clients`);
 const jobIds = require(`${process.cwd()}/seeds/ids/jobs`);
+const otherIds = require(`${process.cwd()}/seeds/ids/misc`);
 const FreelancerReviews = require(`${process.cwd()}/src/models/freelancer_reviews`);
 
 exports.seed = async (knex) => {
@@ -44,6 +45,7 @@ exports.seed = async (knex) => {
 		}),
 
 		FreelancerReviews.create({
+			id: otherIds.natasha_review,
 			rating: 2,
 			review: 'Jessica was much better at the database specific portion of the project. On anything more full stack or front end related, she was very slow and the site ran into numerous issues and bugs. Worst of all, she told me she could do it in 2 weeks time, she took 3.',
 			freelancer_id: freelancerIds.jessica,

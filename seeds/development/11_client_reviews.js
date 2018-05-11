@@ -4,6 +4,7 @@
 const freelancerIds = require(`${process.cwd()}/seeds/ids/freelancers`);
 const clientIds = require(`${process.cwd()}/seeds/ids/clients`);
 const jobIds = require(`${process.cwd()}/seeds/ids/jobs`);
+const otherIds = require(`${process.cwd()}/seeds/ids/misc`);
 const ClientReviews = require(`${process.cwd()}/src/models/client_reviews`);
 
 exports.seed = async (knex) => {
@@ -41,6 +42,15 @@ exports.seed = async (knex) => {
 			freelancer_id: freelancerIds.izuku,
 			client_id: clientIds.peter,
 			job_id: jobIds.ecommerce_repair_site
+		}),
+
+		ClientReviews.create({
+			id: otherIds.jessica_review,
+			rating: 1,
+			review: 'She was rude',
+			freelancer_id: freelancerIds.jessica,
+			client_id: clientIds.natasha,
+			job_id: jobIds.full_stack_site
 		}),
 	]);
 };
