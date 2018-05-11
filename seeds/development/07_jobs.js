@@ -205,6 +205,24 @@ exports.seed = async (knex) => {
 			closed: true,
 		}),
 
+		Jobs.create({
+			id: jobIds.bad_database,
+			title: 'Need database',
+			rate: 100,
+			description: '',
+			field_id: fieldIds.database,
+			client_id: clientIds.loki,
+		}),
 
+		Jobs.create({
+			id: jobIds.bad_website,
+			title: 'Could use expert website developer',
+			rate: 30000,
+			rate_type: 'flat',
+			description: '',
+			experience_level_requested: 'any',
+			field_id: fieldIds.full_stack,
+			client_id: clientIds.loki,
+		}),
 	]);
 };

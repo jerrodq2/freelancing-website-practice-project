@@ -152,5 +152,23 @@ exports.seed = async (knex) => {
 			city: 'Gotham',
 			experience_level: 'intermediate'
 		}),
+
+		Freelancers.create({
+			id: freelancerIds.joker,
+			first_name: 'Joker',
+			last_name: 'princeofcrime',
+			username: 'jprinceofcrime',
+			email: 'joker@princeofcrime.com',
+			password: 'password',
+			job_title: 'Clowned Prince of Crime',
+			rate: 5,
+			gender: 'male',
+			age: 12,
+			field_id: fieldIds.full_stack,
+			summary: 'The best. Period.',
+			state: 'NY',
+			city: 'Gotham',
+			experience_level: 'expert'
+		}),
 	]);
 };

@@ -10,4 +10,5 @@ module.exports = {
 	izuku: 'b67f7b7c-c546-4fe0-9a6c-33b634943a23',
 	leon: 'd6aa0436-e459-460c-9973-b0d530b9ba48',
 	dick: '6770a8be-14d8-467c-a699-edfc6973c8dd',
+	joker: '75a775df-23e6-4193-a35e-eb77bdd401b4',
 };
