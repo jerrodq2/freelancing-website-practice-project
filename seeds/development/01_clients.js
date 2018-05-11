@@ -137,5 +137,18 @@ exports.seed = async (knex) => {
 			city: 'San Francisco',
 			zip: '94114'
 		}),
+
+		Clients.create({
+			id: clientIds.loki,
+			first_name: 'Loki',
+			last_name: 'Odinson',
+			username: 'lodinson',
+			email: 'loki@odinson.com',
+			password: 'password',
+			gender: 'male',
+			age: 90,
+			field_id: fieldIds.other,
+			summary: 'Trickster',
+		}),
 	]);
 };

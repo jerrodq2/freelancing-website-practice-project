@@ -10,4 +10,5 @@ module.exports = {
 	tony: '851b9c56-5c07-4069-8757-c02f4b804c6a',
 	banner: 'b73539a4-d803-46f7-a42f-d5446706ec90',
 	natasha: 'd9fa61f9-cec5-41af-b4f0-6097363bb177',
+	loki: '89dabba9-a440-47a7-a035-36a5205493d2',
 };

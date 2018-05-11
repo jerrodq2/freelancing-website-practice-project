@@ -11,5 +11,35 @@ exports.seed = async (knex) => {
 	// Deletes ALL existing entries
 	await knex('inappropriate_flags').del();
 	// Inserts seed entries
+	return Promise.all([
+		InappropriateFlags.create({
+			client_id: clientIds.loki,
+			freelancer_who_flagged: freelancerIds.jerrod,
+			message: 'He\'s up to no good!',
+		}),
 
+		InappropriateFlags.create({
+			job_id: jobIds.bad_database,
+			freelancer_who_flagged: freelancerIds.leon,
+			message: 'Seems sketchy',
+		}),
+
+		InappropriateFlags.create({
+			job_id: jobIds.bad_website,
+			freelancer_who_flagged: freelancerIds.jessica,
+			message: 'Too large of a payment',
+		}),
+
+		InappropriateFlags.create({
+			freelancer_id: freelancerIds.joker,
+			client_who_flagged: clientIds.bruce,
+			message: 'He\'s a prince of crime, do I really need to explain?',
+		}),
+
+		// InappropriateFlags.create({
+		// 	job_id: jobIds.loki,
+		// 	freelancer_who_flagged: freelancerIds.leon,
+		// 	message: 'He',
+		// }),
+	]);
 };

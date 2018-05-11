@@ -6,7 +6,7 @@ const InappropriateFlags = new Model('inappropriate_flags');
 
 
 module.exports = {
-	// TODO: May have to create specific methods for flags about freelancers, clients, jobs, etc. This way it will be a little more consisten on what tables get joined and for what queries
+	// TODO: May have to create specific methods for flags about freelancers, clients, jobs, etc. This way it will be a little more consistent on what tables get joined and for what queries. ex: findAllClients and findAllJobs that are flagged. Perhaps respectice create methods as well. May infact be more sensible to have a
 
 
 	getAll () {

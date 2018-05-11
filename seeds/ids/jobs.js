@@ -18,4 +18,6 @@ module.exports = {
 	wordpress_site: 'b39add5e-ab0e-4090-ab04-ea36c27faf1d',
 	database_for_app: '16b3cf22-3b26-411e-8a54-b0cb8bbabc38',
 	full_stack_site: '9518859a-50ef-4739-908c-c19d656be349',
+	bad_database: '5cb238d7-f451-48c1-bd2d-80f0fd791d61',
+	bad_website: '6599baab-1e06-4752-8dc5-0500068e26ad',
 };
