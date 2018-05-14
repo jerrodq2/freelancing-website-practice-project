@@ -8,6 +8,7 @@ jobs:
         environment:
           NODE_ENV: test
           PG_USER: jerrodq2
+          PG_DATABASE: freelancing_project
           PG_TEST_DATABASE: freelancing_project_test
           PG_PORT: 5432
 
