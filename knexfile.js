@@ -3,13 +3,14 @@
 
 require('dotenv').config();
 
-const connectionOptions = require('./src/config/knex-connection-options.js');
+const { connectionOptions, testOptions } = require('./src/config/knex-connection-options.js');
+
 
 module.exports = {
 
 	development: connectionOptions,
 
-	test: connectionOptions,
+	test: testOptions,
 
 	staging: connectionOptions,
 
