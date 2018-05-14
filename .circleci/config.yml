@@ -42,7 +42,7 @@ jobs:
             DOCKERIZE_VERSION: v0.3.0
       - run:
           name: Wait for db
-          command: dockerize -wait tcp://localhost:5432 -timeout 50s
+          command: dockerize -wait tcp://localhost:5432 -timeout 500s
 
 
       - save_cache:
