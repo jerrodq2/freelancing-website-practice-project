@@ -4,8 +4,10 @@
 //The below code assumes that the main database doesn't currently exists. Therefore, we start by connecting to the default empty postgres database so we can make queries without any errors
 require('dotenv').config();
 
-const { connectionOptions } = require(`${process.cwd()}/src/config/knex-connection-options.js`);
+const connectionOptions = require(`${process.cwd()}/knexfile.js`)[`${process.env.NODE_ENV}`];
+// Change database in connection to default 'postgres' db
 connectionOptions.connection.database = 'postgres';
+
 
 const knex = require('knex')(connectionOptions);
 console.log('New connection to default postgres database made');

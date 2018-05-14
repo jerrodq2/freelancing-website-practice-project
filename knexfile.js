@@ -8,12 +8,12 @@ const { connectionOptions, testOptions } = require('./src/config/knex-connection
 
 module.exports = {
 
-	development: connectionOptions,
+	dev: connectionOptions,
 
 	test: testOptions,
 
 	staging: connectionOptions,
 
-	production: connectionOptions
+	prod: connectionOptions
 
 };
