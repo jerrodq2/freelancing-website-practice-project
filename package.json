@@ -22,6 +22,7 @@
     "server": "nodemon index.js",
     "lint": "node ./node_modules/.bin/eslint .",
     "db:reset": "bnr create-db && bnr knex migrate:latest && bnr create-admin-and-fields && bnr knex seed:run && bnr knex migrate:latest --env test",
+		"db:reset:test": "bnr create-test-db && bnr knex migrate:latest --env test",
     "db:create": "bnr create-db",
     "db:create-migration": "bnr knex migrate:make",
 		"db:migrate": "bnr knex migrate:latest",
@@ -34,6 +35,7 @@
   "betterScripts": {
     "knex": "./node_modules/.bin/knex",
     "create-db": "node ./bin/database/create-database.js",
+    "create-test-db": "node ./bin/database/create-test-database.js",
     "create-admin-and-fields": "node ./bin/database/create-admin-and-fields.js"
   },
   "devDependencies": {
