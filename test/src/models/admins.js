@@ -30,6 +30,8 @@ describe('Admins Model', () => {
 			const admin = await Admins.findOne(id);
 			expect(admin).to.be.an.object();
 			expect(admin.id).to.equal(id);
+			expect(admin.password).to.equal(undefined);
 		});
 	});
+	
 });
