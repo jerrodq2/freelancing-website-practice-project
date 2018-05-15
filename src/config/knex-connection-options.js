@@ -1,7 +1,6 @@
 'use strict';
 
-
-module.exports = {
+const connectionOptions = {
 	client: 'pg',
 	version: '7.4.1',
 	connection: {
@@ -22,4 +21,14 @@ module.exports = {
 	seeds: {
 		directory: './seeds/development'
 	}
+};
+
+const testOptions = JSON.parse(JSON.stringify(connectionOptions));
+
+testOptions.connection.database = process.env.PG_TEST_DATABASE;
+
+
+module.exports = {
+	connectionOptions,
+	testOptions,
 };
