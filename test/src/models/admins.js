@@ -4,11 +4,17 @@
 const { expect } = require('code');
 const Lab = require('lab');
 const lab = exports.lab = Lab.script();
-const { describe, it } = lab;
+const { describe, it, before } = lab;
 const Admins = require(`${process.cwd()}/src/models/admins`);
 const knex = require(`${process.cwd()}/src/config/knex`);
+const { db } = require(`${process.cwd()}/test/src/helpers`);
 
 describe('Admins Model', () => {
+
+
+	before(() => {
+		return db.resetTable('admins');
+	});
 
 	describe('Has a findOne method', () => {
 		it('should retrieve a specific admin record', async() => {
