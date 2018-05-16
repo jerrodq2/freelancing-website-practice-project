@@ -10,18 +10,19 @@ const { db, random, knex } = require(`${process.cwd()}/test/src/helpers`);
 
 describe('Admins Model', () => {
 	const id = random.guid(), first_name = 'first', last_name = 'last', username = 'username', email = 'email@email.com', password = 'password';
+	const data = {
+		id,
+		first_name,
+		last_name,
+		username,
+		email,
+		password,
+	};
 
 
 	before(async() => {
 		await db.resetTable('admins');
-		return Admins.create({
-			id,
-			first_name,
-			last_name,
-			username,
-			password,
-			email,
-		});
+		return Admins.create(data);
 	});
 
 	describe('has a findOne method', () => {
@@ -48,17 +49,11 @@ describe('Admins Model', () => {
 
 	describe('has a create method', () => {
 		const secondId = random.guid(), secondUsername = 'username2', secondEmail = 'email2@email.com';
-		const data = {
-			id: secondId,
-			first_name,
-			last_name,
-			username: secondUsername,
-			email: secondEmail,
-			password,
-		};
+		const newData = Object.assign({}, data, { id: secondId, username: secondUsername, email: secondEmail });
+
 
 		before(() => {
-			return Admins.create(data);
+			return Admins.create(newData);
 		});
 
 		it('should create a new admin record if given all the necessary info, with a created_at and updated_at field', async () => {
