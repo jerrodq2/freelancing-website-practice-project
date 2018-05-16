@@ -14,7 +14,7 @@ Next, setup the project by running the following command to install the node mod
 npm run init
 ```
 
-You can also reset the database back to it's start state with migrations and seed data with the following command.
+You can also reset the database back to it's starting state with migrations and seed data with the following command.
 ```
 npm run db:reset
 ```
@@ -24,8 +24,14 @@ You can run the project with the following command.
 npm run server
 ```
 ## Testing
+This project uses npm Lab and Code to run its tests. Other npm modules used include Chance. It uses a separate test database, that mirrors the main database, using the same migrations without the seed data.
 
+My current practice with this project is to test all Models... You can run all of the tests with the following command.
+```
+npm run test
+```
 
 ## General Info
+TBD
 
 Last updated: 5/16/18
