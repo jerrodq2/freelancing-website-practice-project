@@ -97,21 +97,22 @@ describe('Admins Model', () => {
 			expect(updatedAdmin.email).to.equal(newEmail);
 		});
 
-		it('should update the admin record with the given id and passed in the correct data', async() => {
-			const updateData = { first_name: newFirstName, last_name: newLastName, email: newEmail };
+		it('should update the admin record with the given id if given valid data, even if not given all fields', async() => {
+			const updateData = { first_name: newFirstName };
 			const admin = await Admins.findOne(id);
 
 			expect(admin).to.be.an.object();
 			expect(admin.id).to.equal(id);
 			expect(admin.first_name).to.equal(first_name);
 			expect(admin.last_name).to.equal(last_name);
+			expect(admin.email).to.equal(email);
 
 			await Admins.update(id, updateData);
 
 			const updatedAdmin = await Admins.findOne(id);
 			expect(updatedAdmin.first_name).to.equal(newFirstName);
-			expect(updatedAdmin.last_name).to.equal(newLastName);
-			expect(updatedAdmin.email).to.equal(newEmail);
+			expect(updatedAdmin.last_name).to.equal(last_name);
+			expect(updatedAdmin.email).to.equal(email);
 		});
 	});
 
