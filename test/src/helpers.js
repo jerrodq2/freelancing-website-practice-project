@@ -30,6 +30,7 @@ const pgTables = [
 ];
 
 const helpers = {
+	knex,
 	random,
 
 	db: {
