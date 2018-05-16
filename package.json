@@ -25,7 +25,7 @@
     "db:reset": "bnr db-reset",
     "db:reset:test": "bnr create-test-db && bnr knex migrate:latest --env test",
     "db:create": "bnr create-db",
-    "db:create-migration": "bnr knex migrate:make",
+    "db:create:migration": "bnr knex migrate:make",
     "db:migrate": "bnr knex migrate:latest",
     "db:migrate:rollback": "bnr knex migrate:rollback",
     "db:migrate:test": "bnr knex migrate:latest --env test",
