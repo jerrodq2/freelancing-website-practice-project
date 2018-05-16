@@ -25,7 +25,7 @@ module.exports = {
 			.then((result) => _.omit(result, 'password', 'username'));
 	},
 
-	// TODO: Separate update method for updating password, perhaps one for username and/or email. Change model tests accordingly for this method.
+	// TODO: Separate update method for updating password and username, perhaps one for email as well. Change model tests accordingly for this method.
 	update (id, data) {
 		return Admins.updateById(id, data)
 			.then((result) => _.omit(result, 'password', 'username'));
