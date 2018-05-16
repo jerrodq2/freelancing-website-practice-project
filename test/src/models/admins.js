@@ -32,6 +32,15 @@ describe('Admins Model', () => {
 			expect(admin.id).to.equal(id);
 			expect(admin.password).to.equal(undefined);
 		});
+
+		it('should return an empty object if not found', async() => {
+			const admin = await Admins.findOne(random.guid());
+
+			expect(admin).to.be.an.object();
+			expect(admin.id).to.equal(undefined);
+			expect(admin.first_name).to.equal(undefined);
+			expect(admin.email).to.equal(undefined);
+		});
 	});
-	
+
 });
