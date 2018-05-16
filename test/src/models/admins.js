@@ -4,7 +4,7 @@
 const { expect } = require('code');
 const Lab = require('lab');
 const lab = exports.lab = Lab.script();
-const { describe, it, before, beforeEach } = lab;
+const { describe, it, beforeEach } = lab;
 const Admins = require(`${process.cwd()}/src/models/admins`);
 const { db, random, knex } = require(`${process.cwd()}/test/src/helpers`);
 
@@ -112,6 +112,21 @@ describe('Admins Model', () => {
 			expect(updatedAdmin.first_name).to.equal(newFirstName);
 			expect(updatedAdmin.last_name).to.equal(newLastName);
 			expect(updatedAdmin.email).to.equal(newEmail);
+		});
+	});
+
+	// TODO: write tests for incorrect id and what it returns upon successful delete once that process is refactored
+	describe('has a delete method', () => {
+		it('should delete the record if given a correct id', async() => {
+			const admin = await Admins.findOne(id);
+			expect(admin).to.be.an.object();
+			expect(admin.id).to.equal(id);
+
+			await Admins.delete(id);
+			const afterDelete = await Admins.findOne(id);
+
+			expect(afterDelete).to.be.an.object();
+			expect(afterDelete.id).to.equal(undefined);
 		});
 	});
 
