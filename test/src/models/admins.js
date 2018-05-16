@@ -9,27 +9,30 @@ const Admins = require(`${process.cwd()}/src/models/admins`);
 const { db, random, knex } = require(`${process.cwd()}/test/src/helpers`);
 
 describe('Admins Model', () => {
+	const id = random.guid(), first_name = 'first', last_name = 'last', username = 'username', email = 'email@email.com', password = 'password';
 
 
-	before(() => {
-		return db.resetTable('admins');
+	before(async() => {
+		await db.resetTable('admins');
+		return Admins.create({
+			id,
+			first_name,
+			last_name,
+			username,
+			password,
+			email,
+		});
 	});
 
 	describe('has a findOne method', () => {
-		it('should retrieve a specific admin record without the password', async() => {
-			const id = random.guid();
-			await Admins.create({
-				id,
-				first_name: 'First',
-				last_name: 'Last',
-				username: 'User',
-				password: 'password',
-				email: 'e@mail.com'
-			});
-
+		it('should retrieve a specific admin record without the password or username', async() => {
 			const admin = await Admins.findOne(id);
 			expect(admin).to.be.an.object();
 			expect(admin.id).to.equal(id);
+			expect(admin.first_name).to.equal(first_name);
+			expect(admin.last_name).to.equal(last_name);
+			expect(admin.username).to.equal(undefined);
+			expect(admin.email).to.equal(email);
 			expect(admin.password).to.equal(undefined);
 		});
 
@@ -44,18 +47,13 @@ describe('Admins Model', () => {
 	});
 
 	describe('has a create method', () => {
-		const id = random.guid();
-		const first_name = 'first';
-		const last_name = 'last';
-		const username = 'username';
-		const email = 'email@email.com';
-		const password = 'password';
+		const secondId = random.guid(), secondUsername = 'username2', secondEmail = 'email2@email.com';
 		const data = {
-			id,
+			id: secondId,
 			first_name,
 			last_name,
-			username,
-			email,
+			username: secondUsername,
+			email: secondEmail,
 			password,
 		};
 
@@ -64,24 +62,25 @@ describe('Admins Model', () => {
 		});
 
 		it('should create a new admin record if given all the necessary info, with a created_at and updated_at field', async () => {
-			const result = await knex('admins').where({ id });
+			const result = await knex('admins').where({ id: secondId });
 			const admin = result[0];
 
 			expect(admin).to.be.an.object();
-			expect(admin.id).to.equal(id);
+			expect(admin.id).to.equal(secondId);
 			expect(admin.first_name).to.equal(first_name);
 			expect(admin.last_name).to.equal(last_name);
-			expect(admin.email).to.equal(email);
+			expect(admin.email).to.equal(secondEmail);
+			expect(admin.username).to.equal(secondUsername);
 			expect(admin.created_at).to.be.a.date();
 			expect(admin.updated_at).to.equal(null);
 		});
 
 		it('should create a new admin record with a hashed password', async () => {
-			const result = await knex('admins').where({ id });
+			const result = await knex('admins').where({ id: secondId });
 			const admin = result[0];
 
 			expect(admin).to.be.an.object();
-			expect(admin.id).to.equal(id);
+			expect(admin.id).to.equal(secondId);
 			expect(admin.password).to.be.a.string();
 			expect(admin.password).to.not.equal(password);
 			expect(admin.password.length).to.be.above(password.length);
