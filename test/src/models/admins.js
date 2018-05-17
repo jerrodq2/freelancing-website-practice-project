@@ -8,6 +8,7 @@ const { describe, it, before } = lab;
 const Admins = require(`${process.cwd()}/src/models/admins`);
 const { db, random, knex } = require(`${process.cwd()}/test/src/helpers`);
 
+
 describe('Admins Model', () => {
 	const id = random.guid(),
 		first_name = 'first',

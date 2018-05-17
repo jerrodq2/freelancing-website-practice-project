@@ -21,8 +21,7 @@ module.exports = {
 			.then((result) => result[0]);
 	},
 
-	create (skill) {
-		const data = { skill };
+	create (data) {
 		return Skills.create(data);
 	},
 
