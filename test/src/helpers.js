@@ -4,7 +4,7 @@
 const connectionOptions = require(`${process.cwd()}/knexfile.js`)[`${process.env.NODE_ENV}`];
 const knex = require('knex')(connectionOptions);
 // TODO: Move the declaraction of random to the random folder and index file when created.
-const random = new (require('chance'));
+const random = require(`${process.cwd()}/randoms`);
 
 
 // TODO: Look into more elegant solution to clear/truncate all tables from db besides a hard coded array.
