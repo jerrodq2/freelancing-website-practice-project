@@ -144,12 +144,14 @@ describe('Admins Model', () => {
 	// TODO: write tests for incorrect id and what it returns upon successful delete once that process is refactored. When there is more than one test for the delete describe, create a record for each one
 	describe('has a delete method', () => {
 		it('should delete the record if given a correct id', async() => {
-			const admin = await Admins.findOne(id);
+			const specificId = random.guid();
+			await random.admin({ id: specificId });
+			const admin = await Admins.findOne(specificId);
 			expect(admin).to.be.an.object();
-			expect(admin.id).to.equal(id);
+			expect(admin.id).to.equal(specificId);
 
-			await Admins.delete(id);
-			const afterDelete = await Admins.findOne(id);
+			await Admins.delete(specificId);
+			const afterDelete = await Admins.findOne(specificId);
 
 			expect(afterDelete).to.be.an.object();
 			expect(afterDelete.id).to.equal(undefined);
