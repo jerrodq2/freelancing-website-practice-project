@@ -12,8 +12,8 @@ describe('Admins Model', () => {
 	const id = random.guid(),
 		first_name = 'first',
 		last_name = 'last',
-		username= 'username',
-		email= 'email@email.com',
+		username = 'username',
+		email = 'email@email.com',
 		password = 'password';
 	const data = { id, first_name, last_name, username, email, password };
 
@@ -87,18 +87,13 @@ describe('Admins Model', () => {
 		const newFirstName = 'new first',
 			newLastName = 'new last';
 
-		// Used to create an admin with a specific id, email, and username, but same first/last name and password for the below update fields. Expects an object similar to { id, email, username }
-		const createAdmin = (obj) => {
-			const newData = Object.assign({}, data, obj);
-			return random.admin(newData);
-		};
-
 		it('should update the admin record with the given id if given valid data', async() => {
 			const specificId = random.guid(),
 				specificEmail = `${specificId}@email.com`,
 				specificUsername = `username - ${specificId}`,
-				newEmail = `update-${specificEmail}`;
-			await createAdmin({ id: specificId, email: specificEmail, username: specificUsername });
+				newEmail = `update-${specificEmail}`,
+				createData = { id: specificId, email: specificEmail, username: specificUsername };
+			await random.admin(Object.assign({}, data, createData));
 
 			const updateData = { first_name: newFirstName, last_name: newLastName, email: newEmail };
 			const admin = await Admins.findOne(specificId);
@@ -120,8 +115,9 @@ describe('Admins Model', () => {
 		it('should update the admin record with the given id if given valid data, even if only given one field', async() => {
 			const specificId = random.guid(),
 				specificEmail = `${specificId}@email.com`,
-				specificUsername = `username - ${specificId}`;
-			await createAdmin({ id: specificId, email: specificEmail, username: specificUsername });
+				specificUsername = `username - ${specificId}`,
+				createData = { id: specificId, email: specificEmail, username: specificUsername };
+			await random.admin(Object.assign({}, data, createData));
 
 			const updateData = { first_name: newFirstName };
 			const admin = await Admins.findOne(specificId);
