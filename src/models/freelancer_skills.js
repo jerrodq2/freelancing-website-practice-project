@@ -26,7 +26,7 @@ module.exports = {
 		const skill = await Skills.findByName(lowercase);
 
 		if (!skill) {
-			const newSkill = await Skills.create(lowercase);
+			const newSkill = await Skills.create({ skill: lowercase });
 			wasSkillCreated = true;
 			skillId = newSkill.id;
 		} else {
