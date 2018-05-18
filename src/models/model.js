@@ -47,7 +47,11 @@ class Model {
 	// find one for any table other than client or freelancer
 	findOne (id) {
 		return knex(this.tableName).where({ id })
-			.then((result) => result[0]);
+			.then((array) => {
+				// In the event of no record found, we still return an empty object for consistency
+				const result = array[0] ? array[0] : {};
+				return result;
+			});
 	}
 
 

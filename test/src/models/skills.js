@@ -9,7 +9,7 @@ const Skills = require(`${process.cwd()}/src/models/skills`);
 const { db, random, knex } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe.only('Skills Model', () => {
+describe('Skills Model', () => {
 	const id = random.guid(),
 		skill = random.word(),
 		data = { id, skill };
@@ -35,6 +35,43 @@ describe.only('Skills Model', () => {
 			expect(record.skill).to.equal(specificSkill);
 			expect(record.created_at).to.be.a.date();
 			expect(record.updated_at).to.equal(null);
+		});
+	});
+
+
+	describe('has a findOne method', () => {
+		it('should retrieve a specific skill record if given a correct id', async() => {
+			const result = await Skills.findOne(id);
+			expect(result).to.be.an.object();
+			expect(result.id).to.equal(id);
+			expect(result.skill).to.equal(skill);
+		});
+
+		it('should return an empty object if not found', async() => {
+			const result = await Skills.findOne(random.guid());
+
+			expect(result).to.be.an.object();
+			expect(result.id).to.equal(undefined);
+			expect(result.skill).to.equal(undefined);
+		});
+	});
+
+
+	describe('has a findByName method', () => {
+		it('should retrieve a specific skill if given a correct skill name', async() => {
+			const result = await Skills.findByName(skill);
+
+			expect(result).to.be.an.object();
+			expect(result.id).to.equal(id);
+			expect(result.skill).to.equal(skill);
+		});
+
+		it('should return an empty object if not found', async() => {
+			const result = await Skills.findByName('skill?');
+
+			expect(result).to.be.an.object();
+			expect(result.id).to.equal(undefined);
+			expect(result.skill).to.equal(undefined);
 		});
 	});
 
