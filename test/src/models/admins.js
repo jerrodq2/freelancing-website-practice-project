@@ -88,7 +88,7 @@ describe('Admins Model', () => {
 		const newFirstName = 'new first',
 			newLastName = 'new last';
 
-		it('should update the admin record with the given id if given valid data', async() => {
+		it('should update the admin record if given a valid id and data', async() => {
 			const specificId = random.guid(),
 				specificEmail = `${specificId}@email.com`,
 				specificUsername = `username - ${specificId}`,
@@ -104,6 +104,7 @@ describe('Admins Model', () => {
 			expect(admin.first_name).to.equal(first_name);
 			expect(admin.last_name).to.equal(last_name);
 			expect(admin.email).to.equal(specificEmail);
+			expect(admin.updated_at).to.equal(null);
 
 			await Admins.update(specificId, updateData);
 
@@ -111,6 +112,7 @@ describe('Admins Model', () => {
 			expect(updatedAdmin.first_name).to.equal(newFirstName);
 			expect(updatedAdmin.last_name).to.equal(newLastName);
 			expect(updatedAdmin.email).to.equal(newEmail);
+			expect(updatedAdmin.updated_at).to.be.a.date();
 		});
 
 		it('should update the admin record with the given id if given valid data, even if only given one field', async() => {
@@ -128,6 +130,7 @@ describe('Admins Model', () => {
 			expect(admin.first_name).to.equal(first_name);
 			expect(admin.last_name).to.equal(last_name);
 			expect(admin.email).to.equal(specificEmail);
+			expect(admin.updated_at).to.equal(null);
 
 			await Admins.update(specificId, updateData);
 
@@ -135,6 +138,7 @@ describe('Admins Model', () => {
 			expect(updatedAdmin.first_name).to.equal(newFirstName);
 			expect(updatedAdmin.last_name).to.equal(last_name);
 			expect(updatedAdmin.email).to.equal(specificEmail);
+			expect(updatedAdmin.updated_at).to.be.a.date();
 		});
 	});
 

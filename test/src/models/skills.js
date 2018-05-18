@@ -75,4 +75,32 @@ describe('Skills Model', () => {
 		});
 	});
 
+
+	describe('has an update method', () => {
+		it('should update the skill record if given a valid id and skill', async() => {
+			const specificId = random.guid(),
+				specificSkill = random.word(),
+				newSkill = random.word(),
+				createData = { id: specificId, skill: specificSkill },
+				updateData = { skill: newSkill };
+
+			await random.skill(createData);
+			const oldSkill = await Skills.findOne(specificId);
+
+			expect(oldSkill).to.be.an.object();
+			expect(oldSkill.id).to.equal(specificId);
+			expect(oldSkill.skill).to.equal(specificSkill);
+			expect(oldSkill.updated_at).to.equal(null);
+
+			await Skills.update(specificId, updateData);
+			const updatedSkill = await Skills.findOne(specificId);
+
+			
+			expect(updatedSkill).to.be.an.object();
+			expect(updatedSkill.id).to.equal(specificId);
+			expect(updatedSkill.skill).to.equal(newSkill);
+			expect(updatedSkill.updated_at).to.be.a.date();
+		});
+	});
+
 });
