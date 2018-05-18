@@ -18,11 +18,13 @@ module.exports = {
 
 	findByName (name) {
 		return knex('skills').where({ skill: name })
-			.then((result) => result[0]);
+			.then((array) => {
+				const result = array[0] ? array[0] : {};
+				return result;
+			});
 	},
 
-	create (skill) {
-		const data = { skill };
+	create (data) {
 		return Skills.create(data);
 	},
 
