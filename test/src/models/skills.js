@@ -95,11 +95,29 @@ describe('Skills Model', () => {
 			await Skills.update(specificId, updateData);
 			const updatedSkill = await Skills.findOne(specificId);
 
-			
+
 			expect(updatedSkill).to.be.an.object();
 			expect(updatedSkill.id).to.equal(specificId);
 			expect(updatedSkill.skill).to.equal(newSkill);
 			expect(updatedSkill.updated_at).to.be.a.date();
+		});
+	});
+
+
+	describe('has a delete method', () => {
+		it('should delete a skill record if given a proper id', async() => {
+			const specificId = random.guid();
+			await random.skill({ id: specificId });
+
+			const result = await Skills.findOne(specificId);
+			expect(result).to.be.an.object();
+			expect(result.id).to.equal(specificId);
+
+			await Skills.delete(specificId);
+			const afterDelete = await Skills.findOne(specificId);
+
+			expect(afterDelete).to.be.an.object();
+			expect(afterDelete.id).to.equal(undefined);
 		});
 	});
 
