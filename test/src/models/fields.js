@@ -24,16 +24,22 @@ describe('Fields Model', () => {
 		const specificId = random.guid(),
 			specificField = random.word(),
 			createData = { id: specificId, field: specificField };
+		let result, field;
 
-		before(() => Fields.create(createData));
+		before(async() => {
+			await Fields.create(createData);
+			result = await knex('fields').where({ id: specificId });
+			field = result[0];
+		});
 
-		it('should create a new field record if given a proper id and field with a created_at and updated_at field', async() => {
-			const result = await knex('fields').where({ id: specificId });
-			const field = result[0];
-
+		it('should create a new field record if given a proper id and field', async() => {
 			expect(field).to.be.an.object();
 			expect(field.id).to.equal(specificId);
 			expect(field.field).to.equal(specificField);
+
+		});
+
+		it('should create the new field record with new created_at and updated_at fields', async() => {
 			expect(field.created_at).to.be.a.date();
 			expect(field.updated_at).to.equal(null);
 		});
