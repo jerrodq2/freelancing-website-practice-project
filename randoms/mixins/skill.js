@@ -7,5 +7,5 @@ const Skills = require(`${process.cwd()}/src/models/skills`);
 // used to create a random skill. If given no parameters, randomizes all fields.
 module.exports = (opts = {}) => Skills.create({
 	id: opts.id || random.guid(),
-	skill: opts.skill || `skill-${random.guid().substring(0, 16)}`,
+	skill: opts.skill || `skill name-${random.guid().substring(0, 16)}`,
 });

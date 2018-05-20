@@ -9,6 +9,11 @@ random.mixin(require('./mixins'));
 
 // methods that create multiple records, ex: 10 clients, 20 skills, etc.
 random.mixin({
+	clients: (count = 10, opts = {}) => {
+		const clients = _.times(count, () => random.client(opts));
+		return Promise.all(clients);
+	},
+
 	fields: (count = 10, opts = {}) => {
 		const fields = _.times(count, () => random.field(opts));
 		return Promise.all(fields);

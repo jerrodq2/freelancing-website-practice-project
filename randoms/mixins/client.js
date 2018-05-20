@@ -6,9 +6,10 @@ const Clients = require(`${process.cwd()}/src/models/clients`);
 
 // used to create a random skill. If given no parameters, randomizes all fields.
 module.exports = async (opts = {}) => {
-	const field_id = opts.field_id || random.guid();
+	const field_id = opts.field_id || random.guid(),
+		field = opts.field || `field name-${random.guid().substring(0, 16)}`;
 
-	await random.field({ id: field_id });
+	await random.field({ id: field_id, field });
 
 	return Clients.create({
 		id: opts.id || random.guid(),
