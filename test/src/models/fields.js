@@ -59,4 +59,37 @@ describe('Fields Model', () => {
 	});
 
 
+	describe('has an update method', () => {
+
+		it('should update a field record if given a valid id and field', async() => {
+			const specificId = random.guid(),
+				specificField = random.word(),
+				newFieldName = random.word(),
+				createData = { id: specificId, field: specificField },
+				updateData = { field: newFieldName };
+
+			await random.field(createData);
+			const oldField = await Fields.findOne(specificId);
+
+			expect(oldField).to.be.an.object();
+			expect(oldField.id).to.equal(specificId);
+			expect(oldField.field).to.equal(specificField);
+			expect(oldField.updated_at).to.equal(null);
+
+			await Fields.update(specificId, updateData);
+			const newField = await Fields.findOne(specificId);
+
+			expect(newField).to.be.an.object();
+			expect(newField.id).to.equal(specificId);
+			expect(newField.field).to.equal(newFieldName);
+			expect(newField.updated_at).to.be.a.date();
+		});
+	});
+
+
+	describe('has a delete method', () => {
+
+	});
+
+
 });
