@@ -88,7 +88,20 @@ describe('Fields Model', () => {
 
 
 	describe('has a delete method', () => {
+		it('should delete a field record if given a proper id', async() => {
+			const specificId = random.guid();
+			await random.field({ id: specificId });
 
+			const field = await Fields.findOne(specificId);
+			expect(field).to.be.an.object();
+			expect(field.id).to.equal(specificId);
+
+			await Fields.delete(specificId);
+			const afterDelete = await Fields.findOne(specificId);
+
+			expect(afterDelete).to.be.an.object();
+			expect(afterDelete.id).to.equal(undefined);
+		});
 	});
 
 
