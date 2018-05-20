@@ -182,6 +182,19 @@ describe('Clients Model', () => {
 
 
 	describe('has a delete method', () => {
+		it('should delete the record if given a correct id', async() => {
+			const specificId = random.guid();
+			await random.client({ id: specificId, field_id });
 
+			const client = await Clients.findOne(specificId);
+			expect(client).to.be.an.object();
+			expect(client.id).to.equal(specificId);
+
+			await Clients.delete(specificId);
+			const afterDelete = await Clients.findOne(specificId);
+
+			expect(afterDelete).to.be.an.object();
+			expect(afterDelete.id).to.equal(undefined);
+		});
 	});
 });

@@ -141,7 +141,7 @@ describe('Admins Model', () => {
 		});
 	});
 
-	// TODO: write tests for incorrect id and what it returns upon successful delete once that process is refactored
+	// TODO: write tests for incorrect id and what it returns upon successful delete once that process is refactored. Same for other model test files
 	describe('has a delete method', () => {
 		it('should delete the record if given a correct id', async() => {
 			const specificId = random.guid();
