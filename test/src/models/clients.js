@@ -10,7 +10,7 @@ const { db, random, knex } = require(`${process.cwd()}/test/src/helpers`);
 const _ = require('lodash');
 
 
-describe.only('Clients Model', () => {
+describe('Clients Model', () => {
 	const id = random.guid(),
 		first_name = random.name(),
 		last_name = random.name(),
@@ -27,10 +27,12 @@ describe.only('Clients Model', () => {
 		phone = random.phone(),
 		dob = random.date({ string: true }),
 		password = random.word(),
-		data = { id, first_name, last_name, username, email, gender, age, field_id, field, summary, state, city, zip, phone, dob, password };
+		data = { id, first_name, last_name, username, email, gender, age, field_id, summary, state, city, zip, phone, dob, password };
 
 	before(async() => {
 		await db.resetTable('clients');
+		await db.resetTable('fields');
+		await random.field({ id: field_id, field });
 		return random.client(data);
 	});
 
@@ -40,7 +42,7 @@ describe.only('Clients Model', () => {
 			specificEmail = `${specificId}@email.com`;
 		let result, client,
 			createData = Object.assign({}, data, { id: specificId, username: specificUsername, email: specificEmail });
-			
+
 		// remove the 'field' key, which is used in the client mixin but not in the actual Create method
 		createData = _.omit(createData, ['field']);
 
@@ -100,7 +102,82 @@ describe.only('Clients Model', () => {
 
 
 	describe('has an update method', () => {
+		const newFieldId = random.guid(),
+			newFieldName = 'new field',
+			newFirstName = random.name(),
+			newLastName = random.name(),
+			newGender = 'male',
+			newAge = 22,
+			newSummary = random.paragraph(),
+			newState = 'FL',
+			newCity = random.word(),
+			newZip = random.zip(),
+			newPhone = random.phone(),
+			newDob = random.date({ string: true });
 
+		let updateData = { field_id: newFieldId, first_name: newFirstName, last_name: newLastName, gender: newGender, age: newAge, summary: newSummary, state: newState, city: newCity, zip: newZip, phone: newPhone, dob: newDob };
+
+
+		before(() => random.field({ id: newFieldId, field: newFieldName }));
+
+		it('should update the admin record if given a valid id and data', async() => {
+			const specificId = random.guid(),
+				specificEmail = `${specificId}@email.com`,
+				newEmail = `update-${specificEmail}`,
+				createData = { id: specificId, email: specificEmail, field_id: field_id };
+			updateData = Object.assign(updateData, { email: newEmail });
+
+			await random.client(createData);
+			const oldClient = await Clients.findOne(specificId);
+
+			expect(oldClient).to.be.an.object();
+			expect(oldClient.id).to.equal(specificId);
+			expect(oldClient.email).to.equal(specificEmail);
+			expect(oldClient.updated_at).to.equal(null);
+
+			await Clients.update(specificId, updateData);
+			const updatedClient = await Clients.findOne(specificId);
+
+			expect(updatedClient).to.be.an.object();
+			expect(updatedClient.id).to.equal(specificId);
+			expect(updatedClient.first_name).to.equal(newFirstName);
+			expect(updatedClient.last_name).to.equal(newLastName);
+			expect(updatedClient.gender).to.equal(newGender);
+			expect(updatedClient.age).to.equal(newAge);
+			expect(updatedClient.summary).to.equal(newSummary);
+			expect(updatedClient.state).to.equal(newState);
+			expect(updatedClient.city).to.equal(newCity);
+			expect(updatedClient.zip).to.equal(newZip);
+			expect(updatedClient.phone).to.equal(newPhone);
+			expect(updatedClient.dob).to.equal(new Date(newDob));
+			expect(updatedClient.email).to.equal(newEmail);
+			expect(updatedClient.updated_at).to.be.a.date();
+		});
+
+		it('should update the client record with the given id if given valid data, even if only given one field', async() => {
+			const specificId = random.guid(),
+				specificEmail = `${specificId}@email.com`,
+				createData = { id: specificId, email: specificEmail, field_id: field_id };
+			updateData = { first_name: newFirstName };
+
+			await random.client(createData);
+			const oldClient = await Clients.findOne(specificId);
+
+			expect(oldClient).to.be.an.object();
+			expect(oldClient.id).to.equal(specificId);
+			expect(oldClient.email).to.equal(specificEmail);
+			expect(oldClient.updated_at).to.equal(null);
+
+			await Clients.update(specificId, updateData);
+			const updatedClient = await Clients.findOne(specificId);
+
+			expect(updatedClient).to.be.an.object();
+			expect(updatedClient.id).to.equal(specificId);
+			expect(updatedClient.first_name).to.equal(newFirstName);
+			expect(updatedClient.updated_at).to.be.a.date();
+
+
+		});
 	});
 
 
