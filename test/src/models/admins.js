@@ -20,7 +20,7 @@ describe('Admins Model', () => {
 
 
 	before(async() => {
-		await db.resetAll();
+		await db.resetTable('admins');
 		return random.admin(data);
 	});
 

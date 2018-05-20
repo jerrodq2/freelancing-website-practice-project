@@ -15,7 +15,7 @@ describe('Skills Model', () => {
 		data = { id, skill };
 
 	before(async() => {
-		await db.resetAll();
+		await db.resetTable('skills');
 		return random.skill(data);
 	});
 

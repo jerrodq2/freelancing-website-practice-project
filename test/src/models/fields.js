@@ -15,7 +15,7 @@ describe('Fields Model', () => {
 		data = { id, field: fieldName };
 
 	before(async() => {
-		await db.resetAll();
+		await db.resetTable('fields');
 		return random.field(data);
 	});
 
