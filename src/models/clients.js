@@ -1,10 +1,8 @@
 'use strict';
 
 
-// const Model = require('./main_model');
-const Model = require('./user_model');
-const Clients = new Model('clients');
-const _ = require('lodash');
+const UserModel = require('./user_model');
+const Clients = new UserModel('clients');
 
 
 module.exports = {
@@ -28,10 +26,8 @@ module.exports = {
 	},
 
 
-	// TODO: Separate update method for updating password and username, perhaps one for emaila and field as well. Change model tests accordingly for this method.
 	update (id, data) {
-		return Clients.updateById(id, data)
-			.then((result) => _.omit(result, 'password', 'username'));
+		return Clients.update(id, data);
 	},
 
 

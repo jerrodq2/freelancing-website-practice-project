@@ -17,7 +17,17 @@ class MainModel {
 			.then((result) => result[0]);
 	}
 
-	
+
+	findOne (id) {
+		return knex(this.tableName).where({ id })
+			.then((array) => {
+				// In the event of no record found, we still return an empty object for consistency
+				const result = array[0] ? array[0] : {};
+				return result;
+			});
+	}
+
+
 	// find the employment or education history for one freelancer
 	findHistory (id) {
 		return knex(this.tableName).where({ freelancer_id: id });
@@ -39,17 +49,6 @@ class MainModel {
 			.innerJoin('freelancers as f', `${this.tableName}.freelancer_id`, 'f.id')
 			.innerJoin('jobs as j', `${this.tableName}.job_id`, 'j.id')
 			.then((result) => result[0]);
-	}
-
-
-	// find one for any table other than client or freelancer
-	findOne (id) {
-		return knex(this.tableName).where({ id })
-			.then((array) => {
-				// In the event of no record found, we still return an empty object for consistency
-				const result = array[0] ? array[0] : {};
-				return result;
-			});
 	}
 
 

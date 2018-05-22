@@ -14,6 +14,7 @@ class UserModel extends MainModel {
 		this.tableName = tableName;
 	}
 
+
 	createUser (data) {
 		// hash the password
 		data.password = hashPassword(data.password);
@@ -21,12 +22,14 @@ class UserModel extends MainModel {
 			.then((result) => _.omit(result, 'password', 'username'));
 	}
 
+
 	// Same as the above create method but it doesn't hash the password. This is only used in tests and random mixins to speed up creation of multiple users (ex: 50 clients), not to be used in actual data or workflow.
 	createWithoutHash (data) {
 		return this.create(data).then((result) => _.omit(result, 'password', 'username'));
 	}
 
-	// select a single client or freelancer, also grabs their field (front end, web development, etc.)
+
+	// also grabs the user's field
 	findOneUser (id) {
 		const selectedColumns = [`${this.tableName}.*`, 'fields.field'];
 		return knex(this.tableName)
@@ -35,6 +38,13 @@ class UserModel extends MainModel {
 			.innerJoin('fields', `${this.tableName}.field_id`, 'fields.id')
 			.then((result) => result[0])
 			.then((result) => _.omit(result, 'password', 'field_id', 'username'));
+	}
+
+
+	// TODO: Separate update method for updating password and username, perhaps one for emaila and field as well. Change model tests accordingly for this method.
+	update (id, data) {
+		return this.updateById(id, data)
+			.then((result) => _.omit(result, 'password', 'username'));
 	}
 
 }
