@@ -5,7 +5,9 @@ const knex = require('../config/knex');
 const { hashPassword } = require(`${process.cwd()}/src/lib/helper_functions`);
 const _ = require('lodash');
 
-class Model {
+
+// This is the main Model that is inherited by all other models
+class MainModel {
 	constructor (tableName) {
 		this.tableName = tableName;
 	}
@@ -56,7 +58,7 @@ class Model {
 			});
 	}
 
-	
+
 	create (data) {
 		data.created_at = data.created_at || new Date();
 		return knex(this.tableName).insert(data).returning('*')
@@ -92,4 +94,4 @@ class Model {
 
 }
 
-module.exports = Model;
+module.exports = MainModel;

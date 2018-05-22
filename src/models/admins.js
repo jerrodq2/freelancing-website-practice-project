@@ -1,7 +1,7 @@
 'use strict';
 
 
-const Model = require('./model');
+const Model = require('./main_model');
 const Admins = new Model('admins');
 const { hashPassword } = require(`${process.cwd()}/src/lib/helper_functions`);
 const _ = require('lodash');

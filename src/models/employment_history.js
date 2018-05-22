@@ -1,7 +1,7 @@
 'use strict';
 
 
-const Model = require('./model');
+const Model = require('./main_model');
 const EmploymentHistory = new Model('employment_history');
 
 
@@ -14,7 +14,7 @@ module.exports = {
 	findOne (id) {
 		return EmploymentHistory.findOne(id);
 	},
-	
+
 	// TODO: Limit on number of records per freelancer?
 	create (data) {
 		return EmploymentHistory.create(data);

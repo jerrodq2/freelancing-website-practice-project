@@ -1,7 +1,7 @@
 'use strict';
 
 
-const Model = require('./model');
+const Model = require('./main_model');
 const ClientReviews = new Model('client_reviews');
 
 

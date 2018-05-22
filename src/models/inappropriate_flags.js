@@ -1,7 +1,7 @@
 'use strict';
 
 
-const Model = require('./model');
+const Model = require('./main_model');
 const InappropriateFlags = new Model('inappropriate_flags');
 
 
