@@ -10,7 +10,7 @@ const { db, random, knex } = require(`${process.cwd()}/test/src/helpers`);
 const _ = require('lodash');
 
 
-describe('Clients Model', () => {
+describe.only('Clients Model', () => {
 	const id = random.guid(),
 		first_name = random.name(),
 		last_name = random.name(),
@@ -33,6 +33,7 @@ describe('Clients Model', () => {
 		await db.resetTable('clients');
 		await db.resetTable('fields');
 		await random.field({ id: field_id, field });
+		await random.clients(20);
 		return random.client(data);
 	});
 

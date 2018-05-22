@@ -2,8 +2,6 @@
 
 
 const knex = require('../config/knex');
-const { hashPassword } = require(`${process.cwd()}/src/lib/helper_functions`);
-const _ = require('lodash');
 
 
 // This is the main Model that is inherited by all other models
@@ -13,17 +11,13 @@ class MainModel {
 	}
 
 
-	// select a single client or freelancer, also grabs their field (front end, web development, etc.)
-	findOneUser (id) {
-		const selectedColumns = [`${this.tableName}.*`, 'fields.field'];
-		return knex(this.tableName)
-			.select(selectedColumns)
-			.where(knex.raw(`${this.tableName}.id = '${id}'`))
-			.innerJoin('fields', `${this.tableName}.field_id`, 'fields.id')
+	create (data) {
+		data.created_at = data.created_at || new Date();
+		return knex(this.tableName).insert(data).returning('*')
 			.then((result) => result[0]);
 	}
 
-
+	
 	// find the employment or education history for one freelancer
 	findHistory (id) {
 		return knex(this.tableName).where({ freelancer_id: id });
@@ -56,22 +50,6 @@ class MainModel {
 				const result = array[0] ? array[0] : {};
 				return result;
 			});
-	}
-
-
-	create (data) {
-		data.created_at = data.created_at || new Date();
-		return knex(this.tableName).insert(data).returning('*')
-			.then((result) => result[0]);
-	}
-
-
-	// Used for users (clients, freelancers, and admins), first hashes the password, then calls the above create method, and finally omitting the password and username, which we don't want passed to the front.
-	createUser (data) {
-		// hash the password
-		data.password = hashPassword(data.password);
-		return this.create(data)
-			.then((result) => _.omit(result, 'password', 'username'));
 	}
 
 
