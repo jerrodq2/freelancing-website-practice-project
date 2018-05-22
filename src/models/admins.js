@@ -17,7 +17,7 @@ module.exports = {
 	},
 
 
-	// goes through the mainModel findOne, as opposed to the UserModel findOneUser since admins don't have a field
+	// goes through the mainModel findOne, as opposed to the UserModel findOneUser, since admins don't have a field_id
 	findOne (id) {
 		return Admins.findOne(id)
 			.then((result) => _.omit(result, 'password', 'username'));

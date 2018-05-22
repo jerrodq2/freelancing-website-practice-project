@@ -16,7 +16,7 @@ random.mixin({
 			opts.field_id = random.guid();
 			await random.field({ id: opts.field_id });
 		}
-		// When creating several clients (ex: 50), we want to skip hashing the password 50 times in the client mixin or model, which is by far the most time consuming part of it. So we hash one password and give all 50 clients that same password, speeds up the 50 inserts by roughtly 9 times. Or, we can pass in 'dontHash' = false, to make it hash the given plain password or hash a random word in the mixin like normal. We tell the client mixin not to hash via the 'dontHash' variable below
+		// When creating several clients (ex: 50), we want to skip hashing the password 50 times in the client mixin or model, which is by far the most time consuming part of it. So we hash one password and give all 50 clients that same password, speeds up the 50 inserts by roughly 9 times. Or, we can pass in 'dontHash' = false, to make it hash the given plain password or hash a random word in the mixin like normal. We tell the client mixin not to hash via the 'dontHash' variable below
 		if (dontHash) {
 			opts.password = hashPassword('password');
 			opts.dontHash = true;

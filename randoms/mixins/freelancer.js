@@ -10,7 +10,7 @@ const { hashPassword } = require(`${process.cwd()}/src/lib/helper_functions`);
 module.exports = (opts = {}) => {
 	let password;
 
-	// When going through the freelancers mixin to create multiple freelancer records (ex: 50), we don't hash every password, far too time consuming, so the 'dontHash' will be true, telling this mixin not to hash it, we hash the password in the freelancers mixin, and it is passed in the opts object. If 'dontHash' is false, then we hash either the given plain password or a random word like normal.
+	// When going through the freelancers mixin to create multiple freelancer records (ex: 50), we don't hash every password, far too time consuming. So if the 'dontHash' variable in opts is true, it's telling this mixin to not hash it. We instead hash it in the freelancers mixin and pass it to this mixin. if 'dontHash' is false, then we hash either the given plain password or a random word like normal below
 	if (opts.dontHash) {
 		password = opts.password;
 	} else {
