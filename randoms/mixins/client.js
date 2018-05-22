@@ -10,7 +10,7 @@ module.exports = (opts = {}) => Clients.create({
 	id: opts.id || random.guid(),
 	first_name: opts.first_name || random.name(),
 	last_name: opts.last_name || random.name(),
-	username: opts.username || `${random.guid().substring(0, 16)}-adminUserName`,
+	username: opts.username || `${random.guid().substring(0, 16)}-clientUserName`,
 	email: opts.email || `${random.guid().substring(0, 16)}@client.com`,
 	gender: opts.gender || 'male',
 	age: opts.age || 20,
