@@ -10,6 +10,7 @@ random.mixin(require('./mixins'));
 
 // methods that create multiple records, ex: 10 clients, 20 skills, etc.
 random.mixin({
+
 	clients: async(count = 10, opts = {}, dontHash = true) => {
 		if (!opts.field_id) {
 			opts.field_id = random.guid();
@@ -30,7 +31,23 @@ random.mixin({
 		const fields = _.times(count, () => random.field(opts));
 		return Promise.all(fields);
 	},
-	
+
+
+	freelancers: async(count = 10, opts = {}, dontHash = true) => {
+		if (!opts.field_id) {
+			opts.field_id = random.guid();
+			await random.field({ id: opts.field_id });
+		}
+		// see above explanation in the clients mixin as to why this step is here.
+		if (dontHash) {
+			opts.password = hashPassword('password');
+			opts.dontHash = true;
+		}
+
+		const freelancers = _.times(count, () => random.freelancer(opts));
+		return Promise.all(freelancers);
+	},
+
 
 	skills: (count = 10, opts = {}) => {
 		const skills = _.times(count, () => random.skill(opts));

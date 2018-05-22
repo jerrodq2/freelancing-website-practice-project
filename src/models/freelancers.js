@@ -19,8 +19,11 @@ module.exports = {
 	},
 
 	create (data) {
-		// hash the password
-		data.password = hashPassword(data.password);
+		return Freelancers.createUser(data);
+	},
+
+	createWithoutHash (data) {
+		// calls the create method in the main Model
 		return Freelancers.create(data)
 			.then((result) => _.omit(result, 'password', 'username'));
 	},

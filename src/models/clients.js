@@ -23,7 +23,7 @@ module.exports = {
 
 	// Same as the create above but it doesn't hash the password. This is only used in tests and random mixins to speed up creation of multiple clients (ex: 50 clients), not to be used in actual data or workflow.
 	createWithoutHash (data) {
-		// calls the create method above
+		// calls the create method in the main Model
 		return Clients.create(data)
 			.then((result) => _.omit(result, 'password', 'username'));
 	},
