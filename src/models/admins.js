@@ -12,15 +12,15 @@ module.exports = {
 	},
 
 
+	create (data) {
+		return Admins.createUser(data);
+	},
+
+
 	// goes through the mainModel findOne, as opposed to the UserModel findOneUser since admins don't have a field
 	findOne (id) {
 		return Admins.findOne(id)
 			.then((result) => _.omit(result, 'password', 'username'));
-	},
-
-
-	create (data) {
-		return Admins.createUser(data);
 	},
 
 

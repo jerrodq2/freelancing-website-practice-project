@@ -11,11 +11,6 @@ module.exports = {
 	},
 
 
-	findOne (id) {
-		return Clients.findOneUser(id);
-	},
-
-
 	create (data) {
 		return Clients.createUser(data);
 	},
@@ -23,6 +18,11 @@ module.exports = {
 
 	createWithoutHash (data) {
 		return Clients.createWithoutHash(data);
+	},
+
+
+	findOne (id) {
+		return Clients.findOneUser(id);
 	},
 
 
