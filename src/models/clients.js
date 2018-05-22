@@ -3,7 +3,6 @@
 
 const Model = require('./model');
 const Clients = new Model('clients');
-const { hashPassword } = require(`${process.cwd()}/src/lib/helper_functions`);
 const _ = require('lodash');
 
 
@@ -19,15 +18,12 @@ module.exports = {
 	},
 
 	create (data) {
-		// hash the password
-		data.password = hashPassword(data.password);
-		return Clients.create(data)
-			.then((result) => _.omit(result, 'password', 'username'));
+		return Clients.createUser(data);
 	},
 
 	// Same as the create above but it doesn't hash the password. This is only used in tests and random mixins to speed up creation of multiple clients (ex: 50 clients), not to be used in actual data or workflow.
 	createWithoutHash (data) {
-		// Hashed password is already given to save time.
+		// calls the create method above
 		return Clients.create(data)
 			.then((result) => _.omit(result, 'password', 'username'));
 	},

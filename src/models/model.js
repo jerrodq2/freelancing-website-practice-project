@@ -2,6 +2,8 @@
 
 
 const knex = require('../config/knex');
+const { hashPassword } = require(`${process.cwd()}/src/lib/helper_functions`);
+const _ = require('lodash');
 
 class Model {
 	constructor (tableName) {
@@ -54,11 +56,20 @@ class Model {
 			});
 	}
 
-
+	
 	create (data) {
 		data.created_at = data.created_at || new Date();
 		return knex(this.tableName).insert(data).returning('*')
 			.then((result) => result[0]);
+	}
+
+
+	// Used for users (clients, freelancers, and admins), first hashes the password, then calls the above create method, and finally omitting the password and username, which we don't want passed to the front.
+	createUser (data) {
+		// hash the password
+		data.password = hashPassword(data.password);
+		return this.create(data)
+			.then((result) => _.omit(result, 'password', 'username'));
 	}
 
 
