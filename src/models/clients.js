@@ -1,35 +1,35 @@
 'use strict';
 
 
-const Model = require('./model');
-const Clients = new Model('clients');
-const { hashPassword } = require(`${process.cwd()}/src/lib/helper_functions`);
-const _ = require('lodash');
+const UserModel = require('./user_model');
+const Clients = new UserModel('clients');
 
 
 module.exports = {
-
 	getAll () {
 		// TODO: to be setup with pagination later
 	},
 
-	findOne (id) {
-		return Clients.findOneUser(id)
-			.then((result) => _.omit(result, 'password', 'field_id', 'username'));
-	},
 
 	create (data) {
-		// hash the password
-		data.password = hashPassword(data.password);
-		return Clients.create(data)
-			.then((result) => _.omit(result, 'password', 'username'));
+		return Clients.createUser(data);
 	},
 
-	// TODO: Separate update method for updating password and username, perhaps one for emaila and field as well. Change model tests accordingly for this method.
-	update (id, data) {
-		return Clients.updateById(id, data)
-			.then((result) => _.omit(result, 'password', 'username'));
+
+	createWithoutHash (data) {
+		return Clients.createWithoutHash(data);
 	},
+
+
+	findOne (id) {
+		return Clients.findOneUser(id);
+	},
+
+
+	update (id, data) {
+		return Clients.update(id, data);
+	},
+
 
 	delete (id) {
 		return Clients.delete(id);

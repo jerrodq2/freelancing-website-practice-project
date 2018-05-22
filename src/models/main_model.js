@@ -3,20 +3,28 @@
 
 const knex = require('../config/knex');
 
-class Model {
+
+// This is the main Model that is inherited by all other models
+class MainModel {
 	constructor (tableName) {
 		this.tableName = tableName;
 	}
 
 
-	// select a single client or freelancer, also grabs their field (front end, web development, etc.)
-	findOneUser (id) {
-		const selectedColumns = [`${this.tableName}.*`, 'fields.field'];
-		return knex(this.tableName)
-			.select(selectedColumns)
-			.where(knex.raw(`${this.tableName}.id = '${id}'`))
-			.innerJoin('fields', `${this.tableName}.field_id`, 'fields.id')
+	create (data) {
+		data.created_at = data.created_at || new Date();
+		return knex(this.tableName).insert(data).returning('*')
 			.then((result) => result[0]);
+	}
+
+
+	findOne (id) {
+		return knex(this.tableName).where({ id })
+			.then((array) => {
+				// In the event of no record found, we still return an empty object for consistency
+				const result = array[0] ? array[0] : {};
+				return result;
+			});
 	}
 
 
@@ -44,24 +52,6 @@ class Model {
 	}
 
 
-	// find one for any table other than client or freelancer
-	findOne (id) {
-		return knex(this.tableName).where({ id })
-			.then((array) => {
-				// In the event of no record found, we still return an empty object for consistency
-				const result = array[0] ? array[0] : {};
-				return result;
-			});
-	}
-
-
-	create (data) {
-		data.created_at = data.created_at || new Date();
-		return knex(this.tableName).insert(data).returning('*')
-			.then((result) => result[0]);
-	}
-
-
 	// TODO: add boom errors for not found, doesn't currently give any indication other than an empty object
 	updateById (id, data) {
 		data.updated_at = new Date();
@@ -81,4 +71,4 @@ class Model {
 
 }
 
-module.exports = Model;
+module.exports = MainModel;

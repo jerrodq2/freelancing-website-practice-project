@@ -3,23 +3,36 @@
 
 const random = new (require('chance'));
 const Clients = require(`${process.cwd()}/src/models/clients`);
+const { hashPassword } = require(`${process.cwd()}/src/lib/helper_functions`);
 
-// used to create a random skill. If given no parameters, randomizes all fields.
+// used to create a random client. If given no parameters, randomizes all fields.
 // A field_id is required, for simplicity we don't create a new field here
-module.exports = (opts = {}) => Clients.create({
-	id: opts.id || random.guid(),
-	first_name: opts.first_name || random.name(),
-	last_name: opts.last_name || random.name(),
-	username: opts.username || `${random.guid().substring(0, 16)}-clientUserName`,
-	email: opts.email || `${random.guid().substring(0, 16)}@client.com`,
-	gender: opts.gender || 'male',
-	age: opts.age || 20,
-	field_id: opts.field_id,
-	summary: opts.summary || random.paragraph(),
-	state: opts.state || 'TX',
-	city: opts.city || random.word(),
-	zip: opts.zip || random.zip(),
-	phone: opts.phone || random.phone(),
-	dob: opts.dob || random.date({ string: true }),
-	password: opts.password || random.word()
-});
+module.exports = (opts = {}) => {
+	let password;
+
+	// When going through the clients mixin to create multiple client records (ex: 50), we don't hash every password, far too time consuming. So if the 'dontHash' variable in opts is true, it's telling this mixin to not hash it. We instead hash it in the clients mixin and pass it to this mixin. if 'dontHash' is false, then we hash either the given plain password or a random word like normal below
+	if (opts.dontHash) {
+		password = opts.password;
+	} else {
+		const beforeHash = opts.password || random.word();
+		password = hashPassword(beforeHash);
+	}
+
+	return Clients.createWithoutHash({
+		id: opts.id || random.guid(),
+		first_name: opts.first_name || random.name(),
+		last_name: opts.last_name || random.name(),
+		username: opts.username || `${random.guid().substring(0, 16)}-clientUserName`,
+		email: opts.email || `${random.guid().substring(0, 16)}@client.com`,
+		gender: opts.gender || 'male',
+		age: opts.age || 20,
+		field_id: opts.field_id,
+		summary: opts.summary || random.paragraph(),
+		state: opts.state || 'TX',
+		city: opts.city || random.word(),
+		zip: opts.zip || random.zip(),
+		phone: opts.phone || random.phone(),
+		dob: opts.dob || random.date({ string: true }),
+		password,
+	});
+};

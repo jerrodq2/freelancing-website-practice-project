@@ -1,34 +1,35 @@
 'use strict';
 
 
-const Model = require('./model');
-const Freelancers = new Model('freelancers');
-const { hashPassword } = require(`${process.cwd()}/src/lib/helper_functions`);
-const _ = require('lodash');
+const UserModel = require('./user_model');
+const Freelancers = new UserModel('freelancers');
 
 
 module.exports = {
-
 	getAll () {
 		// TODO: to be setup with pagination later
 	},
 
-	findOne (id) {
-		return Freelancers.findOneUser(id)
-			.then((result) => _.omit(result, 'password', 'field_id', 'username'));
-	},
 
 	create (data) {
-		// hash the password
-		data.password = hashPassword(data.password);
-		return Freelancers.create(data)
-			.then((result) => _.omit(result, 'password', 'username'));
+		return Freelancers.createUser(data);
 	},
 
-	update (id, data) {
-		return Freelancers.updateById(id, data)
-			.then((result) => _.omit(result, 'password', 'username'));
+
+	createWithoutHash (data) {
+		return Freelancers.createWithoutHash(data);
 	},
+
+
+	findOne (id) {
+		return Freelancers.findOneUser(id);
+	},
+
+
+	update (id, data) {
+		return Freelancers.update(id, data);
+	},
+
 
 	delete (id) {
 		return Freelancers.delete(id);

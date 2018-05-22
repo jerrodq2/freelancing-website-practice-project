@@ -2,7 +2,7 @@
 
 
 const knex = require('../config/knex');
-const Model = require('./model');
+const Model = require('./main_model');
 const Skills = require('./skills');
 const FreelancerSkills = new Model('freelancer_skills');
 
