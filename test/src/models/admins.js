@@ -20,7 +20,7 @@ describe('Admins Model', () => {
 
 
 	before(async() => {
-		await db.resetAll();
+		await db.resetTable('admins');
 		return random.admin(data);
 	});
 
@@ -29,29 +29,28 @@ describe('Admins Model', () => {
 		const newId = random.guid(),
 			username = 'create',
 			email = 'create@email.com';
+		let result, admin;
 
 		const newData = Object.assign({}, data, { id: newId, username, email });
 
-		before(() => Admins.create(newData));
+		before(async() => {
+			await Admins.create(newData);
+			result = await knex('admins').where({ id: newId });
+			admin = result[0];
+		});
 
-		it('should create a new admin record if given all the necessary info, with a created_at and updated_at field', async () => {
-			const result = await knex('admins').where({ id: newId });
-			const admin = result[0];
-
+		it('should create a new admin record if given valid data', async () => {
 			expect(admin).to.be.an.object();
 			expect(admin.id).to.equal(newId);
 			expect(admin.first_name).to.equal(first_name);
 			expect(admin.last_name).to.equal(last_name);
 			expect(admin.email).to.equal(email);
 			expect(admin.username).to.equal(username);
-			expect(admin.created_at).to.be.a.date();
-			expect(admin.updated_at).to.equal(null);
 		});
 
-		it('should create a new admin record with a hashed password', async () => {
-			const result = await knex('admins').where({ id: newId });
-			const admin = result[0];
-
+		it('should create the new admin record with a hashed password, and new created_at and updated_at fields', async () => {
+			expect(admin.created_at).to.be.a.date();
+			expect(admin.updated_at).to.equal(null);
 			expect(admin).to.be.an.object();
 			expect(admin.id).to.equal(newId);
 			expect(admin.password).to.be.a.string();
@@ -142,7 +141,7 @@ describe('Admins Model', () => {
 		});
 	});
 
-	// TODO: write tests for incorrect id and what it returns upon successful delete once that process is refactored
+	// TODO: write tests for incorrect id and what it returns upon successful delete once that process is refactored. Same for other model test files
 	describe('has a delete method', () => {
 		it('should delete the record if given a correct id', async() => {
 			const specificId = random.guid();
