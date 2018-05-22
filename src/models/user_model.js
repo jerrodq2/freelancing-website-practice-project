@@ -41,7 +41,7 @@ class UserModel extends MainModel {
 	}
 
 
-	// TODO: Separate update method for updating password and username, perhaps one for emaila and field as well. Change model tests accordingly for this method.
+	// TODO: Separate update method for updating password and username, perhaps one for email and field as well. Change model tests accordingly for this method.
 	update (id, data) {
 		return this.updateById(id, data)
 			.then((result) => _.omit(result, 'password', 'username'));
