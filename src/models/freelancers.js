@@ -3,7 +3,6 @@
 
 const UserModel = require('./user_model');
 const Freelancers = new UserModel('freelancers');
-const _ = require('lodash');
 
 
 module.exports = {
