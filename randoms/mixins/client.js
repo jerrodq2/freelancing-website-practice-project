@@ -14,7 +14,8 @@ module.exports = (opts = {}) => {
 	if (opts.dontHash) {
 		password = opts.password;
 	} else {
-		password = hashPassword(opts.password) || hashPassword(random.word());
+		const beforeHash = opts.password || random.word();
+		password = hashPassword(beforeHash);
 	}
 
 	return Clients.createWithoutHash({
