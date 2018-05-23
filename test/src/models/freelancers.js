@@ -59,6 +59,8 @@ describe('Freelancers Model', () => {
 		it('should create a new freelancer record if given valid data, create new created_at and updated_at fields, and return the freelancer object without the username or password', async() => {
 			expect(result).to.be.an.object();
 			expect(result.id).to.equal(specificId);
+			expect(result.first_name).to.equal(first_name);
+			expect(result.last_name).to.equal(last_name);
 			expect(result.email).to.equal(specificEmail);
 			expect(result.job_title).to.equal(job_title);
 			expect(result.rate).to.equal(rate);
@@ -108,6 +110,8 @@ describe('Freelancers Model', () => {
 		it('should create a new freelancer record if given valid data, create new created_at and updated_at fields, and return the client object without the username or password', async() => {
 			expect(result).to.be.an.object();
 			expect(result.id).to.equal(specificId);
+			expect(result.first_name).to.equal(first_name);
+			expect(result.last_name).to.equal(last_name);
 			expect(result.email).to.equal(specificEmail);
 			expect(result.job_title).to.equal(job_title);
 			expect(result.rate).to.equal(rate);
@@ -145,6 +149,8 @@ describe('Freelancers Model', () => {
 
 			expect(freelancer).to.be.an.object();
 			expect(freelancer.id).to.equal(id);
+			expect(freelancer.first_name).to.equal(first_name);
+			expect(freelancer.last_name).to.equal(last_name);
 			expect(freelancer.email).to.equal(email);
 			expect(freelancer.job_title).to.equal(job_title);
 			expect(freelancer.rate).to.equal(rate);
@@ -176,7 +182,90 @@ describe('Freelancers Model', () => {
 
 
 	describe('has an update method', () => {
+		const newFieldId = random.guid(),
+			newFirstName = random.name(),
+			newLastName = random.name(),
+			newJobTitle = random.word(),
+			newRate = 75,
+			newExperienceLevel = 'expert',
+			newAvailability = false,
+			newGender = 'male',
+			newAge = 22,
+			newSummary = random.paragraph(),
+			newState = 'FL',
+			newCity = random.word(),
+			newZip = random.zip(),
+			newPhone = random.phone(),
+			newDob = random.date({ string: true });
 
+		let updateData = { field_id: newFieldId, first_name: newFirstName, last_name: newLastName, job_title: newJobTitle, rate: newRate, experience_level: newExperienceLevel, available: newAvailability, gender: newGender, age: newAge, summary: newSummary, state: newState, city: newCity, zip: newZip, phone: newPhone, dob: newDob };
+
+		before(() => random.field({ id: newFieldId }));
+
+		it('should update the admin record if given a valid id and data, and return the updated object without password or username', async() => {
+			const specificId = random.guid(),
+				specificEmail = `${specificId}@email.com`,
+				newEmail = `update-${specificEmail}`,
+				createData = { id: specificId, email: specificEmail, field_id };
+
+			updateData = Object.assign(updateData, { email: newEmail });
+
+			await random.freelancer(createData);
+			const oldFreelancer = await Freelancers.findOne(specificId);
+
+			expect(oldFreelancer).to.be.an.object();
+			expect(oldFreelancer.id).to.equal(specificId);
+			expect(oldFreelancer.email).to.equal(specificEmail);
+			expect(oldFreelancer.updated_at).to.equal(null);
+
+			const updatedFreelancer = await Freelancers.update(specificId, updateData);
+
+			expect(updatedFreelancer).to.be.an.object();
+			expect(updatedFreelancer.id).to.equal(specificId);
+			expect(updatedFreelancer.first_name).to.equal(newFirstName);
+			expect(updatedFreelancer.last_name).to.equal(newLastName);
+			expect(updatedFreelancer.email).to.equal(newEmail);
+			expect(updatedFreelancer.job_title).to.equal(newJobTitle);
+			expect(updatedFreelancer.rate).to.equal(newRate);
+			expect(updatedFreelancer.experience_level).to.equal(newExperienceLevel);
+			expect(updatedFreelancer.available).to.equal(newAvailability);
+			expect(updatedFreelancer.gender).to.equal(newGender);
+			expect(updatedFreelancer.age).to.equal(newAge);
+			expect(updatedFreelancer.field_id).to.equal(newFieldId);
+			expect(updatedFreelancer.summary).to.equal(newSummary);
+			expect(updatedFreelancer.state).to.equal(newState);
+			expect(updatedFreelancer.city).to.equal(newCity);
+			expect(updatedFreelancer.zip).to.equal(newZip);
+			expect(updatedFreelancer.phone).to.equal(newPhone);
+			expect(updatedFreelancer.dob).to.equal(new Date(newDob));
+			expect(updatedFreelancer.updated_at).to.be.a.date();
+			expect(updatedFreelancer.username).to.equal(undefined);
+			expect(updatedFreelancer.password).to.equal(undefined);
+		});
+
+		it('should update the freelancer record with the given id if given valid data, even if only given one field', async() => {
+			const specificId = random.guid(),
+				specificEmail = `${specificId}@email.com`,
+				originalFirstName = random.name(),
+				createData = { id: specificId, email: specificEmail, field_id, first_name: originalFirstName },
+				updateData = { first_name: newFirstName };
+
+			await random.freelancer(createData);
+			const oldFreelancer = await Freelancers.findOne(specificId);
+
+			expect(oldFreelancer).to.be.an.object();
+			expect(oldFreelancer.id).to.equal(specificId);
+			expect(oldFreelancer.email).to.equal(specificEmail);
+			expect(oldFreelancer.first_name).to.equal(originalFirstName);
+			expect(oldFreelancer.updated_at).to.equal(null);
+
+			const updatedFreelancer = await Freelancers.update(specificId, updateData);
+
+			expect(updatedFreelancer).to.be.an.object();
+			expect(updatedFreelancer.id).to.equal(specificId);
+			expect(updatedFreelancer.first_name).to.equal(newFirstName);
+			expect(updatedFreelancer.updated_at).to.be.a.date();
+		});
 	});
 
 
