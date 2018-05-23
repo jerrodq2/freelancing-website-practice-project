@@ -39,7 +39,7 @@ describe('Fields Model', () => {
 
 
 	describe('has a findOne method', () => {
-		it('should retrive a specific field record if given a correct id', async() => {
+		it('should retrieve a specific field with a given id, and return an object', async() => {
 			const field = await Fields.findOne(id);
 			expect(field).to.be.an.object();
 			expect(field.id).to.equal(id);
@@ -51,8 +51,7 @@ describe('Fields Model', () => {
 			const field = await Fields.findOne(random.guid());
 
 			expect(field).to.be.an.object();
-			expect(field.id).to.equal(undefined);
-			expect(field.field).to.equal(undefined);
+			expect(field).to.equal({});
 		});
 	});
 

@@ -120,7 +120,7 @@ describe('Clients Model', () => {
 
 
 	describe('has a findOne method', () => {
-		it('should retrieve a specific client record without the password, username, or field_id, but it should have the name of the field.', async() => {
+		it('should retrieve a specific client with a given id, and return an object without the password, username, or field_id, but with the name of the field', async() => {
 			const client = await Clients.findOne(id);
 
 			expect(client).to.be.an.object();
@@ -138,6 +138,13 @@ describe('Clients Model', () => {
 			expect(client.username).to.equal(undefined);
 			expect(client.password).to.equal(undefined);
 			expect(client.field_id).to.equal(undefined);
+		});
+
+		it('should return an empty object if not found or given an incorrect id', async() => {
+			const client = await Clients.findOne(random.guid());
+
+			expect(client).to.be.an.object();
+			expect(client).to.equal({});
 		});
 	});
 

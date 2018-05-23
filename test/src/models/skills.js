@@ -38,7 +38,7 @@ describe('Skills Model', () => {
 
 
 	describe('has a findOne method', () => {
-		it('should retrieve a specific skill record if given a correct id', async() => {
+		it('should retrieve a specific skill with a given id, and return an object', async() => {
 			const result = await Skills.findOne(id);
 			expect(result).to.be.an.object();
 			expect(result.id).to.equal(id);
@@ -49,8 +49,7 @@ describe('Skills Model', () => {
 			const result = await Skills.findOne(random.guid());
 
 			expect(result).to.be.an.object();
-			expect(result.id).to.equal(undefined);
-			expect(result.skill).to.equal(undefined);
+			expect(result).to.equal({});
 		});
 	});
 

@@ -63,7 +63,7 @@ describe('Admins Model', () => {
 
 
 	describe('has a findOne method', () => {
-		it('should retrieve a specific admin record without the password or username', async() => {
+		it('should retrieve a specific admin with a given id, and return an object without the password or username', async() => {
 			const admin = await Admins.findOne(id);
 			expect(admin).to.be.an.object();
 			expect(admin.id).to.equal(id);
@@ -78,9 +78,7 @@ describe('Admins Model', () => {
 			const admin = await Admins.findOne(random.guid());
 
 			expect(admin).to.be.an.object();
-			expect(admin.id).to.equal(undefined);
-			expect(admin.first_name).to.equal(undefined);
-			expect(admin.email).to.equal(undefined);
+			expect(admin).to.equal({});
 		});
 	});
 

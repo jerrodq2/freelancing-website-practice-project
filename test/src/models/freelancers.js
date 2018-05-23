@@ -140,7 +140,38 @@ describe('Freelancers Model', () => {
 
 
 	describe('has a findOne method', () => {
+		it('should retrieve a specific freelancer with a given id, and return an object without the password, username, or field_id, but with the name of the field', async() => {
+			const freelancer = await Freelancers.findOne(id);
 
+			expect(freelancer).to.be.an.object();
+			expect(freelancer.id).to.equal(id);
+			expect(freelancer.email).to.equal(email);
+			expect(freelancer.job_title).to.equal(job_title);
+			expect(freelancer.rate).to.equal(rate);
+			expect(freelancer.experience_level).to.equal(experience_level);
+			expect(freelancer.video_url).to.equal(video_url);
+			expect(freelancer.portfolio_url).to.equal(portfolio_url);
+			expect(freelancer.available).to.equal(available);
+			expect(freelancer.gender).to.equal(gender);
+			expect(freelancer.age).to.equal(age);
+			expect(freelancer.field).to.equal(field);
+			expect(freelancer.summary).to.equal(summary);
+			expect(freelancer.state).to.equal(state);
+			expect(freelancer.city).to.equal(city);
+			expect(freelancer.zip).to.equal(zip);
+			expect(freelancer.phone).to.equal(phone);
+			expect(freelancer.dob).to.equal(new Date(dob));
+			expect(freelancer.username).to.equal(undefined);
+			expect(freelancer.password).to.equal(undefined);
+			expect(freelancer.field_id).to.equal(undefined);
+		});
+
+		it('should return an empty object if not found or given an incorrect id', async() => {
+			const freelancer = await Freelancers.findOne(random.guid());
+
+			expect(freelancer).to.be.an.object();
+			expect(freelancer).to.equal({});
+		});
 	});
 
 
