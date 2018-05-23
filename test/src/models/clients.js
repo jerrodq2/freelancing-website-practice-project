@@ -7,7 +7,6 @@ const lab = exports.lab = Lab.script();
 const { describe, it, before } = lab;
 const Clients = require(`${process.cwd()}/src/models/clients`);
 const { db, random, knex } = require(`${process.cwd()}/test/src/helpers`);
-const _ = require('lodash');
 
 
 describe('Clients Model', () => {
@@ -39,12 +38,9 @@ describe('Clients Model', () => {
 	describe('has a create method', async() => {
 		const specificId = random.guid(),
 			specificUsername = `username - ${specificId}`,
-			specificEmail = `${specificId}@email.com`;
-		let result, client,
+			specificEmail = `${specificId}@email.com`,
 			createData = Object.assign({}, data, { id: specificId, username: specificUsername, email: specificEmail });
-
-		// remove the 'field' key, which is used in the client mixin but not in the actual Create method
-		createData = _.omit(createData, ['field']);
+		let result, client;
 
 		before(async() => {
 			await Clients.create(createData);
