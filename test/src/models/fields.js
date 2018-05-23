@@ -6,7 +6,7 @@ const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 const { describe, it, before } = lab;
 const Fields = require(`${process.cwd()}/src/models/fields`);
-const { db, random, knex } = require(`${process.cwd()}/test/src/helpers`);
+const { db, random} = require(`${process.cwd()}/test/src/helpers`);
 
 
 describe('Fields Model', () => {
@@ -24,22 +24,14 @@ describe('Fields Model', () => {
 		const specificId = random.guid(),
 			specificField = random.word(),
 			createData = { id: specificId, field: specificField };
-		let result, field;
+		let field;
 
-		before(async() => {
-			await Fields.create(createData);
-			result = await knex('fields').where({ id: specificId });
-			field = result[0];
-		});
+		before(async() => field = await Fields.create(createData));
 
-		it('should create a new field record if given a proper id and field', async() => {
+		it('should create a new field record if given valid data, create new created_at and updated_at fields, and return the field object', async() => {
 			expect(field).to.be.an.object();
 			expect(field.id).to.equal(specificId);
 			expect(field.field).to.equal(specificField);
-
-		});
-
-		it('should create the new field record with new created_at and updated_at fields', async() => {
 			expect(field.created_at).to.be.a.date();
 			expect(field.updated_at).to.equal(null);
 		});

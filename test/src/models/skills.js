@@ -6,7 +6,7 @@ const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 const { describe, it, before } = lab;
 const Skills = require(`${process.cwd()}/src/models/skills`);
-const { db, random, knex } = require(`${process.cwd()}/test/src/helpers`);
+const { db, random } = require(`${process.cwd()}/test/src/helpers`);
 
 
 describe('Skills Model', () => {
@@ -23,23 +23,16 @@ describe('Skills Model', () => {
 		const specificId = random.guid(),
 			specificSkill = random.word(),
 			newData = { id: specificId, skill: specificSkill };
-		let result, record;
+		let result;
 
-		before(async() => {
-			await Skills.create(newData);
-			result = await knex('skills').where({ id: specificId });
-			record = result[0];
-		});
+		before(async() => result = await Skills.create(newData));
 
-		it('should create a new skill if given a proper id and skill', async() => {
-			expect(record).to.be.an.object();
-			expect(record.id).to.equal(specificId);
-			expect(record.skill).to.equal(specificSkill);
-		});
-
-		it('should create the new skill record with new created_at and update_at fields', async() => {
-			expect(record.created_at).to.be.a.date();
-			expect(record.updated_at).to.equal(null);
+		it('should create a new skill record if given valid data, create new created_at and updated_at fields, and return the skill object', async() => {
+			expect(result).to.be.an.object();
+			expect(result.id).to.equal(specificId);
+			expect(result.skill).to.equal(specificSkill);
+			expect(result.created_at).to.be.a.date();
+			expect(result.updated_at).to.equal(null);
 		});
 	});
 

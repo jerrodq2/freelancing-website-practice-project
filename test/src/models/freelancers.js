@@ -82,6 +82,8 @@ describe('Freelancers Model', () => {
 		});
 
 		it('should create the new record with the given username and the hashed password', async() => {
+			expect(freelancer).to.be.an.object();
+			expect(freelancer.id).to.equal(specificId);
 			expect(freelancer.username).to.equal(specificUsername);
 			expect(freelancer.password).to.be.a.string();
 			expect(freelancer.password).to.not.equal(password);

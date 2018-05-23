@@ -26,33 +26,35 @@ describe('Admins Model', () => {
 
 
 	describe('has a create method', () => {
-		const newId = random.guid(),
-			username = 'create',
-			email = 'create@email.com';
-		let result, admin;
+		const specificId = random.guid(),
+			specificUsername = 'create',
+			specificEmail = 'create@email.com';
+		let result, admin, record;
 
-		const newData = Object.assign({}, data, { id: newId, username, email });
+		const newData = Object.assign({}, data, { id: specificId, username: specificUsername, email: specificEmail });
 
 		before(async() => {
-			await Admins.create(newData);
-			result = await knex('admins').where({ id: newId });
-			admin = result[0];
+			result = await Admins.create(newData);
+			record = await knex('admins').where({ id: specificId });
+			admin = record[0];
 		});
 
-		it('should create a new admin record if given valid data', async () => {
-			expect(admin).to.be.an.object();
-			expect(admin.id).to.equal(newId);
-			expect(admin.first_name).to.equal(first_name);
-			expect(admin.last_name).to.equal(last_name);
-			expect(admin.email).to.equal(email);
-			expect(admin.username).to.equal(username);
+		it('should create a new admin record if given valid data, create new created_at and updated_at fields, and return the admin object without the username or password', async () => {
+			expect(result).to.be.an.object();
+			expect(result.id).to.equal(specificId);
+			expect(result.first_name).to.equal(first_name);
+			expect(result.last_name).to.equal(last_name);
+			expect(result.email).to.equal(specificEmail);
+			expect(result.created_at).to.be.a.date();
+			expect(result.updated_at).to.equal(null);
+			expect(result.username).to.equal(undefined);
+			expect(result.password).to.equal(undefined);
 		});
 
-		it('should create the new admin record with a hashed password, and new created_at and updated_at fields', async () => {
-			expect(admin.created_at).to.be.a.date();
-			expect(admin.updated_at).to.equal(null);
+		it('should create the new record with the given username and the hashed password', async () => {
 			expect(admin).to.be.an.object();
-			expect(admin.id).to.equal(newId);
+			expect(admin.id).to.equal(specificId);
+			expect(admin.username).to.equal(specificUsername);
 			expect(admin.password).to.be.a.string();
 			expect(admin.password).to.not.equal(password);
 			expect(admin.password.length).to.be.above(password.length);

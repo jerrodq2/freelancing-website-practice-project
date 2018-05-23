@@ -68,6 +68,8 @@ describe('Clients Model', () => {
 		});
 
 		it('should create the new record with a hashed password, and new created_at and updated_at fields', async() => {
+			expect(client).to.be.an.object();
+			expect(client.id).to.equal(specificId);
 			expect(client.username).to.equal(specificUsername);
 			expect(client.password).to.be.a.string();
 			expect(client.password).to.not.equal(password);
