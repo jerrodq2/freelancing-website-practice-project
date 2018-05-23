@@ -6,7 +6,7 @@ const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 const { describe, it, before } = lab;
 const Fields = require(`${process.cwd()}/src/models/fields`);
-const { db, random, knex } = require(`${process.cwd()}/test/src/helpers`);
+const { db, random } = require(`${process.cwd()}/test/src/helpers`);
 
 
 describe('Fields Model', () => {
@@ -24,22 +24,14 @@ describe('Fields Model', () => {
 		const specificId = random.guid(),
 			specificField = random.word(),
 			createData = { id: specificId, field: specificField };
-		let result, field;
+		let field;
 
-		before(async() => {
-			await Fields.create(createData);
-			result = await knex('fields').where({ id: specificId });
-			field = result[0];
-		});
+		before(async() => field = await Fields.create(createData));
 
-		it('should create a new field record if given a proper id and field', async() => {
+		it('should create a new field record if given valid data, create new created_at and updated_at fields, and return the field object', async() => {
 			expect(field).to.be.an.object();
 			expect(field.id).to.equal(specificId);
 			expect(field.field).to.equal(specificField);
-
-		});
-
-		it('should create the new field record with new created_at and updated_at fields', async() => {
 			expect(field.created_at).to.be.a.date();
 			expect(field.updated_at).to.equal(null);
 		});
@@ -47,7 +39,7 @@ describe('Fields Model', () => {
 
 
 	describe('has a findOne method', () => {
-		it('should retrive a specific field record if given a correct id', async() => {
+		it('should retrieve a specific field with a given id, and return an object', async() => {
 			const field = await Fields.findOne(id);
 			expect(field).to.be.an.object();
 			expect(field.id).to.equal(id);
@@ -59,15 +51,14 @@ describe('Fields Model', () => {
 			const field = await Fields.findOne(random.guid());
 
 			expect(field).to.be.an.object();
-			expect(field.id).to.equal(undefined);
-			expect(field.field).to.equal(undefined);
+			expect(field).to.equal({});
 		});
 	});
 
 
 	describe('has an update method', () => {
 
-		it('should update a field record if given a valid id and field', async() => {
+		it('should update the field record if given a valid id and data, and return the updated object', async() => {
 			const specificId = random.guid(),
 				specificField = random.word(),
 				newFieldName = random.word(),
@@ -82,8 +73,7 @@ describe('Fields Model', () => {
 			expect(oldField.field).to.equal(specificField);
 			expect(oldField.updated_at).to.equal(null);
 
-			await Fields.update(specificId, updateData);
-			const newField = await Fields.findOne(specificId);
+			const newField = await Fields.update(specificId, updateData);
 
 			expect(newField).to.be.an.object();
 			expect(newField.id).to.equal(specificId);
@@ -106,7 +96,7 @@ describe('Fields Model', () => {
 			const afterDelete = await Fields.findOne(specificId);
 
 			expect(afterDelete).to.be.an.object();
-			expect(afterDelete.id).to.equal(undefined);
+			expect(afterDelete).to.equal({});
 		});
 	});
 
