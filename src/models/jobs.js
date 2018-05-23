@@ -12,6 +12,12 @@ module.exports = {
 		// TODO: to be setup with pagination later
 	},
 
+
+	create (data) {
+		return Jobs.create(data);
+	},
+
+
 	findOne (id) {
 		// specify the columns I want from each table
 		const jobColumns = ['jobs.*' ];
@@ -29,13 +35,11 @@ module.exports = {
 			.then((result) => result[0]);
 	},
 
-	create (data) {
-		return Jobs.create(data);
-	},
 
 	update (id, data) {
 		return Jobs.updateById(id, data);
 	},
+
 
 	delete (id) {
 		return Jobs.delete(id);
