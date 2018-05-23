@@ -112,7 +112,7 @@ describe('Skills Model', () => {
 			const afterDelete = await Skills.findOne(specificId);
 
 			expect(afterDelete).to.be.an.object();
-			expect(afterDelete.id).to.equal(undefined);
+			expect(afterDelete).to.equal({});
 		});
 	});
 

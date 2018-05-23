@@ -96,7 +96,7 @@ describe('Fields Model', () => {
 			const afterDelete = await Fields.findOne(specificId);
 
 			expect(afterDelete).to.be.an.object();
-			expect(afterDelete.id).to.equal(undefined);
+			expect(afterDelete).to.equal({});
 		});
 	});
 

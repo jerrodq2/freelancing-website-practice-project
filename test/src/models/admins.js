@@ -156,7 +156,7 @@ describe('Admins Model', () => {
 			const afterDelete = await Admins.findOne(specificId);
 
 			expect(afterDelete).to.be.an.object();
-			expect(afterDelete.id).to.equal(undefined);
+			expect(afterDelete).to.equal({});
 		});
 	});
 

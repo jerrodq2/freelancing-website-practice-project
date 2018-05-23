@@ -270,6 +270,20 @@ describe('Freelancers Model', () => {
 
 
 	describe('has a delete method', () => {
+		it('should delete the record if given a correct id', async() => {
+			const specificId = random.guid();
+			await random.freelancer({ id: specificId, field_id });
 
+			const freelancer = await Freelancers.findOne(specificId);
+			expect(freelancer).to.be.an.object();
+			expect(freelancer.id).to.equal(specificId);
+
+			await Freelancers.delete(specificId);
+			const afterDelete = await Freelancers.findOne(specificId);
+
+			expect(afterDelete).to.be.an.object();
+			expect(afterDelete).to.equal({});
+
+		});
 	});
 });
