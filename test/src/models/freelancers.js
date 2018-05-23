@@ -202,7 +202,7 @@ describe('Freelancers Model', () => {
 
 		before(() => random.field({ id: newFieldId }));
 
-		it('should update the admin record if given a valid id and data, and return the updated object without password or username', async() => {
+		it('should update the freelancer record if given a valid id and data, and return the updated object without password or username', async() => {
 			const specificId = random.guid(),
 				specificEmail = `${specificId}@email.com`,
 				newEmail = `update-${specificEmail}`,

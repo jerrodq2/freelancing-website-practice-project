@@ -74,7 +74,7 @@ describe('Skills Model', () => {
 
 
 	describe('has an update method', () => {
-		it('should update the skill record if given a valid id and skill', async() => {
+		it('should update the skill record if given a valid id and data, and return the updated object ', async() => {
 			const specificId = random.guid(),
 				specificSkill = random.word(),
 				newSkill = random.word(),
@@ -89,9 +89,7 @@ describe('Skills Model', () => {
 			expect(oldSkill.skill).to.equal(specificSkill);
 			expect(oldSkill.updated_at).to.equal(null);
 
-			await Skills.update(specificId, updateData);
-			const updatedSkill = await Skills.findOne(specificId);
-
+			const updatedSkill =await Skills.update(specificId, updateData);
 
 			expect(updatedSkill).to.be.an.object();
 			expect(updatedSkill.id).to.equal(specificId);

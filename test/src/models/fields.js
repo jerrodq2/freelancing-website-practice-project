@@ -6,7 +6,7 @@ const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 const { describe, it, before } = lab;
 const Fields = require(`${process.cwd()}/src/models/fields`);
-const { db, random} = require(`${process.cwd()}/test/src/helpers`);
+const { db, random } = require(`${process.cwd()}/test/src/helpers`);
 
 
 describe('Fields Model', () => {
@@ -58,7 +58,7 @@ describe('Fields Model', () => {
 
 	describe('has an update method', () => {
 
-		it('should update a field record if given a valid id and field', async() => {
+		it('should update the field record if given a valid id and data, and return the updated object', async() => {
 			const specificId = random.guid(),
 				specificField = random.word(),
 				newFieldName = random.word(),
@@ -73,8 +73,7 @@ describe('Fields Model', () => {
 			expect(oldField.field).to.equal(specificField);
 			expect(oldField.updated_at).to.equal(null);
 
-			await Fields.update(specificId, updateData);
-			const newField = await Fields.findOne(specificId);
+			const newField = await Fields.update(specificId, updateData);
 
 			expect(newField).to.be.an.object();
 			expect(newField.id).to.equal(specificId);
