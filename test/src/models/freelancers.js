@@ -7,10 +7,9 @@ const lab = exports.lab = Lab.script();
 const { describe, it, before } = lab;
 const Freelancers = require(`${process.cwd()}/src/models/freelancers`);
 const { db, random, knex } = require(`${process.cwd()}/test/src/helpers`);
-const _ = require('lodash');
 
 
-describe.only('Freelancers Model', () => {
+describe('Freelancers Model', () => {
 	const id = random.guid(),
 		first_name = random.name(),
 		last_name = random.name(),
@@ -57,7 +56,7 @@ describe.only('Freelancers Model', () => {
 			freelancer = record[0];
 		});
 
-		it('should create a new freelancer record if given valid data, create a new created_at and updated_at fields, and return the freelancer object without the username or password.', async() => {
+		it('should create a new freelancer record if given valid data, create new created_at and updated_at fields, and return the freelancer object without the username or password', async() => {
 			expect(result).to.be.an.object();
 			expect(result.id).to.equal(specificId);
 			expect(result.email).to.equal(specificEmail);

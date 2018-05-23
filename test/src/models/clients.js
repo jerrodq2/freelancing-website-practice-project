@@ -40,33 +40,35 @@ describe('Clients Model', () => {
 			specificUsername = `username - ${specificId}`,
 			specificEmail = `${specificId}@email.com`,
 			createData = Object.assign({}, data, { id: specificId, username: specificUsername, email: specificEmail });
-		let result, client;
+		let record, client, result;
 
 		before(async() => {
-			await Clients.create(createData);
-			result = await knex('clients').where({ id: specificId });
-			client = result[0];
+			result = await Clients.create(createData);
+			record = await knex('clients').where({ id: specificId });
+			client = record[0];
 		});
 
-		it('should create a new client record if given valid data', async() => {
-			expect(client).to.be.an.object();
-			expect(client.id).to.equal(specificId);
-			expect(client.username).to.equal(specificUsername);
-			expect(client.email).to.equal(specificEmail);
-			expect(client.gender).to.equal(gender);
-			expect(client.age).to.equal(age);
-			expect(client.field_id).to.equal(field_id);
-			expect(client.summary).to.equal(summary);
-			expect(client.state).to.equal(state);
-			expect(client.city).to.equal(city);
-			expect(client.zip).to.equal(zip);
-			expect(client.phone).to.equal(phone);
-			expect(client.dob).to.equal(new Date(dob));
+		it('should create a new client record if given valid data, create new created_at and updated_at fields, and return the client object without the username or password', async() => {
+			expect(result).to.be.an.object();
+			expect(result.id).to.equal(specificId);
+			expect(result.email).to.equal(specificEmail);
+			expect(result.gender).to.equal(gender);
+			expect(result.age).to.equal(age);
+			expect(result.field_id).to.equal(field_id);
+			expect(result.summary).to.equal(summary);
+			expect(result.state).to.equal(state);
+			expect(result.city).to.equal(city);
+			expect(result.zip).to.equal(zip);
+			expect(result.phone).to.equal(phone);
+			expect(result.dob).to.equal(new Date(dob));
+			expect(result.created_at).to.be.a.date();
+			expect(result.updated_at).to.equal(null);
+			expect(result.username).to.equal(undefined);
+			expect(result.username).to.equal(undefined);
 		});
 
 		it('should create the new record with a hashed password, and new created_at and updated_at fields', async() => {
-			expect(client.created_at).to.be.a.date();
-			expect(client.updated_at).to.equal(null);
+			expect(client.username).to.equal(specificUsername);
 			expect(client.password).to.be.a.string();
 			expect(client.password).to.not.equal(password);
 			expect(client.password.length).to.be.above(password.length);
