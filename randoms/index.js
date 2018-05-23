@@ -49,6 +49,28 @@ random.mixin({
 	},
 
 
+	jobs: async(count = 10, opts = {}) => {
+		// create a field if not given
+		if (!opts.field_id) {
+			opts.field_id = random.guid();
+			await random.field({ id: opts.field_id });
+		}
+		// create a client if not given
+		if (!opts.client_id) {
+			opts.client_id = random.guid();
+			await random.client({ id: opts.client_id, field_id: opts.field_id });
+		}
+		// create a freelancer if not given
+		if (!opts.freelancer_id) {
+			opts.freelancer_id = random.guid();
+			await random.freelancer({ id: opts.freelancer_id, field_id: opts.field_id });
+		}
+
+		const jobs = _.times(count, () => random.job(opts));
+		return Promise.all(jobs);
+	},
+
+
 	skills: (count = 10, opts = {}) => {
 		const skills = _.times(count, () => random.skill(opts));
 		return Promise.all(skills);

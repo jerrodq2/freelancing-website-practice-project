@@ -12,7 +12,7 @@ module.exports = (opts = {}) => Jobs.create({
 	client_id: opts.client_id,
 	freelancer_id: opts.freelancer_id || null,
 	title: opts.title || random.sentence(),
-	rate: opts.rate || random.chance.integer({ min: 15, max: 80 }),
+	rate: opts.rate || random.integer({ min: 15, max: 80 }),
 	rate_type: opts.rate_type || 'hourly',
 	description: opts.description || random.paragraph(),
 	state: opts.state || 'TX',
