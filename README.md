@@ -46,6 +46,6 @@ npm run test
 ```
 
 ## General Info
-TBD
+A note about the general syntax of the project. I prefer to add spaces throughout the project for readability and to make things clearer, just a preference.
 
 Last updated: 5/22/18

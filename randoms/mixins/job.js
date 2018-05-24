@@ -18,8 +18,8 @@ module.exports = (opts = {}) => Jobs.create({
 	state: opts.state || 'TX',
 	city: opts.city || random.word(),
 	zip: opts.zip || random.zip(),
-	onsite_required: opts.onsite_required || random.bool(),
-	available: opts.available || random.bool(),
-	closed: opts.closed || random.bool(),
+	onsite_required: opts.onsite_required == undefined? random.bool() : opts.onsite_required,
+	available: opts.available == undefined? random.bool() : opts.available,
+	closed: opts.closed == undefined? random.bool() : opts.closed,
 	experience_level_requested: opts.experience_level_requested || 'any',
 });
