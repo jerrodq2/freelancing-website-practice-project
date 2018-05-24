@@ -33,7 +33,10 @@ describe.only('Jobs Model', () => {
 		await random.field({ id: field_id, field });
 		await random.client({ id: client_id, field_id });
 		await random.freelancer({ id: freelancer_id, field_id });
-		await random.job({ id }); // testing errors
+		const bad = await random.job({ id }) // testing errors
+			.catch((e) => {
+				console.log('e', e.message);
+			})
 		return random.job(data);
 	});
 	describe('has a create method', () => {

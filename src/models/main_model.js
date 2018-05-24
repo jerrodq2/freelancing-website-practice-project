@@ -2,6 +2,7 @@
 
 
 const knex = require('../config/knex');
+const Errors = require(`${process.cwd()}/src/lib/errors`);
 
 
 // This is the main Model that is inherited by all other models
@@ -15,20 +16,11 @@ class MainModel {
 		data.created_at = data.created_at || new Date();
 		return knex(this.tableName).insert(data).returning('*')
 			.then((result) => result[0])
-			.catch((e) => {
-				console.log('error');
-				console.log(e.message);
-				console.log(e.message.indexOf('violates foreign key'));
-				console.log(e.message.indexOf('violates not-null'));
-				if (e.message.indexOf('violates not-null') >= 0) {
-					const str = e.message;
-					console.log(e.column);
-					// console.log(str.split('"'));
-				}
-				console.log();
-				console.log();
-				console.log();
-				console.log(e);
+			.catch((err) => {
+				if (Errors.violatesNull(err)) 
+					throw Errors.badRequest(this.tableName, 'create', err.column);
+
+				throw err;
 			});
 	}
 
