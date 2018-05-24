@@ -41,6 +41,7 @@ describe.only('Jobs Model', () => {
 	});
 	describe('has a create method', () => {
 
+		// checks all fields when a job is created given all required and optional fields or without freelancer_id
 		const checkFields = (job, givenId, freelancer) => {
 			expect(job).to.be.an.object();
 			expect(job.id).to.equal(givenId);
@@ -62,6 +63,7 @@ describe.only('Jobs Model', () => {
 			expect(job.updated_at).to.equal(null);
 		};
 
+		// checks that certain fields are required upon create
 		const checkError = async (field) => {
 			const specificId = random.guid();
 			let createData = Object.assign({}, data, { id: specificId });
@@ -76,6 +78,19 @@ describe.only('Jobs Model', () => {
 				expect(err.message).to.include(field);
 			}
 		};
+
+		// checks that fields default to a certain value upon create if not given
+		const checkDefault = async (field, defaultValue) => {
+			const specificId = random.guid();
+			let createData = Object.assign({}, data, { id: specificId });
+			createData = _.omit(createData, field);
+			const job = await Jobs.create(createData);
+
+			expect(job).to.be.an.object();
+			expect(job.id).to.equal(specificId);
+			expect(job[`${field}`]).to.equal(defaultValue);
+		};
+
 
 		it('should create a new job if given valid data, create new created_at and updated_at fields, and return the new job object', async() => {
 			const specificId = random.guid(),
@@ -95,6 +110,7 @@ describe.only('Jobs Model', () => {
 			return checkFields(job, specificId, null);
 		});
 
+
 		it('should require the title to create', async() => {
 			return checkError('title');
 		});
@@ -105,6 +121,35 @@ describe.only('Jobs Model', () => {
 
 		it('should require a client_id to create', async() => {
 			return checkError('client_id');
+		});
+
+		it('should require a rate to create', async() => {
+			return checkError('rate');
+		});
+
+		it('should require a description to create', async() => {
+			return checkError('description');
+		});
+
+
+		it('should default rate_type to \'hourly\' if not given', async() => {
+			return checkDefault('rate_type', 'hourly');
+		});
+
+		it('should default onsite_required to \'false\' if not given', async() => {
+			return checkDefault('onsite_required', false);
+		});
+
+		it('should default available to \'true\' if not given', async() => {
+			return checkDefault('available', true);
+		});
+
+		it('should default closed to \'false\' if not given', async() => {
+			return checkDefault('closed', false);
+		});
+
+		it('should default experience_level_requested to \'any\' if not given', async() => {
+			return checkDefault('experience_level_requested', 'any');
 		});
 	});
 
