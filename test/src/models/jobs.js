@@ -98,7 +98,6 @@ describe.only('Jobs Model', () => {
 
 			const job = await Jobs.create(createData);
 			return checkFields(job, specificId, freelancer_id);
-
 		});
 
 		it('should be able to create a job without a freelancer_id', async() => {
@@ -108,6 +107,21 @@ describe.only('Jobs Model', () => {
 
 			const job = await Jobs.create(createData);
 			return checkFields(job, specificId, null);
+		});
+
+		it('should require a id in proper uuid format', async() => {
+			const specificId = 1,
+				createData = Object.assign({}, data, { id: specificId });
+
+			try {
+				await Jobs.create(createData);
+			} catch (err) {
+				expect(err.message).to.include('jobs');
+				expect(err.message).to.include('create');
+				expect(err.message).to.include('couldn\'t be completed');
+				expect(err.message).to.include('id');
+				expect(err.message).to.include('proper uuid format');
+			}
 		});
 
 

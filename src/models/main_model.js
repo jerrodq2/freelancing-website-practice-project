@@ -17,9 +17,12 @@ class MainModel {
 		return knex(this.tableName).insert(data).returning('*')
 			.then((result) => result[0])
 			.catch((err) => {
-				if (Errors.violatesNull(err)) 
+				if (Errors.violatesNull(err))
 					throw Errors.badRequest(this.tableName, 'create', err.column);
 
+				if (Errors.violatesSyntax(err)) {
+					throw Errors.badId(this.tableName, 'create');
+				}
 				throw err;
 			});
 	}
