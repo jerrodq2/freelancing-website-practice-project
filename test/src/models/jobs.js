@@ -217,14 +217,115 @@ describe.only('Jobs Model', () => {
 				expect(err.message).to.include('findOne');
 				expect(err.message).to.include('couldn\'t be completed');
 				expect(err.message).to.include('id');
-				expect(err.message).to.include(' proper uuid format');
+				expect(err.message).to.include('proper uuid format');
 			}
 		});
 	});
 
 
 	describe('has an update method', () => {
+		const new_field_id = random.guid(),
+			new_client_id = random.guid(),
+			new_freelancer_id = random.guid(),
+			new_title = random.word(),
+			new_rate = 30,
+			new_rate_type = 'hourly',
+			new_description = random.paragraph(),
+			new_state = 'FL',
+			new_city = random.word(),
+			new_zip = random.zip(),
+			new_onsite_required = true,
+			new_available = false,
+			new_closed = true,
+			new_experience_level_requested = 'expert',
+			updateData = {
+				field_id: new_field_id,
+				client_id: new_client_id,
+				freelancer_id: new_freelancer_id,
+				title: new_title,
+				rate: new_rate,
+				rate_type: new_rate_type,
+				description: new_description,
+				state: new_state,
+				city: new_city,
+				zip: new_zip,
+				onsite_required: new_onsite_required,
+				available: new_available,
+				closed: new_closed,
+				experience_level_requested: new_experience_level_requested };
 
+		before(async() => {
+			await random.field({ id: new_field_id });
+			await random.client({ id: new_client_id, field_id: new_field_id });
+			await random.freelancer({ id: new_freelancer_id, field_id: new_field_id });
+		});
+
+		it('should update the job record if given a valid id and data, update the \'updated_at\' field, and return the updated job object', async() => {
+			const specificId = random.guid(),
+				createData = Object.assign({}, data, { id: specificId });
+
+			const oldJob = await Jobs.create(createData);
+			expect(oldJob).to.be.an.object();
+			expect(oldJob.id).to.equal(specificId);
+			expect(oldJob.updated_at).to.equal(null);
+
+			const updatedJob = await Jobs.update(specificId, updateData);
+
+			expect(updatedJob).to.be.an.object();
+			expect(updatedJob.id).to.equal(specificId);
+			expect(updatedJob.field_id).to.equal(new_field_id);
+			expect(updatedJob.client_id).to.equal(new_client_id);
+			expect(updatedJob.freelancer_id).to.equal(new_freelancer_id);
+			expect(updatedJob.title).to.equal(new_title);
+			expect(updatedJob.rate).to.equal(new_rate);
+			expect(updatedJob.rate_type).to.equal(new_rate_type);
+			expect(updatedJob.description).to.equal(new_description);
+			expect(updatedJob.state).to.equal(new_state);
+			expect(updatedJob.city).to.equal(new_city);
+			expect(updatedJob.zip).to.equal(new_zip);
+			expect(updatedJob.onsite_required).to.equal(new_onsite_required);
+			expect(updatedJob.available).to.equal(new_available);
+			expect(updatedJob.closed).to.equal(new_closed);
+			expect(updatedJob.experience_level_requested).to.equal(new_experience_level_requested);
+			expect(updatedJob.updated_at).to.be.a.date();
+		});
+
+		it('should update the job record if given a valid id and data, even if only given one field ', async() => {
+			const specificId = random.guid(),
+				specificTitle = random.word(),
+				createData = Object.assign({}, data, { id: specificId });
+
+			const oldJob = await Jobs.create(createData);
+			expect(oldJob).to.be.an.object();
+			expect(oldJob.id).to.equal(specificId);
+			expect(oldJob.updated_at).to.equal(null);
+
+			const updatedJob = await Jobs.update(specificId, { title: specificTitle });
+
+			expect(updatedJob).to.be.an.object();
+			expect(updatedJob.id).to.equal(specificId);
+			expect(updatedJob.title).to.equal(specificTitle);
+			expect(updatedJob.updated_at).to.be.a.date();
+		});
+
+		it('should return an empty object if given an incorrect id (not found)', async() => {
+			const job = await Jobs.update(random.guid(), {});
+			expect(job).to.be.an.object();
+			expect(job).to.equal({});
+		});
+
+		it('should raise an exception if given an invalid id (not in uuid format)', async() => {
+			try {
+				await Jobs.update(1, {});
+			} catch (err) {
+				expect(err.message).to.include('jobs');
+				expect(err.message).to.include('update');
+				expect(err.message).to.include('couldn\'t be completed');
+				expect(err.message).to.include('id');
+				expect(err.message).to.include('proper uuid format');
+			}
+
+		});
 	});
 
 

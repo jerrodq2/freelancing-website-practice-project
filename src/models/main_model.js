@@ -66,7 +66,20 @@ class MainModel {
 	updateById (id, data) {
 		data.updated_at = new Date();
 		return knex(this.tableName).where({ id }).update(data).returning('*')
-			.then((result) => result[0]);
+			.then((array) => {
+				// In the event of no record found, we still return an empty object for consistency
+				const result = array[0] ? array[0] : {};
+				return result;
+			})
+			.catch((err) => {
+				if (Errors.violatesNull(err))
+					throw Errors.badRequest(this.tableName, 'update', err.column);
+
+				if (Errors.violatesSyntax(err)) {
+					throw Errors.badId(this.tableName, 'update');
+				}
+				throw err;
+			});
 	}
 
 
