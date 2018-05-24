@@ -208,6 +208,18 @@ describe.only('Jobs Model', () => {
 			expect(job).to.equal({});
 
 		});
+
+		it('should raise exception when given an invalid id (not in uuid format)', async() => {
+			try {
+				await Jobs.findOne(1);
+			} catch (err) {
+				expect(err.message).to.include('jobs');
+				expect(err.message).to.include('findOne');
+				expect(err.message).to.include('couldn\'t be completed');
+				expect(err.message).to.include('id');
+				expect(err.message).to.include(' proper uuid format');
+			}
+		});
 	});
 
 

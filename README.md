@@ -40,7 +40,7 @@ The project is directory is broken down into a few key sub directories listed be
 ## Testing
 This project uses npm Lab and Code to run its tests. Other npm modules used include Chance. It uses a separate test database, that mirrors the main database, using the same migrations without the seed data.
 
-My current practice with this project is to test all Models... You can run all of the tests with the following command.
+My current practice with this project is to test all Models. I also try to test the intended behavior as well as what is not intended, or what should make it fail. I try to find a balance between being thorough but not overly tedious. You can run all of the tests with the following command.
 ```
 npm run test
 ```

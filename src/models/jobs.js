@@ -4,6 +4,7 @@
 const knex = require('../config/knex');
 const Model = require('./main_model');
 const Jobs = new Model('jobs');
+const Errors = require(`${process.cwd()}/src/lib/errors`);
 
 
 module.exports = {
@@ -36,6 +37,12 @@ module.exports = {
 				// In the event of no record found, we still return an empty object for consistency
 				const result = array[0] ? array[0] : {};
 				return result;
+			})
+			.catch((err) => {
+				if (Errors.violatesSyntax(err))
+					throw Errors.badId('jobs', 'findOne');
+
+				throw err;
 			});
 	},
 
