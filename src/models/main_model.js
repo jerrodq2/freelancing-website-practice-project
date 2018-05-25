@@ -84,11 +84,16 @@ class MainModel {
 
 
 	// TODO: test cascading delete (ex: delete a client, does that client's job dissappear as well?)
-	// TODO: setup Boom to deal with not found cases (doesn't error out, simply returns a 0)
 	delete (id) {
 		return knex(this.tableName).where({ id }).del()
-			// temporary, returns 1 if successful or 0 if not found
-			.then((result) => result);
+			// By default, it returns 1 if successful and 2 if not found. I changed this to return true and false respectively, just preference
+			.then((result) => result? true : false)
+			.catch((err) => {
+				if (Errors.violatesSyntax(err))
+					throw Errors.badId(this.tableName, 'delete');
+
+				throw err;
+			});
 	}
 
 

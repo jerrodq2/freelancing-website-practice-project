@@ -9,7 +9,7 @@ const Jobs = require(`${process.cwd()}/src/models/jobs`);
 const { db, random, _ } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe.only('Jobs Model', () => {
+describe('Jobs Model', () => {
 	// info used to create first job
 	const id = random.guid(),
 		field_id = random.guid(),
@@ -324,12 +324,45 @@ describe.only('Jobs Model', () => {
 				expect(err.message).to.include('id');
 				expect(err.message).to.include('proper uuid format');
 			}
-
 		});
 	});
 
 
 	describe('has a delete method', () => {
+		const createData = { field_id, client_id, freelancer_id };
 
+		it('should delete the record if given a correct id and return true if successful', async() => {
+			const specificId = random.guid();
+			createData.id = specificId;
+			await random.job(createData);
+
+			const job = await Jobs.findOne(specificId);
+			expect(job).to.be.an.object();
+			expect(job.id).to.equal(specificId);
+
+			const result = await Jobs.delete(specificId);
+			const afterDelete = await Jobs.findOne(specificId);
+
+			expect(result).to.equal(true);
+			expect(afterDelete).to.be.an.object();
+			expect(afterDelete).to.equal({});
+		});
+
+		it('should return false if given an incorrect id (not found)', async() => {
+			const result = await Jobs.delete(random.guid());
+			expect(result).to.equal(false);
+		});
+
+		it('should raise an exception if given an invalid id (not in uuid format)', async() => {
+			try {
+				await Jobs.delete(1);
+			} catch (err) {
+				expect(err.message).to.include('jobs');
+				expect(err.message).to.include('delete');
+				expect(err.message).to.include('couldn\'t be completed');
+				expect(err.message).to.include('id');
+				expect(err.message).to.include('proper uuid format');
+			}
+		});
 	});
 });
