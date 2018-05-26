@@ -18,11 +18,14 @@ class MainModel {
 			.then((result) => result[0])
 			.catch((err) => {
 				if (Errors.violatesNull(err))
-					throw Errors.badRequest(this.tableName, 'create', err.column);
+					throw Errors.badNull(this.tableName, 'create', err.column);
 
-				if (Errors.violatesSyntax(err)) {
+				if (Errors.violatesSyntax(err))
 					throw Errors.badId(this.tableName, 'create');
-				}
+
+				if (Errors.violatesForeignKey(err))
+					throw Errors.badForeignKey(this.tableName, 'create', err.constraint);
+
 				throw err;
 			});
 	}

@@ -6,6 +6,7 @@ const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 const { describe, it, before } = lab;
 const Jobs = require(`${process.cwd()}/src/models/jobs`);
+const Clients = require(`${process.cwd()}/src/models/clients`);
 const { db, random, _ } = require(`${process.cwd()}/test/src/helpers`);
 
 
@@ -363,6 +364,27 @@ describe('Jobs Model', () => {
 				expect(err.message).to.include('id');
 				expect(err.message).to.include('proper uuid format');
 			}
+		});
+	});
+
+	describe('has a client_id with \'cascade\' onDelete,', () => {
+		it('should be deleted in the event of the client who created it is deleted.', async() => {
+			const specificId = random.guid(),
+				specificClientId = random.guid(),
+				createData = Object.assign({}, data, { id: specificId, client_id: specificClientId });
+
+			await random.client({ id: specificClientId, field_id });
+			const job = await Jobs.create(createData);
+
+			expect(job).to.be.an.object();
+			expect(job.id).to.equal(specificId);
+			expect(job.client_id).to.equal(specificClientId);
+
+			await Clients.delete(specificClientId);
+			const afterDelete = await Jobs.findOne(specificId);
+
+			expect(afterDelete).to.be.an.object();
+			expect(afterDelete).to.equal({});
 		});
 	});
 });
