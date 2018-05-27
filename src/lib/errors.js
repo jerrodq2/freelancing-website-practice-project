@@ -11,7 +11,7 @@ module.exports = {
 	violatesNull: (err) => err.message.indexOf('violates not-null') >= 0,
 
 	// checks if the id is in proper uuid format
-	violatesSyntax: (err) => err.message.indexOf('invalid input syntax') >= 0,
+	violatesIdSyntax: (err) => err.message.indexOf('invalid input syntax') >= 0,
 
 	// checks to see if a foreign key constrain was violated, ex: create a job without a client_id
 	violatesForeignKey: (err) => err.message.indexOf('violates foreign key constraint') >= 0,

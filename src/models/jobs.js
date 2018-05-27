@@ -39,7 +39,7 @@ module.exports = {
 				return result;
 			})
 			.catch((err) => {
-				if (Errors.violatesSyntax(err))
+				if (Errors.violatesIdSyntax(err))
 					throw Errors.badId('jobs', 'findOne');
 
 				throw err;

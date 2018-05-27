@@ -20,7 +20,7 @@ class MainModel {
 				if (Errors.violatesNull(err))
 					throw Errors.badNull(this.tableName, 'create', err.column);
 
-				if (Errors.violatesSyntax(err))
+				if (Errors.violatesIdSyntax(err))
 					throw Errors.badId(this.tableName, 'create');
 
 				if (Errors.violatesForeignKey(err))
@@ -78,7 +78,7 @@ class MainModel {
 				if (Errors.violatesNull(err))
 					throw Errors.badRequest(this.tableName, 'update', err.column);
 
-				if (Errors.violatesSyntax(err)) {
+				if (Errors.violatesIdSyntax(err)) {
 					throw Errors.badId(this.tableName, 'update');
 				}
 				throw err;
@@ -92,7 +92,7 @@ class MainModel {
 			// By default, it returns 1 if successful and 2 if not found. I changed this to return true and false respectively, just preference
 			.then((result) => result? true : false)
 			.catch((err) => {
-				if (Errors.violatesSyntax(err))
+				if (Errors.violatesIdSyntax(err))
 					throw Errors.badId(this.tableName, 'delete');
 
 				throw err;
