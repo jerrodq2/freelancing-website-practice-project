@@ -10,7 +10,7 @@ const Clients = require(`${process.cwd()}/src/models/clients`);
 const { db, random, _ } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe('Jobs Model', () => {
+describe.only('Jobs Model', () => {
 	// info used to create first job
 	const id = random.guid(),
 		field_id = random.guid(),
@@ -386,9 +386,15 @@ describe('Jobs Model', () => {
 			}
 		});
 
-		it('should return false if given an incorrect id (not found)', async() => {
-			const result = await Jobs.delete(random.guid());
-			expect(result).to.equal(false);
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			try {
+				await Jobs.delete(random.guid());
+			} catch (err) {
+				expect(err.message).to.include('job');
+				expect(err.message).to.include('delete');
+				expect(err.message).to.include('does not exist');
+				expect(err.message).to.include('not found');
+			}
 		});
 
 		it('should raise an exception if given an invalid id (not in uuid format)', async() => {

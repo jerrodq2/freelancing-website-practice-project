@@ -34,17 +34,17 @@ module.exports = {
 			.innerJoin('clients as c', 'jobs.client_id', 'c.id')
 			.innerJoin('freelancers as f', 'jobs.freelancer_id', 'f.id')
 			.then((result) => {
-				if (result[0])
-					return result[0];
-				else
-					throw Errors.notFound('job', 'find');
+				// throw error if the record with the given id couldn't be found
+				if (!result[0]) throw Errors.notFound('job', 'find');
+
+				return result[0];
 			})
 			.catch((err) => {
-				// check if id is in proper uuid format
+				// throw error if the id wasn't given in proper uuid format
 				if (Errors.violatesIdSyntax(err))
 					throw Errors.badId('job', 'find');
 
-				// if the cause of the error wasn't found above, throw the error
+				// if the cause of the error wasn't found, throw the error
 				throw err;
 			});
 	},
