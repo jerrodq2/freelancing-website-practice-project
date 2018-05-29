@@ -4,6 +4,7 @@
 const knex = require('../config/knex');
 const Model = require('./main_model');
 const Skills = new Model('skills');
+const Errors = require(`${process.cwd()}/src/lib/errors`);
 
 
 module.exports = {
@@ -18,9 +19,11 @@ module.exports = {
 
 	findByName (name) {
 		return knex('skills').where({ skill: name })
-			.then((array) => {
-				const result = array[0] ? array[0] : {};
-				return result;
+			.then((result) => {
+				// throw error if the record with the given id couldn't be found
+				if (!result[0]) throw Errors.notFound('skill', 'findByName', 'skill');
+
+				return result[0];
 			});
 	},
 

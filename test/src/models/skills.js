@@ -120,12 +120,15 @@ describe.only('Skills Model', () => {
 			expect(result.skill).to.equal(skill);
 		});
 
-		it('should return an empty object if not found', async() => {
-			const result = await Skills.findByName('skill?');
-
-			expect(result).to.be.an.object();
-			expect(result.id).to.equal(undefined);
-			expect(result.skill).to.equal(undefined);
+		it('should raise an exception if not found', async() => {
+			try {
+				await Skills.findByName('skill?');
+			} catch (err) {
+				expect(err.message).to.include('skill');
+				expect(err.message).to.include('findByName');
+				expect(err.message).to.include('does not exist');
+				expect(err.message).to.include('not found');
+			}
 		});
 	});
 
