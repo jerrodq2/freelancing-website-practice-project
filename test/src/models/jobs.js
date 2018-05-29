@@ -44,7 +44,7 @@ describe('Jobs Model', () => {
 		freelancerData = { id: freelancer_id, field_id, first_name: freelancer_first_name, last_name: freelancer_last_name, job_title: freelancer_job_title, experience_level: freelancer_experience_level };
 
 
-	// checks all fields in a job, conditionally checks the freelancer_id to test a being created without one
+	// checks all fields in a given job, conditionally checks the freelancer_id to test a being created without one
 	const checkFields = (job, givenId, checkFreelancer = true) => {
 		expect(job).to.be.an.object();
 		expect(job.id).to.equal(givenId);
@@ -52,7 +52,6 @@ describe('Jobs Model', () => {
 		expect(job.client_id).to.equal(client_id);
 		if (checkFreelancer)
 			expect(job.freelancer_id).to.equal(freelancer_id);
-
 		expect(job.title).to.equal(title);
 		expect(job.rate).to.equal(rate);
 		expect(job.rate_type).to.equal(rate_type);
@@ -79,8 +78,7 @@ describe('Jobs Model', () => {
 
 
 	describe('has a create method', () => {
-
-		// checks that certain fields are required upon create
+		// checks that certain fields are required upon create by removing that field from the createData sent over to the model
 		const checkError = async (field) => {
 			const specificId = random.guid();
 			let createData = Object.assign({}, data, { id: specificId });
@@ -96,7 +94,7 @@ describe('Jobs Model', () => {
 			}
 		};
 
-		// checks that fields default to a certain value upon create if not given
+		// checks that certain fields default to a certain value upon create if not given in the createData object
 		const checkDefault = async (field, defaultValue) => {
 			const specificId = random.guid();
 			let createData = Object.assign({}, data, { id: specificId });
@@ -143,54 +141,54 @@ describe('Jobs Model', () => {
 		});
 
 
-		it('should require the title to create', async() => {
+		it('should require the title to create', () => {
 			return checkError('title');
 		});
 
-		it('should require a field_id to create', async() => {
+		it('should require a field_id to create', () => {
 			return checkError('field_id');
 		});
 
-		it('should require a client_id to create', async() => {
+		it('should require a client_id to create', () => {
 			return checkError('client_id');
 		});
 
-		it('should require a rate to create', async() => {
+		it('should require a rate to create', () => {
 			return checkError('rate');
 		});
 
-		it('should require a description to create', async() => {
+		it('should require a description to create', () => {
 			return checkError('description');
 		});
 
 
-		it('should default rate_type to \'hourly\' if not given', async() => {
+		it('should default rate_type to \'hourly\' if not given', () => {
 			return checkDefault('rate_type', 'hourly');
 		});
 
-		it('should default onsite_required to \'false\' if not given', async() => {
+		it('should default onsite_required to \'false\' if not given', () => {
 			return checkDefault('onsite_required', false);
 		});
 
-		it('should default available to \'true\' if not given', async() => {
+		it('should default available to \'true\' if not given', () => {
 			return checkDefault('available', true);
 		});
 
-		it('should default closed to \'false\' if not given', async() => {
+		it('should default closed to \'false\' if not given', () => {
 			return checkDefault('closed', false);
 		});
 
-		it('should default experience_level_requested to \'any\' if not given', async() => {
+		it('should default experience_level_requested to \'any\' if not given', () => {
 			return checkDefault('experience_level_requested', 'any');
 		});
 	});
 
 
 	describe('has a findOne method', () => {
-		it('should retrieve a specific job with a given id, and return the object with relevant information the client, freelancer, and field', async() => {
+		it('should retrieve a specific job with a given id, and return the object with relevant information about the client, freelancer, and field', async() => {
 			const job = await Jobs.findOne(id);
 
-			// first check the fields that belong to the job record.
+			// first check the fields that belong to the job record
 			checkFields(job, id);
 
 			expect(job.field).to.equal(field);

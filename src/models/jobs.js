@@ -39,9 +39,11 @@ module.exports = {
 				return result;
 			})
 			.catch((err) => {
+				// check if id is in proper uuid format
 				if (Errors.violatesIdSyntax(err))
 					throw Errors.badId('jobs', 'findOne');
 
+				// if the cause of the error wasn't found above, throw the error
 				throw err;
 			});
 	},

@@ -7,17 +7,17 @@ const Boom = require('boom');
 module.exports = {
 	Boom,
 
-	// checks if a query violates a not-null constrain, ex: try to create a client without a field_id, which is a nonNullable field
+	// checks if a not-null constraint was violated, ex: try to create a client without a field_id, which is a nonNullable field
 	violatesNull: (err) => err.message.indexOf('violates not-null') >= 0,
 
 	// checks if the id is in proper uuid format
 	violatesIdSyntax: (err) => err.message.indexOf('invalid input syntax') >= 0,
 
-	// checks to see if a foreign key constrain was violated, ex: create a job without a client_id
+	// checks to see if a foreign key constraint was violated, ex: create a job without a client_id
 	violatesForeignKey: (err) => err.message.indexOf('violates foreign key constraint') >= 0,
 
 	badNull: (table, action, field, data = {}) => {
-		const message = `The ${table} you were attempting to ${action} couldn't be completed. You violated the not-null constrain in the '${field}' column`;
+		const message = `The ${table} you were attempting to ${action} couldn't be completed. You violated the not-null constraint in the '${field}' column`;
 
 		return Boom.badRequest(message, data);
 	},

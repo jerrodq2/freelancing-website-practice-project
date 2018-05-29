@@ -17,15 +17,19 @@ class MainModel {
 		return knex(this.tableName).insert(data).returning('*')
 			.then((result) => result[0])
 			.catch((err) => {
+				// check if not-null constraint was violated
 				if (Errors.violatesNull(err))
 					throw Errors.badNull(this.tableName, 'create', err.column);
 
+				// check if id is in proper uuid format
 				if (Errors.violatesIdSyntax(err))
 					throw Errors.badId(this.tableName, 'create');
 
+				// check if a foreign key constraint was violated
 				if (Errors.violatesForeignKey(err))
 					throw Errors.badForeignKey(this.tableName, 'create', err.constraint);
 
+				// if the cause of the error wasn't found above, throw the error
 				throw err;
 			});
 	}
@@ -37,6 +41,14 @@ class MainModel {
 				// In the event of no record found, we still return an empty object for consistency
 				const result = array[0] ? array[0] : {};
 				return result;
+			})
+			.catch((err) => {
+				// check if id is in proper uuid format
+				if (Errors.violatesIdSyntax(err))
+					throw Errors.badId('jobs', 'findOne');
+
+				// if the cause of the error wasn't found above, throw the error
+				throw err;
 			});
 	}
 
