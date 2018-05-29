@@ -209,7 +209,7 @@ describe('Jobs Model', () => {
 	});
 
 
-	describe('has a findOne method', () => {
+	describe.only('has a findOne method', () => {
 		it('should retrieve a specific job with a given id, and return the object with relevant information about the client, freelancer, and field', async() => {
 			const job = await Jobs.findOne(id);
 
@@ -225,11 +225,16 @@ describe('Jobs Model', () => {
 			expect(job.freelancer_experience_level).to.equal(freelancer_experience_level);
 		});
 
-		it('should return an empty object if not found or given an incorrect id', async() => {
-			const job = await Jobs.findOne(random.guid());
-
-			expect(job).to.be.an.object();
-			expect(job).to.equal({});
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			try {
+				await Jobs.findOne(random.guid());
+			} catch (err) {
+				expect(err.message).to.include('job');
+				expect(err.message).to.include('find');
+				expect(err.message).to.include('couldn\'t be completed');
+				expect(err.message).to.include('id');
+				expect(err.message).to.include('not found');
+			}
 
 		});
 
@@ -237,8 +242,8 @@ describe('Jobs Model', () => {
 			try {
 				await Jobs.findOne(1);
 			} catch (err) {
-				expect(err.message).to.include('jobs');
-				expect(err.message).to.include('findOne');
+				expect(err.message).to.include('job');
+				expect(err.message).to.include('find');
 				expect(err.message).to.include('couldn\'t be completed');
 				expect(err.message).to.include('id');
 				expect(err.message).to.include('proper uuid format');
