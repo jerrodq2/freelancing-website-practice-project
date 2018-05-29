@@ -78,12 +78,9 @@ describe('Jobs Model', () => {
 
 
 	describe('has a create method', () => {
-		// checks that certain fields are required upon create by removing that field from the createData sent over to the model
-		const checkError = async (field) => {
-			const specificId = random.guid();
-			let createData = Object.assign({}, data, { id: specificId });
-			createData = _.omit(createData, field);
-
+		// contains code used by both the checkError and checkIncorrectId functions below, just improves DRYness
+		const checkMessage = async (givenData, field) => {
+			const createData = _.omit(givenData, field);
 			try {
 				await Jobs.create(createData);
 			} catch (err) {
@@ -92,6 +89,21 @@ describe('Jobs Model', () => {
 				expect(err.message).to.include('couldn\'t be completed');
 				expect(err.message).to.include(field);
 			}
+		};
+
+		// checks that certain fields are required upon create by removing that field from the createData sent over to the model
+		const checkError = async (field) => {
+			const specificId = random.guid();
+			const createData = Object.assign({}, data, { id: specificId });
+			return checkMessage(createData, field);
+		};
+
+		// checks that field_id, client_id, and freelancer_id have to be given correct id's or id's of records currently in the db
+		const checkIncorrectId = async (field) => {
+			const specificId = random.guid();
+			const createData = Object.assign({}, data, { id: specificId });
+			createData[`${field}`] = random.guid();
+			return checkMessage(createData, field);
 		};
 
 		// checks that certain fields default to a certain value upon create if not given in the createData object
@@ -159,6 +171,19 @@ describe('Jobs Model', () => {
 
 		it('should require a description to create', () => {
 			return checkError('description');
+		});
+
+
+		it('should raise an exception if given an incorrect client_id', () => {
+			return checkIncorrectId('client_id');
+		});
+
+		it('should raise an exception if given an incorrect freelancer_id', () => {
+			return checkIncorrectId('freelancer_id');
+		});
+
+		it('should raise an exception if given an incorrect field_id', () => {
+			return checkIncorrectId('field_id');
 		});
 
 
