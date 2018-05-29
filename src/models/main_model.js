@@ -2,6 +2,7 @@
 
 
 const knex = require('../config/knex');
+const Errors = require(`${process.cwd()}/src/lib/errors`);
 
 
 // This is the main Model that is inherited by all other models
@@ -14,7 +15,23 @@ class MainModel {
 	create (data) {
 		data.created_at = data.created_at || new Date();
 		return knex(this.tableName).insert(data).returning('*')
-			.then((result) => result[0]);
+			.then((result) => result[0])
+			.catch((err) => {
+				// check if not-null constraint was violated
+				if (Errors.violatesNull(err))
+					throw Errors.badNull(this.tableName, 'create', err.column);
+
+				// check if id is in proper uuid format
+				if (Errors.violatesIdSyntax(err))
+					throw Errors.badId(this.tableName, 'create');
+
+				// check if a foreign key constraint was violated
+				if (Errors.violatesForeignKey(err))
+					throw Errors.badForeignKey(this.tableName, 'create', err.constraint);
+
+				// if the cause of the error wasn't found above, throw the error
+				throw err;
+			});
 	}
 
 
@@ -24,6 +41,14 @@ class MainModel {
 				// In the event of no record found, we still return an empty object for consistency
 				const result = array[0] ? array[0] : {};
 				return result;
+			})
+			.catch((err) => {
+				// check if id is in proper uuid format
+				if (Errors.violatesIdSyntax(err))
+					throw Errors.badId('jobs', 'findOne');
+
+				// if the cause of the error wasn't found above, throw the error
+				throw err;
 			});
 	}
 
@@ -56,16 +81,34 @@ class MainModel {
 	updateById (id, data) {
 		data.updated_at = new Date();
 		return knex(this.tableName).where({ id }).update(data).returning('*')
-			.then((result) => result[0]);
+			.then((array) => {
+				// In the event of no record found, we still return an empty object for consistency
+				const result = array[0] ? array[0] : {};
+				return result;
+			})
+			.catch((err) => {
+				if (Errors.violatesNull(err))
+					throw Errors.badRequest(this.tableName, 'update', err.column);
+
+				if (Errors.violatesIdSyntax(err)) {
+					throw Errors.badId(this.tableName, 'update');
+				}
+				throw err;
+			});
 	}
 
 
 	// TODO: test cascading delete (ex: delete a client, does that client's job dissappear as well?)
-	// TODO: setup Boom to deal with not found cases (doesn't error out, simply returns a 0)
 	delete (id) {
 		return knex(this.tableName).where({ id }).del()
-			// temporary, returns 1 if successful or 0 if not found
-			.then((result) => result);
+			// By default, it returns 1 if successful and 2 if not found. I changed this to return true and false respectively, just preference
+			.then((result) => result? true : false)
+			.catch((err) => {
+				if (Errors.violatesIdSyntax(err))
+					throw Errors.badId(this.tableName, 'delete');
+
+				throw err;
+			});
 	}
 
 
