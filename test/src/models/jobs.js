@@ -336,7 +336,7 @@ describe.only('Jobs Model', () => {
 			expect(updatedJob.updated_at).to.be.a.date();
 		});
 
-		it('should return an empty object if given an incorrect id (not found)', async() => {
+		it('should raise an exception if given an incorrect id (not found)', async() => {
 			try {
 				await Jobs.update(random.guid(), {});
 			} catch (err) {
