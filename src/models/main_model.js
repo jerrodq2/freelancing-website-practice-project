@@ -54,12 +54,14 @@ class MainModel {
 	}
 
 
+	// TODO: Add error sfor not found and bad id syntax
 	// find the employment or education history for one freelancer
 	findHistory (id) {
 		return knex(this.tableName).where({ freelancer_id: id });
 	}
 
 
+	// TODO: Add error sfor not found and bad id syntax
 	// find a single client or freelancer review
 	findReview (id) {
 		const mainColumns = [`${this.tableName}.*`];
