@@ -9,7 +9,7 @@ const Skills = require(`${process.cwd()}/src/models/skills`);
 const { db, random } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe('Skills Model', () => {
+describe.only('Skills Model', () => {
 	const id = random.guid(),
 		skill = random.word(),
 		data = { id, skill };
@@ -20,19 +20,60 @@ describe('Skills Model', () => {
 	});
 
 	describe('has a create method', () => {
-		const specificId = random.guid(),
-			specificSkill = random.word(),
-			newData = { id: specificId, skill: specificSkill };
-		let result;
-
-		before(async() => result = await Skills.create(newData));
-
 		it('should create a new skill record if given valid data, create new created_at and updated_at fields, and return the skill object', async() => {
+			const specificId = random.guid(),
+				specificSkill = random.word(),
+				createData = { id: specificId, skill: specificSkill },
+				result = await Skills.create(createData);
+
 			expect(result).to.be.an.object();
 			expect(result.id).to.equal(specificId);
 			expect(result.skill).to.equal(specificSkill);
 			expect(result.created_at).to.be.a.date();
 			expect(result.updated_at).to.equal(null);
+		});
+
+		it('should require a id in proper uuid format', async() => {
+			const specificId = 1,
+				createData = { id: specificId, skill: random.word() };
+
+			try {
+				await Skills.create(createData);
+			} catch (err) {
+				expect(err.message).to.include('skill');
+				expect(err.message).to.include('create');
+				expect(err.message).to.include('couldn\'t be completed');
+				expect(err.message).to.include('id');
+				expect(err.message).to.include('proper uuid format');
+			}
+		});
+
+		it('should require a skill to create', async() => {
+			const createData = { id: random.guid() };
+
+			try {
+				await Skills.create(createData);
+			} catch (err) {
+				expect(err.message).to.include('skill');
+				expect(err.message).to.include('create');
+				expect(err.message).to.include('couldn\'t be completed');
+				expect(err.message).to.include('not-null constraint');
+				expect(err.message).to.include('skill');
+			}
+		});
+
+		it('should raise an exception if not using a unique skill (duplicate skill)', async() => {
+			const createData = { id: random.guid(), skill };
+
+			try {
+				await Skills.create(createData);
+			} catch (err) {
+				expect(err.message).to.include('skill');
+				expect(err.message).to.include('create');
+				expect(err.message).to.include('couldn\'t be completed');
+				expect(err.message).to.include('unique constraint');
+				expect(err.message).to.include('skill');
+			}
 		});
 	});
 
@@ -45,11 +86,27 @@ describe('Skills Model', () => {
 			expect(result.skill).to.equal(skill);
 		});
 
-		it('should return an empty object if not found', async() => {
-			const result = await Skills.findOne(random.guid());
+		it('should raise an exception if not found', async() => {
+			try {
+				await Skills.findOne(random.guid());
+			} catch (err) {
+				expect(err.message).to.include('skill');
+				expect(err.message).to.include('find');
+				expect(err.message).to.include('does not exist');
+				expect(err.message).to.include('not found');
+			}
+		});
 
-			expect(result).to.be.an.object();
-			expect(result).to.equal({});
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			try {
+				await Skills.findOne(1);
+			} catch (err) {
+				expect(err.message).to.include('skill');
+				expect(err.message).to.include('find');
+				expect(err.message).to.include('couldn\'t be completed');
+				expect(err.message).to.include('id');
+				expect(err.message).to.include('proper uuid format');
+			}
 		});
 	});
 
@@ -108,11 +165,17 @@ describe('Skills Model', () => {
 			expect(result).to.be.an.object();
 			expect(result.id).to.equal(specificId);
 
-			await Skills.delete(specificId);
-			const afterDelete = await Skills.findOne(specificId);
+			const afterDelete = await Skills.delete(specificId);
+			expect(afterDelete).to.equal(true);
 
-			expect(afterDelete).to.be.an.object();
-			expect(afterDelete).to.equal({});
+			try {
+				await Skills.findOne(specificId);
+			} catch (err) {
+				expect(err.message).to.include('skill');
+				expect(err.message).to.include('find');
+				expect(err.message).to.include('does not exist');
+				expect(err.message).to.include('not found');
+			}
 		});
 	});
 

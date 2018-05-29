@@ -10,7 +10,7 @@ const Clients = require(`${process.cwd()}/src/models/clients`);
 const { db, random, _ } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe.only('Jobs Model', () => {
+describe('Jobs Model', () => {
 	// info used to create first job
 	const id = random.guid(),
 		field_id = random.guid(),
@@ -84,7 +84,7 @@ describe.only('Jobs Model', () => {
 			try {
 				await Jobs.create(createData);
 			} catch (err) {
-				expect(err.message).to.include('jobs');
+				expect(err.message).to.include('job');
 				expect(err.message).to.include('create');
 				expect(err.message).to.include('couldn\'t be completed');
 				expect(err.message).to.include(field);
@@ -144,7 +144,7 @@ describe.only('Jobs Model', () => {
 			try {
 				await Jobs.create(createData);
 			} catch (err) {
-				expect(err.message).to.include('jobs');
+				expect(err.message).to.include('job');
 				expect(err.message).to.include('create');
 				expect(err.message).to.include('couldn\'t be completed');
 				expect(err.message).to.include('id');
@@ -176,10 +176,6 @@ describe.only('Jobs Model', () => {
 
 		it('should raise an exception if given an incorrect client_id', () => {
 			return checkIncorrectId('client_id');
-		});
-
-		it('should raise an exception if given an incorrect freelancer_id', () => {
-			return checkIncorrectId('freelancer_id');
 		});
 
 		it('should raise an exception if given an incorrect field_id', () => {
@@ -340,7 +336,7 @@ describe.only('Jobs Model', () => {
 			try {
 				await Jobs.update(random.guid(), {});
 			} catch (err) {
-				expect(err.message).to.include('jobs');
+				expect(err.message).to.include('job');
 				expect(err.message).to.include('update');
 				expect(err.message).to.include('does not exist');
 				expect(err.message).to.include('not found');
@@ -351,7 +347,7 @@ describe.only('Jobs Model', () => {
 			try {
 				await Jobs.update(1, {});
 			} catch (err) {
-				expect(err.message).to.include('jobs');
+				expect(err.message).to.include('job');
 				expect(err.message).to.include('update');
 				expect(err.message).to.include('couldn\'t be completed');
 				expect(err.message).to.include('id');
@@ -401,7 +397,7 @@ describe.only('Jobs Model', () => {
 			try {
 				await Jobs.delete(1);
 			} catch (err) {
-				expect(err.message).to.include('jobs');
+				expect(err.message).to.include('job');
 				expect(err.message).to.include('delete');
 				expect(err.message).to.include('couldn\'t be completed');
 				expect(err.message).to.include('id');
