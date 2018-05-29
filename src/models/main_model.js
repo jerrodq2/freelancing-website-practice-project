@@ -81,10 +81,11 @@ class MainModel {
 	updateById (id, data) {
 		data.updated_at = new Date();
 		return knex(this.tableName).where({ id }).update(data).returning('*')
-			.then((array) => {
-				// In the event of no record found, we still return an empty object for consistency
-				const result = array[0] ? array[0] : {};
-				return result;
+			.then((result) => {
+				if (result[0])
+					return result[0];
+				else
+					throw Errors.notFound(this.tableName, 'update');
 			})
 			.catch((err) => {
 				if (Errors.violatesNull(err))

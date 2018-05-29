@@ -209,7 +209,7 @@ describe('Jobs Model', () => {
 	});
 
 
-	describe.only('has a findOne method', () => {
+	describe('has a findOne method', () => {
 		it('should retrieve a specific job with a given id, and return the object with relevant information about the client, freelancer, and field', async() => {
 			const job = await Jobs.findOne(id);
 
@@ -231,8 +231,7 @@ describe('Jobs Model', () => {
 			} catch (err) {
 				expect(err.message).to.include('job');
 				expect(err.message).to.include('find');
-				expect(err.message).to.include('couldn\'t be completed');
-				expect(err.message).to.include('id');
+				expect(err.message).to.include('does not exist');
 				expect(err.message).to.include('not found');
 			}
 
@@ -338,9 +337,14 @@ describe('Jobs Model', () => {
 		});
 
 		it('should return an empty object if given an incorrect id (not found)', async() => {
-			const job = await Jobs.update(random.guid(), {});
-			expect(job).to.be.an.object();
-			expect(job).to.equal({});
+			try {
+				await Jobs.update(random.guid(), {});
+			} catch (err) {
+				expect(err.message).to.include('jobs');
+				expect(err.message).to.include('update');
+				expect(err.message).to.include('does not exist');
+				expect(err.message).to.include('not found');
+			}
 		});
 
 		it('should raise an exception if given an invalid id (not in uuid format)', async() => {
@@ -370,11 +374,16 @@ describe('Jobs Model', () => {
 			expect(job.id).to.equal(specificId);
 
 			const result = await Jobs.delete(specificId);
-			const afterDelete = await Jobs.findOne(specificId);
-
 			expect(result).to.equal(true);
-			expect(afterDelete).to.be.an.object();
-			expect(afterDelete).to.equal({});
+
+			try {
+				await Jobs.findOne(random.guid());
+			} catch (err) {
+				expect(err.message).to.include('job');
+				expect(err.message).to.include('find');
+				expect(err.message).to.include('does not exist');
+				expect(err.message).to.include('not found');
+			}
 		});
 
 		it('should return false if given an incorrect id (not found)', async() => {
@@ -408,11 +417,17 @@ describe('Jobs Model', () => {
 			expect(job.id).to.equal(specificId);
 			expect(job.client_id).to.equal(specificClientId);
 
-			await Clients.delete(specificClientId);
-			const afterDelete = await Jobs.findOne(specificId);
+			const result = await Clients.delete(specificClientId);
+			expect(result).to.equal(true);
 
-			expect(afterDelete).to.be.an.object();
-			expect(afterDelete).to.equal({});
+			try {
+				await Jobs.findOne(random.guid());
+			} catch (err) {
+				expect(err.message).to.include('job');
+				expect(err.message).to.include('find');
+				expect(err.message).to.include('does not exist');
+				expect(err.message).to.include('not found');
+			}
 		});
 	});
 });

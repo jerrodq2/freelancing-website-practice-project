@@ -34,8 +34,10 @@ module.exports = {
 			.innerJoin('clients as c', 'jobs.client_id', 'c.id')
 			.innerJoin('freelancers as f', 'jobs.freelancer_id', 'f.id')
 			.then((result) => {
-
-				return result[0]? result[0] : Errors.notFound('job', 'find');
+				if (result[0])
+					return result[0];
+				else
+					throw Errors.notFound('job', 'find');
 			})
 			.catch((err) => {
 				// check if id is in proper uuid format
