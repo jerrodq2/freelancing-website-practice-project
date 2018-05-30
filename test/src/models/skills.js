@@ -9,7 +9,7 @@ const Skills = require(`${process.cwd()}/src/models/skills`);
 const { db, random } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe.only('Skills Model', () => {
+describe('Skills Model', () => {
 	const id = random.guid(),
 		skill = random.word(),
 		data = { id, skill };
@@ -186,7 +186,7 @@ describe.only('Skills Model', () => {
 
 
 	describe('has a delete method', () => {
-		it('should delete a skill record if given a proper id', async() => {
+		it('should delete a skill record if given a proper id and return true if successful', async() => {
 			const specificId = random.guid();
 			await random.skill({ id: specificId });
 
@@ -196,7 +196,6 @@ describe.only('Skills Model', () => {
 
 			const afterDelete = await Skills.delete(specificId);
 			expect(afterDelete).to.equal(true);
-
 			try {
 				await Skills.findOne(specificId);
 			} catch (err) {

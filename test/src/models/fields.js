@@ -9,7 +9,7 @@ const Fields = require(`${process.cwd()}/src/models/fields`);
 const { db, random } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe('Fields Model', () => {
+describe.only('Fields Model', () => {
 	const id = random.guid(),
 		fieldName = random.word(),
 		data = { id, field: fieldName };
@@ -46,12 +46,16 @@ describe('Fields Model', () => {
 			expect(field.field).to.equal(fieldName);
 		});
 
-		it('should return an empty object if not found', async() => {
-
-			const field = await Fields.findOne(random.guid());
-
-			expect(field).to.be.an.object();
-			expect(field).to.equal({});
+		it('should raise an exception if not found', async() => {
+			try {
+				await Fields.findOne(random.guid());
+			} catch (err) {
+				expect(err.message).to.include('field');
+				expect(err.message).to.include('find');
+				expect(err.message).to.include('does not exist');
+				expect(err.message).to.include('id');
+				expect(err.message).to.include('not found');
+			}
 		});
 	});
 
@@ -84,7 +88,7 @@ describe('Fields Model', () => {
 
 
 	describe('has a delete method', () => {
-		it('should delete a field record if given a proper id', async() => {
+		it('should delete a field record if given a proper id and return true if successful', async() => {
 			const specificId = random.guid();
 			await random.field({ id: specificId });
 
@@ -92,11 +96,17 @@ describe('Fields Model', () => {
 			expect(field).to.be.an.object();
 			expect(field.id).to.equal(specificId);
 
-			await Fields.delete(specificId);
-			const afterDelete = await Fields.findOne(specificId);
-
-			expect(afterDelete).to.be.an.object();
-			expect(afterDelete).to.equal({});
+			const afterDelete = await Fields.delete(specificId);
+			expect(afterDelete).to.equal(true);
+			try {
+				await Fields.findOne(specificId);
+			} catch (err) {
+				expect(err.message).to.include('field');
+				expect(err.message).to.include('find');
+				expect(err.message).to.include('does not exist');
+				expect(err.message).to.include('id');
+				expect(err.message).to.include('not found');
+			}
 		});
 	});
 
