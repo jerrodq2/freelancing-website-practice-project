@@ -185,5 +185,29 @@ describe.only('Fields Model', () => {
 				expect(err.message).to.include('not found');
 			}
 		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			try {
+				await Fields.delete(random.guid());
+			} catch (err) {
+				expect(err.message).to.include('field');
+				expect(err.message).to.include('delete');
+				expect(err.message).to.include('does not exist');
+				expect(err.message).to.include('id');
+				expect(err.message).to.include('not found');
+			}
+		});
+
+		it('should raise an exception if given an invalid id (not in uuid format)', async() => {
+			try {
+				await Fields.delete(1);
+			} catch (err) {
+				expect(err.message).to.include('field');
+				expect(err.message).to.include('delete');
+				expect(err.message).to.include('couldn\'t be completed');
+				expect(err.message).to.include('id');
+				expect(err.message).to.include('wasn\'t in proper uuid format');
+			}
+		});
 	});
 });
