@@ -21,14 +21,12 @@ describe.only('Fields Model', () => {
 
 
 	describe('has a create method', () => {
-		const specificId = random.guid(),
-			specificField = random.word(),
-			createData = { id: specificId, field: specificField };
-		let field;
-
-		before(async() => field = await Fields.create(createData));
-
 		it('should create a new field record if given valid data, create new created_at and updated_at fields, and return the field object', async() => {
+			const specificId = random.guid(),
+				specificField = random.word(),
+				createData = { id: specificId, field: specificField },
+				field = await Fields.create(createData);
+
 			expect(field).to.be.an.object();
 			expect(field.id).to.equal(specificId);
 			expect(field.field).to.equal(specificField);
@@ -65,7 +63,7 @@ describe.only('Fields Model', () => {
 		});
 
 		it('should raise an exception if not using a unique field (duplicate field)', async() => {
-			const createData = { id: random.guid(), field };
+			const createData = { id: random.guid(), field: fieldName };
 
 			try {
 				await Fields.create(createData);
