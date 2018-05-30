@@ -6,7 +6,7 @@ const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 const { describe, it, before } = lab;
 const Admins = require(`${process.cwd()}/src/models/admins`);
-const { db, random, knex } = require(`${process.cwd()}/test/src/helpers`);
+const { db, random, knex, _ } = require(`${process.cwd()}/test/src/helpers`);
 
 
 describe.only('Admins Model', () => {
@@ -26,6 +26,23 @@ describe.only('Admins Model', () => {
 
 
 	describe('has a create method', () => {
+		// checks that certain actions cause an error (ex: create without required field, or try to create duplicates), returns error to verify the specific error cause in the it statement
+		const checkError = async(field) => {
+			const newData = { id: random.guid(), first_name: random.name(), last_name: random.name(), username: random.word(), email: `${random.word()}@email.com`, password },
+				createData = _.omit(newData, field);
+
+			try {
+				await Admins.create(createData);
+			} catch (err) {
+				expect(err.message).to.include('admin');
+				expect(err.message).to.include('create');
+				expect(err.message).to.include('couldn\'t be completed');
+				expect(err.message).to.include(field);
+				return err;
+			}
+		};
+
+
 		const specificId = random.guid(),
 			specificUsername = 'create',
 			specificEmail = 'create@email.com';
@@ -58,6 +75,47 @@ describe.only('Admins Model', () => {
 			expect(admin.password).to.be.a.string();
 			expect(admin.password).to.not.equal(password);
 			expect(admin.password.length).to.be.above(password.length);
+		});
+
+		it('should raise an exception if given an invalid id (not in uuid format)', async() => {
+			const specificId = 1,
+				createData = Object.assign({}, data, { id: specificId, username: 'fail', email: 'fail@email.com' });
+
+			try {
+				await Admins.create(createData);
+			} catch (err) {
+				expect(err.message).to.include('admin');
+				expect(err.message).to.include('create');
+				expect(err.message).to.include('couldn\'t be completed');
+				expect(err.message).to.include('id');
+				expect(err.message).to.include('proper uuid format');
+			}
+		});
+
+
+		it('should require a first_name to create', async() => {
+			const err = await checkError('first_name');
+			expect(err.message).to.include('violated the not-null constraint');
+		});
+
+		it('should require a last_name to create', async() => {
+			const err = await checkError('last_name');
+			expect(err.message).to.include('violated the not-null constraint');
+		});
+
+		it('should require a username to create', async() => {
+			const err = await checkError('username');
+			expect(err.message).to.include('violated the not-null constraint');
+		});
+
+		it('should require a email to create', async() => {
+			const err = await checkError('email');
+			expect(err.message).to.include('violated the not-null constraint');
+		});
+
+		it('should require a password to create', async() => {
+			const err = await checkError('password');
+			expect(err.message).to.include('violated the not-null constraint');
 		});
 	});
 

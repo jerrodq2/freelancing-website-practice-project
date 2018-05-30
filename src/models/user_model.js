@@ -4,6 +4,8 @@
 const MainModel = require('./main_model');
 const knex = require('../config/knex');
 const { hashPassword } = require(`${process.cwd()}/src/lib/helper_functions`);
+const Errors = require(`${process.cwd()}/src/lib/errors`);
+const { toSingular } = require(`${process.cwd()}/src/lib/helper_functions`);
 const _ = require('lodash');
 
 
@@ -16,8 +18,10 @@ class UserModel extends MainModel {
 
 
 	createUser (data) {
+		if (!data.password) throw Errors.badNull(toSingular(this.tableName), 'create', 'password');
 		// hash the password
 		data.password = hashPassword(data.password);
+
 		return this.create(data)
 			.then((result) => _.omit(result, 'password', 'username'));
 	}
