@@ -9,7 +9,7 @@ const Admins = require(`${process.cwd()}/src/models/admins`);
 const { db, random, knex } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe('Admins Model', () => {
+describe.only('Admins Model', () => {
 	const id = random.guid(),
 		first_name = 'first',
 		last_name = 'last',
@@ -74,11 +74,28 @@ describe('Admins Model', () => {
 			expect(admin.password).to.equal(undefined);
 		});
 
-		it('should return an empty object if not found', async() => {
-			const admin = await Admins.findOne(random.guid());
+		it('should raise an exception if not found', async() => {
+			try {
+				await Admins.findOne(random.guid());
+			} catch (err) {
+				expect(err.message).to.include('admin');
+				expect(err.message).to.include('find');
+				expect(err.message).to.include('does not exist');
+				expect(err.message).to.include('id');
+				expect(err.message).to.include('not found');
+			}
+		});
 
-			expect(admin).to.be.an.object();
-			expect(admin).to.equal({});
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			try {
+				await Admins.findOne(1);
+			} catch (err) {
+				expect(err.message).to.include('admin');
+				expect(err.message).to.include('find');
+				expect(err.message).to.include('couldn\'t be completed');
+				expect(err.message).to.include('id');
+				expect(err.message).to.include('proper uuid format');
+			}
 		});
 	});
 
@@ -144,7 +161,7 @@ describe('Admins Model', () => {
 
 	// TODO: write tests for incorrect id and what it returns upon successful delete once that process is refactored. Same for other model test files
 	describe('has a delete method', () => {
-		it('should delete the record if given a correct id', async() => {
+		it('should delete the record if given a correct id and return true if successful', async() => {
 			const specificId = random.guid();
 			await random.admin({ id: specificId });
 
@@ -152,11 +169,41 @@ describe('Admins Model', () => {
 			expect(admin).to.be.an.object();
 			expect(admin.id).to.equal(specificId);
 
-			await Admins.delete(specificId);
-			const afterDelete = await Admins.findOne(specificId);
+			const afterDelete = await Admins.delete(specificId);
+			expect(afterDelete).to.equal(true);
+			try {
+				await Admins.findOne(specificId);
+			} catch (err) {
+				expect(err.message).to.include('admin');
+				expect(err.message).to.include('find');
+				expect(err.message).to.include('does not exist');
+				expect(err.message).to.include('id');
+				expect(err.message).to.include('not found');
+			}
+		});
 
-			expect(afterDelete).to.be.an.object();
-			expect(afterDelete).to.equal({});
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			try {
+				await Admins.delete(random.guid());
+			} catch (err) {
+				expect(err.message).to.include('admin');
+				expect(err.message).to.include('delete');
+				expect(err.message).to.include('does not exist');
+				expect(err.message).to.include('id');
+				expect(err.message).to.include('not found');
+			}
+		});
+
+		it('should raise an exception if given an invalid id (not in uuid format)', async() => {
+			try {
+				await Admins.delete(1);
+			} catch (err) {
+				expect(err.message).to.include('admin');
+				expect(err.message).to.include('delete');
+				expect(err.message).to.include('couldn\'t be completed');
+				expect(err.message).to.include('id');
+				expect(err.message).to.include('wasn\'t in proper uuid format');
+			}
 		});
 	});
 
