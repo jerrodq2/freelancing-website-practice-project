@@ -62,7 +62,7 @@ describe('Fields Model', () => {
 			}
 		});
 
-		it('should raise an exception if not using a unique field (duplicate field)', async() => {
+		it('should raise an exception if the field isn\'t unique (unique field)', async() => {
 			const createData = { id: random.guid(), field: fieldName };
 
 			try {

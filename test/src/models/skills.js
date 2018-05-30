@@ -62,7 +62,7 @@ describe('Skills Model', () => {
 			}
 		});
 
-		it('should raise an exception if not using a unique skill (duplicate skill)', async() => {
+		it('should raise an exception if the skill isn\'t unique (unique field)', async() => {
 			const createData = { id: random.guid(), skill };
 
 			try {

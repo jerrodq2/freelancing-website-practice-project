@@ -26,8 +26,8 @@ describe.only('Admins Model', () => {
 
 
 	describe('has a create method', () => {
-		// checks that certain actions cause an error (ex: create without required field, or try to create duplicates), returns error to verify the specific error cause in the it statement
-		const checkError = async(field) => {
+		// checks that certain fields are required upon create
+		const checkRequired = async(field) => {
 			const newData = { id: random.guid(), first_name: random.name(), last_name: random.name(), username: random.word(), email: `${random.word()}@email.com`, password },
 				createData = _.omit(newData, field);
 
@@ -38,7 +38,22 @@ describe.only('Admins Model', () => {
 				expect(err.message).to.include('create');
 				expect(err.message).to.include('couldn\'t be completed');
 				expect(err.message).to.include(field);
-				return err;
+				expect(err.message).to.include('violated the not-null constraint');
+			}
+		};
+
+		const checkUnique = async(field, value) => {
+			const createData = { id: random.guid(), first_name: random.name(), last_name: random.name(), username: random.word(), email: `${random.word()}@email.com`, password };
+			createData[`${field}`] = value;
+
+			try {
+				await Admins.create(createData);
+			} catch (err) {
+				expect(err.message).to.include('admin');
+				expect(err.message).to.include('create');
+				expect(err.message).to.include('couldn\'t be completed');
+				expect(err.message).to.include(`'${field}'`);
+				expect(err.message).to.include('violated the unique constraint');
 			}
 		};
 
@@ -94,28 +109,27 @@ describe.only('Admins Model', () => {
 
 
 		it('should require a first_name to create', async() => {
-			const err = await checkError('first_name');
-			expect(err.message).to.include('violated the not-null constraint');
+			return checkRequired('first_name');
 		});
-
 		it('should require a last_name to create', async() => {
-			const err = await checkError('last_name');
-			expect(err.message).to.include('violated the not-null constraint');
+			return checkRequired('last_name');
 		});
-
 		it('should require a username to create', async() => {
-			const err = await checkError('username');
-			expect(err.message).to.include('violated the not-null constraint');
+			return checkRequired('username');
 		});
-
 		it('should require a email to create', async() => {
-			const err = await checkError('email');
-			expect(err.message).to.include('violated the not-null constraint');
+			return checkRequired('email');
+		});
+		it('should require a password to create', async() => {
+			return checkRequired('password');
 		});
 
-		it('should require a password to create', async() => {
-			const err = await checkError('password');
-			expect(err.message).to.include('violated the not-null constraint');
+
+		it('should raise an exception if the username isn\'t unique (unique field)', async() => {
+			return checkUnique('username', username);
+		});
+		it('should raise an exception if the username isn\'t unique (unique field)', async() => {
+			return checkUnique('email', email);
 		});
 	});
 
