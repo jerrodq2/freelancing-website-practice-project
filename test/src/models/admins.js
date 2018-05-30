@@ -229,9 +229,33 @@ describe.only('Admins Model', () => {
 			expect(updatedAdmin.email).to.equal(specificEmail);
 			expect(updatedAdmin.updated_at).to.be.a.date();
 		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			try {
+				await Admins.update(random.guid(), {});
+			} catch (err) {
+				expect(err.message).to.include('admin');
+				expect(err.message).to.include('update');
+				expect(err.message).to.include('does not exist');
+				expect(err.message).to.include('id');
+				expect(err.message).to.include('not found');
+			}
+		});
+
+		it('should raise an exception if given an invalid id (not in uuid format)', async() => {
+			try {
+				await Admins.update(1, {});
+			} catch (err) {
+				expect(err.message).to.include('admin');
+				expect(err.message).to.include('update');
+				expect(err.message).to.include('couldn\'t be completed');
+				expect(err.message).to.include('id');
+				expect(err.message).to.include('wasn\'t in proper uuid format');
+			}
+		});
 	});
 
-	// TODO: write tests for incorrect id and what it returns upon successful delete once that process is refactored. Same for other model test files
+
 	describe('has a delete method', () => {
 		it('should delete the record if given a correct id and return true if successful', async() => {
 			const specificId = random.guid();
