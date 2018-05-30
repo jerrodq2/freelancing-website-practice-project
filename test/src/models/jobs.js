@@ -339,6 +339,7 @@ describe('Jobs Model', () => {
 				expect(err.message).to.include('job');
 				expect(err.message).to.include('update');
 				expect(err.message).to.include('does not exist');
+				expect(err.message).to.include('id');
 				expect(err.message).to.include('not found');
 			}
 		});

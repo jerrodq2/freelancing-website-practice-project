@@ -156,6 +156,30 @@ describe.only('Skills Model', () => {
 			expect(updatedSkill.skill).to.equal(newSkill);
 			expect(updatedSkill.updated_at).to.be.a.date();
 		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			try {
+				await Skills.update(random.guid(), { skill: random.word() });
+			} catch (err) {
+				expect(err.message).to.include('skill');
+				expect(err.message).to.include('update');
+				expect(err.message).to.include('does not exist');
+				expect(err.message).to.include('id');
+				expect(err.message).to.include('not found');
+			}
+		});
+
+		it('should raise an exception if given an invalid id (not in uuid format)', async() => {
+			try {
+				await Skills.update(1, { skill: random.word() });
+			} catch (err) {
+				expect(err.message).to.include('skill');
+				expect(err.message).to.include('update');
+				expect(err.message).to.include('couldn\'t be completed');
+				expect(err.message).to.include('id');
+				expect(err.message).to.include('wasn\'t in proper uuid format');
+			}
+		});
 	});
 
 
