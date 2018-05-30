@@ -88,7 +88,7 @@ describe.only('Fields Model', () => {
 			expect(field.field).to.equal(fieldName);
 		});
 
-		it('should raise an exception if not found', async() => {
+		it('should raise an exception if given an incorrect id (not found)', async() => {
 			try {
 				await Fields.findOne(random.guid());
 			} catch (err) {
@@ -99,11 +99,22 @@ describe.only('Fields Model', () => {
 				expect(err.message).to.include('not found');
 			}
 		});
+
+		it('should raise an exception if given an invalid id (not in uuid format)', async() => {
+			try {
+				await Fields.findOne(1);
+			} catch (err) {
+				expect(err.message).to.include('field');
+				expect(err.message).to.include('find');
+				expect(err.message).to.include('couldn\'t be completed');
+				expect(err.message).to.include('id');
+				expect(err.message).to.include('wasn\'t in proper uuid format');
+			}
+		});
 	});
 
 
 	describe('has an update method', () => {
-
 		it('should update the field record if given a valid id and data, and return the updated object', async() => {
 			const specificId = random.guid(),
 				specificField = random.word(),
@@ -125,6 +136,30 @@ describe.only('Fields Model', () => {
 			expect(newField.id).to.equal(specificId);
 			expect(newField.field).to.equal(newFieldName);
 			expect(newField.updated_at).to.be.a.date();
+		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			try {
+				await Fields.update(random.guid(), { field: random.word() });
+			} catch (err) {
+				expect(err.message).to.include('field');
+				expect(err.message).to.include('update');
+				expect(err.message).to.include('does not exist');
+				expect(err.message).to.include('id');
+				expect(err.message).to.include('not found');
+			}
+		});
+
+		it('should raise an exception if given an invalid id (not in uuid format)', async() => {
+			try {
+				await Fields.update(1, { field: random.word() });
+			} catch (err) {
+				expect(err.message).to.include('field');
+				expect(err.message).to.include('update');
+				expect(err.message).to.include('couldn\'t be completed');
+				expect(err.message).to.include('id');
+				expect(err.message).to.include('wasn\'t in proper uuid format');
+			}
 		});
 	});
 
@@ -151,6 +186,4 @@ describe.only('Fields Model', () => {
 			}
 		});
 	});
-
-
 });
