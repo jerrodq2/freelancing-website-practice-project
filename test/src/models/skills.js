@@ -33,7 +33,7 @@ describe('Skills Model', () => {
 			expect(result.updated_at).to.equal(null);
 		});
 
-		it('should raise an exception if given an invali id (not in uuid format)', async() => {
+		it('should raise an exception if given an invalid id (not in uuid format)', async() => {
 			const specificId = 1,
 				createData = { id: specificId, skill: random.word() };
 

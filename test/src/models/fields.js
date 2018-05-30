@@ -35,6 +35,48 @@ describe.only('Fields Model', () => {
 			expect(field.created_at).to.be.a.date();
 			expect(field.updated_at).to.equal(null);
 		});
+
+		it('should raise an exception if given an invalid id (not in uuid format)', async() => {
+			const specificId = 1,
+				createData = { id: specificId, field: random.word() };
+
+			try {
+				await Fields.create(createData);
+			} catch (err) {
+				expect(err.message).to.include('field');
+				expect(err.message).to.include('create');
+				expect(err.message).to.include('couldn\'t be completed');
+				expect(err.message).to.include('id');
+				expect(err.message).to.include('proper uuid format');
+			}
+		});
+
+		it('should require a field to create', async() => {
+			const createData = { id: random.guid() };
+			try {
+				await Fields.create(createData);
+			} catch (err) {
+				expect(err.message).to.include('field');
+				expect(err.message).to.include('create');
+				expect(err.message).to.include('couldn\'t be completed');
+				expect(err.message).to.include('not-null constraint');
+				expect(err.message).to.include('\'field\'');
+			}
+		});
+
+		it('should raise an exception if not using a unique field (duplicate field)', async() => {
+			const createData = { id: random.guid(), field };
+
+			try {
+				await Fields.create(createData);
+			} catch (err) {
+				expect(err.message).to.include('field');
+				expect(err.message).to.include('create');
+				expect(err.message).to.include('couldn\'t be completed');
+				expect(err.message).to.include('unique constraint');
+				expect(err.message).to.include('\'field\'');
+			}
+		});
 	});
 
 
