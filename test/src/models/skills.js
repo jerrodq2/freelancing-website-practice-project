@@ -33,7 +33,7 @@ describe.only('Skills Model', () => {
 			expect(result.updated_at).to.equal(null);
 		});
 
-		it('should require a id in proper uuid format', async() => {
+		it('should raise an exception if given an invali id (not in uuid format)', async() => {
 			const specificId = 1,
 				createData = { id: specificId, skill: random.word() };
 
@@ -58,7 +58,7 @@ describe.only('Skills Model', () => {
 				expect(err.message).to.include('create');
 				expect(err.message).to.include('couldn\'t be completed');
 				expect(err.message).to.include('not-null constraint');
-				expect(err.message).to.include('skill');
+				expect(err.message).to.include('\'skill\'');
 			}
 		});
 
@@ -72,7 +72,7 @@ describe.only('Skills Model', () => {
 				expect(err.message).to.include('create');
 				expect(err.message).to.include('couldn\'t be completed');
 				expect(err.message).to.include('unique constraint');
-				expect(err.message).to.include('skill');
+				expect(err.message).to.include('\'skill\'');
 			}
 		});
 	});
@@ -93,6 +93,7 @@ describe.only('Skills Model', () => {
 				expect(err.message).to.include('skill');
 				expect(err.message).to.include('find');
 				expect(err.message).to.include('does not exist');
+				expect(err.message).to.include('id');
 				expect(err.message).to.include('not found');
 			}
 		});
@@ -127,6 +128,7 @@ describe.only('Skills Model', () => {
 				expect(err.message).to.include('skill');
 				expect(err.message).to.include('findByName');
 				expect(err.message).to.include('does not exist');
+				expect(err.message).to.include('skill name');
 				expect(err.message).to.include('not found');
 			}
 		});

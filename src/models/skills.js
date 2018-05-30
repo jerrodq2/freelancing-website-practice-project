@@ -21,7 +21,7 @@ module.exports = {
 		return knex('skills').where({ skill: name })
 			.then((result) => {
 				// throw error if the record with the given id couldn't be found
-				if (!result[0]) throw Errors.notFound('skill', 'findByName', 'skill');
+				if (!result[0]) throw Errors.notFound('skill', 'findByName', 'skill name');
 
 				return result[0];
 			});
