@@ -6,10 +6,10 @@ const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 const { describe, it, before } = lab;
 const Clients = require(`${process.cwd()}/src/models/clients`);
-const { db, random, knex, checkErr, _ } = require(`${process.cwd()}/test/src/helpers`);
+const { db, random, knex, checkErr } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe('Clients Model', () => {
+describe.only('Clients Model', () => {
 	const id = random.guid(),
 		first_name = random.name(),
 		last_name = random.name(),
@@ -35,6 +35,18 @@ describe('Clients Model', () => {
 		return random.client(data);
 	});
 
+
+	// simple funciton used to create the necessary unique variables to create a new client
+	const createNewData = () => {
+		const specificId = random.guid(),
+			specificUsername = `username - ${specificId}`,
+			specificEmail = `${specificId}@email.com`,
+
+			obj = { id: specificId, username: specificUsername, email: specificEmail },
+			createData = Object.assign({}, data, obj);
+
+		return createData;
+	};
 
 	// checks all fields returned from the create or createWithoutHash method
 	const checkFields = (obj, givenId, givenEmail, checkField = true) => {
@@ -72,22 +84,6 @@ describe('Clients Model', () => {
 		expect(err.message).to.include(givenField);
 	};
 
-	// check that certain fields are required upon create
-	const checkNotNull = async(givenField) => {
-		const specificId = random.guid(),
-			specificUsername = `username - ${specificId}`,
-			specificEmail = `${specificId}@email.com`,
-			obj = { id: specificId, username: specificUsername, email: specificEmail },
-			newData = Object.assign({}, data, obj),
-			createData = _.omit(newData, field);
-
-		try {
-			await Clients.create(createData);
-		} catch (err) {
-			return checkError(err, 'create', givenField, 'violated the not-null constraint');
-		}
-	};
-
 	// checks that certain fields have to be unique to create
 	const checkUnique = async(givenField) => {
 		const specificId = random.guid(),
@@ -122,10 +118,10 @@ describe('Clients Model', () => {
 
 
 	describe('has a create method', async() => {
-		const specificId = random.guid(),
-			specificUsername = `username - ${specificId}`,
-			specificEmail = `${specificId}@email.com`,
-			createData = Object.assign({}, data, { id: specificId, username: specificUsername, email: specificEmail });
+		const createData = createNewData(),
+			specificId = createData.id,
+			specificEmail = createData.email,
+			specificUsername = createData.username;
 		let record, client, result;
 
 		before(async() => {
@@ -158,23 +154,30 @@ describe('Clients Model', () => {
 		});
 
 		// check that certain fields are required to create
-		it('should require a first_name to create', () => checkNotNull('first_name'));
-
-		it.only('requires first', async() => {
-			const specificId = random.guid(),
-				specificUsername = `username - ${specificId}`,
-				specificEmail = `${specificId}@email.com`,
-				createData = Object.assign({}, data, { id: specificId, username: specificUsername, email: specificEmail });
-
-			return checkErr.checkNotNull(Clients, 'client', createData, 'first_name');
+		it('should require a first_name to create', async() => {
+			return checkErr.checkNotNull(Clients, 'client', createNewData(), 'first_name');
 		});
-		it('should require a last_name to create', () => checkNotNull('last_name'));
-		it('should require a username to create', () => checkNotNull('username'));
-		it('should require a email to create', () => checkNotNull('email'));
-		it('should require a gender to create', () => checkNotNull('gender'));
-		it('should require a age to create', () => checkNotNull('age'));
-		it('should require a field_id to create', () => checkNotNull('field_id'));
-		it('should require a password to create', () => checkNotNull('password'));
+		it('should require a last_name to create', () => {
+			return checkErr.checkNotNull(Clients, 'client', createNewData(), 'last_name');
+		});
+		it('should require a username to create', () => {
+			return checkErr.checkNotNull(Clients, 'client', createNewData(), 'username');
+		});
+		it('should require a email to create', () => {
+			return checkErr.checkNotNull(Clients, 'client', createNewData(), 'email');
+		});
+		it('should require a gender to create', () => {
+			return checkErr.checkNotNull(Clients, 'client', createNewData(), 'gender');
+		});
+		it('should require a age to create', () => {
+			return checkErr.checkNotNull(Clients, 'client', createNewData(), 'age');
+		});
+		it('should require a field_id to create', () => {
+			return checkErr.checkNotNull(Clients, 'client', createNewData(), 'field_id');
+		});
+		it('should require a password to create', () => {
+			return checkErr.checkNotNull(Clients, 'client', createNewData(), 'password');
+		});
 
 		// check that certain fields have to be unique to create
 		it('should raise an exception if the username isn\'t unique (unique field)', () => checkUnique('username'));
@@ -187,10 +190,10 @@ describe('Clients Model', () => {
 
 	// I don't test all of the error test above here because the createWithoutHash method still goes through the create method to actually create the record. This is to speed up tests and not be tedious
 	describe('has a createWithoutHash method used for testing that doesn\'t hash the given password,', async() => {
-		const specificId = random.guid(),
-			specificUsername = `username - ${specificId}`,
-			specificEmail = `${specificId}@email.com`,
-			createData = Object.assign({}, data, { id: specificId, username: specificUsername, email: specificEmail });
+		const createData = createNewData(),
+			specificId = createData.id,
+			specificEmail = createData.email,
+			specificUsername = createData.username;
 		let record, client, result;
 
 		before(async() => {
@@ -258,10 +261,10 @@ describe('Clients Model', () => {
 		before(() => random.field({ id: newFieldId }));
 
 		it('should update the client record if given a valid id and data, and return the updated object without password or username', async() => {
-			const specificId = random.guid(),
-				specificEmail = `${specificId}@email.com`,
-				newEmail = `update-${specificEmail}`,
-				createData = { id: specificId, email: specificEmail, field_id };
+			const createData = createNewData(),
+				specificId = createData.id,
+				specificEmail = createData.email,
+				newEmail = `update-${specificEmail}`;
 			updateData = Object.assign(updateData, { email: newEmail });
 
 			await random.client(createData);
@@ -293,9 +296,9 @@ describe('Clients Model', () => {
 		});
 
 		it('should update the client record with the given id if given valid data, even if only given one field', async() => {
-			const specificId = random.guid(),
-				specificEmail = `${specificId}@email.com`,
-				createData = { id: specificId, email: specificEmail, field_id };
+			const createData = createNewData(),
+				specificId = createData.id,
+				specificEmail = createData.email;
 			updateData = { first_name: newFirstName };
 
 			await random.client(createData);
