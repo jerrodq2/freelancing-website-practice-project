@@ -144,13 +144,9 @@ describe.only('Clients Model', () => {
 		});
 
 		it('should raise an exception if given an invalid id (not in uuid format)', async() => {
-			const createData = Object.assign({}, data, { id: 1, username: random.word(), email: random.email() });
-
-			try {
-				await Clients.create(createData);
-			} catch (err) {
-				return checkError(err, 'create', 'id', 'proper uuid format');
-			}
+			const createData = createNewData();
+			createData.id = 1;
+			return checkErr.checkIdFormat(Clients, 'create', 'create', 'client', createData);
 		});
 
 		// check that certain fields are required to create
@@ -233,11 +229,7 @@ describe.only('Clients Model', () => {
 		});
 
 		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
-			try {
-				await Clients.findOne(1);
-			} catch (err) {
-				return checkError(err, 'find', 'id', 'proper uuid format' );
-			}
+			return checkErr.checkIdFormat(Clients, 'findOne', 'find', 'client', {});
 		});
 	});
 
