@@ -37,7 +37,7 @@ describe.only('Clients Model', () => {
 
 
 	// checks all fields returned from the create or createWithoutHash method
-	const checkFields = (obj, givenId, givenEmail) => {
+	const checkFields = (obj, givenId, givenEmail, checkField = true) => {
 		expect(obj).to.be.an.object();
 		expect(obj.id).to.equal(givenId);
 		expect(obj.first_name).to.equal(first_name);
@@ -45,7 +45,12 @@ describe.only('Clients Model', () => {
 		expect(obj.email).to.equal(givenEmail);
 		expect(obj.gender).to.equal(gender);
 		expect(obj.age).to.equal(age);
-		expect(obj.field_id).to.equal(field_id);
+		if (checkField) {
+			expect(obj.field_id).to.equal(field_id);
+		} else {
+			// this is checked in the findOne
+			expect(obj.field_id).to.equal(undefined);
+		}
 		expect(obj.summary).to.equal(summary);
 		expect(obj.state).to.equal(state);
 		expect(obj.city).to.equal(city);
@@ -205,23 +210,9 @@ describe.only('Clients Model', () => {
 		it('should retrieve a specific client with a given id, and return an object without the password, username, or field_id, but with the name of the field', async() => {
 			const client = await Clients.findOne(id);
 
-			expect(client).to.be.an.object();
-			expect(client.id).to.equal(id);
-			expect(client.first_name).to.equal(first_name);
-			expect(client.last_name).to.equal(last_name);
-			expect(client.email).to.equal(email);
-			expect(client.gender).to.equal(gender);
-			expect(client.age).to.equal(age);
+			// check the usual fields first
+			checkFields(client, id, email, false);
 			expect(client.field).to.equal(field);
-			expect(client.summary).to.equal(summary);
-			expect(client.state).to.equal(state);
-			expect(client.city).to.equal(city);
-			expect(client.zip).to.equal(zip);
-			expect(client.phone).to.equal(phone);
-			expect(client.dob).to.equal(new Date(dob));
-			expect(client.username).to.equal(undefined);
-			expect(client.password).to.equal(undefined);
-			expect(client.field_id).to.equal(undefined);
 		});
 
 		it('should return an empty object if not found or given an incorrect id', async() => {
