@@ -174,6 +174,7 @@ describe.only('Clients Model', () => {
 	});
 
 
+	// I don't test all of the error test above here because the createWithoutHash method still goes through the create method to actually create the record. This is to speed up tests and not be tedious
 	describe('has a createWithoutHash method used for testing that doesn\'t hash the given password,', async() => {
 		const specificId = random.guid(),
 			specificUsername = `username - ${specificId}`,
