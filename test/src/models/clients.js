@@ -64,12 +64,12 @@ describe.only('Clients Model', () => {
 	};
 
 	// checks the error message for the below methods, just putting re-used code in its own function for DRYness
-	const checkError = (err, givenField, expectedError) => {
+	const checkError = (err, action, givenField, expectedError, errMessage = 'couldn\'t be completed' ) => {
 		expect(err.message).to.include('client');
-		expect(err.message).to.include('create');
-		expect(err.message).to.include('couldn\'t be completed');
+		expect(err.message).to.include(action);
+		expect(err.message).to.include(errMessage);
 		expect(err.message).to.include(expectedError);
-		expect(err.message).to.include(`'${givenField}'`);
+		expect(err.message).to.include(givenField);
 	};
 
 	// check that certain fields are required upon create
@@ -84,7 +84,7 @@ describe.only('Clients Model', () => {
 		try {
 			await Clients.create(createData);
 		} catch (err) {
-			return checkError(err, givenField, 'violated the not-null constraint');
+			return checkError(err, 'create', givenField, 'violated the not-null constraint');
 		}
 	};
 
@@ -100,7 +100,7 @@ describe.only('Clients Model', () => {
 		try {
 			await Clients.create(createData);
 		} catch (err) {
-			return checkError(err, givenField, 'violated the unique constraint');
+			return checkError(err, 'create', givenField, 'violated the unique constraint');
 		}
 	};
 
@@ -116,7 +116,7 @@ describe.only('Clients Model', () => {
 		try {
 			await Clients.create(createData);
 		} catch (err) {
-			return checkError(err, givenField, 'violated the foreign key constraint');
+			return checkError(err, 'create', givenField, 'violated the foreign key constraint');
 		}
 	};
 
@@ -153,11 +153,7 @@ describe.only('Clients Model', () => {
 			try {
 				await Clients.create(createData);
 			} catch (err) {
-				expect(err.message).to.include('client');
-				expect(err.message).to.include('create');
-				expect(err.message).to.include('couldn\'t be completed');
-				expect(err.message).to.include('id');
-				expect(err.message).to.include('proper uuid format');
+				return checkError(err, 'create', 'id', 'proper uuid format');
 			}
 		});
 
@@ -169,6 +165,7 @@ describe.only('Clients Model', () => {
 		it('should require a gender to create', () => checkNotNull('gender'));
 		it('should require a age to create', () => checkNotNull('age'));
 		it('should require a field_id to create', () => checkNotNull('field_id'));
+		it('should require a password to create', () => checkNotNull('password'));
 
 		// check that certain fields have to be unique to create
 		it('should raise an exception if the username isn\'t unique (unique field)', () => checkUnique('username'));
@@ -215,11 +212,20 @@ describe.only('Clients Model', () => {
 			expect(client.field).to.equal(field);
 		});
 
-		it('should return an empty object if not found or given an incorrect id', async() => {
-			const client = await Clients.findOne(random.guid());
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			try {
+				await Clients.findOne(random.guid());
+			} catch (err) {
+				return checkError(err, 'find', 'id', 'does not exist', 'not found');
+			}
+		});
 
-			expect(client).to.be.an.object();
-			expect(client).to.equal({});
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			try {
+				await Clients.findOne(1);
+			} catch (err) {
+				return checkError(err, 'find', 'id', 'proper uuid format' );
+			}
 		});
 	});
 
@@ -312,11 +318,14 @@ describe.only('Clients Model', () => {
 			expect(client).to.be.an.object();
 			expect(client.id).to.equal(specificId);
 
-			await Clients.delete(specificId);
-			const afterDelete = await Clients.findOne(specificId);
+			const afterDelete = await Clients.delete(specificId);
+			expect(afterDelete).to.equal(true);
 
-			expect(afterDelete).to.be.an.object();
-			expect(afterDelete).to.equal({});
+			try {
+				await Clients.findOne(specificId);
+			} catch (err) {
+				return checkError(err, 'find', 'id', 'does not exist', 'not found');
+			}
 		});
 	});
 });
