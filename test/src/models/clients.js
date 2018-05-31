@@ -6,10 +6,10 @@ const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 const { describe, it, before } = lab;
 const Clients = require(`${process.cwd()}/src/models/clients`);
-const { db, random, knex } = require(`${process.cwd()}/test/src/helpers`);
+const { db, random, knex, _ } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe('Clients Model', () => {
+describe.only('Clients Model', () => {
 	const id = random.guid(),
 		first_name = random.name(),
 		last_name = random.name(),
@@ -35,6 +35,87 @@ describe('Clients Model', () => {
 		return random.client(data);
 	});
 
+
+	// checks all fields returned from the create or createWithoutHash method
+	const checkFields = (obj, givenId, givenEmail) => {
+		expect(obj).to.be.an.object();
+		expect(obj.id).to.equal(givenId);
+		expect(obj.first_name).to.equal(first_name);
+		expect(obj.last_name).to.equal(last_name);
+		expect(obj.email).to.equal(givenEmail);
+		expect(obj.gender).to.equal(gender);
+		expect(obj.age).to.equal(age);
+		expect(obj.field_id).to.equal(field_id);
+		expect(obj.summary).to.equal(summary);
+		expect(obj.state).to.equal(state);
+		expect(obj.city).to.equal(city);
+		expect(obj.zip).to.equal(zip);
+		expect(obj.phone).to.equal(phone);
+		expect(obj.dob).to.equal(new Date(dob));
+		expect(obj.created_at).to.be.a.date();
+		expect(obj.updated_at).to.equal(null);
+		expect(obj.username).to.equal(undefined);
+		expect(obj.password).to.equal(undefined);
+	};
+
+	// checks the error message for the below methods, just putting re-used code in its own function for DRYness
+	const checkError = (err, givenField, expectedError) => {
+		expect(err.message).to.include('client');
+		expect(err.message).to.include('create');
+		expect(err.message).to.include('couldn\'t be completed');
+		expect(err.message).to.include(expectedError);
+		expect(err.message).to.include(`'${givenField}'`);
+	};
+
+	// check that certain fields are required upon create
+	const checkNotNull = async(givenField) => {
+		const specificId = random.guid(),
+			specificUsername = `username - ${specificId}`,
+			specificEmail = `${specificId}@email.com`,
+			obj = { id: specificId, username: specificUsername, email: specificEmail },
+			newData = Object.assign({}, data, obj),
+			createData = _.omit(newData, field);
+
+		try {
+			await Clients.create(createData);
+		} catch (err) {
+			return checkError(err, givenField, 'violated the not-null constraint');
+		}
+	};
+
+	// checks that certain fields have to be unique to create
+	const checkUnique = async(givenField) => {
+		const specificId = random.guid(),
+			specificUsername = `username - ${specificId}`,
+			specificEmail = `${specificId}@email.com`,
+			obj = { id: specificId, username: specificUsername, email: specificEmail },
+			createData = Object.assign({}, data, obj);
+		createData[`${givenField}`] = givenField;
+
+		try {
+			await Clients.create(createData);
+		} catch (err) {
+			return checkError(err, givenField, 'violated the unique constraint');
+		}
+	};
+
+	// checks that foreign key fields require a correct id to create
+	const checkForeign = async(givenField) => {
+		const specificId = random.guid(),
+			specificUsername = `username - ${specificId}`,
+			specificEmail = `${specificId}@email.com`,
+			obj = { id: specificId, username: specificUsername, email: specificEmail },
+			createData = Object.assign({}, data, obj);
+		createData[`${givenField}`] = random.guid();
+
+		try {
+			await Clients.create(createData);
+		} catch (err) {
+			return checkError(err, givenField, 'violated the foreign key constraint');
+		}
+	};
+
+
 	describe('has a create method', async() => {
 		const specificId = random.guid(),
 			specificUsername = `username - ${specificId}`,
@@ -49,24 +130,7 @@ describe('Clients Model', () => {
 		});
 
 		it('should create a new client record if given valid data, create new created_at and updated_at fields, and return the client object without the username or password', async() => {
-			expect(result).to.be.an.object();
-			expect(result.id).to.equal(specificId);
-			expect(result.first_name).to.equal(first_name);
-			expect(result.last_name).to.equal(last_name);
-			expect(result.email).to.equal(specificEmail);
-			expect(result.gender).to.equal(gender);
-			expect(result.age).to.equal(age);
-			expect(result.field_id).to.equal(field_id);
-			expect(result.summary).to.equal(summary);
-			expect(result.state).to.equal(state);
-			expect(result.city).to.equal(city);
-			expect(result.zip).to.equal(zip);
-			expect(result.phone).to.equal(phone);
-			expect(result.dob).to.equal(new Date(dob));
-			expect(result.created_at).to.be.a.date();
-			expect(result.updated_at).to.equal(null);
-			expect(result.username).to.equal(undefined);
-			expect(result.username).to.equal(undefined);
+			return checkFields(result, specificId, specificEmail);
 		});
 
 		it('should create the new record with the given username and the hashed password', async() => {
@@ -77,6 +141,36 @@ describe('Clients Model', () => {
 			expect(client.password).to.not.equal(password);
 			expect(client.password.length).to.be.above(password.length);
 		});
+
+		it('should raise an exception if given an invalid id (not in uuid format)', async() => {
+			const createData = Object.assign({}, data, { id: 1, username: random.word(), email: random.email() });
+
+			try {
+				await Clients.create(createData);
+			} catch (err) {
+				expect(err.message).to.include('client');
+				expect(err.message).to.include('create');
+				expect(err.message).to.include('couldn\'t be completed');
+				expect(err.message).to.include('id');
+				expect(err.message).to.include('proper uuid format');
+			}
+		});
+
+		// check that certain fields are required to create
+		it('should require a first_name to create', () => checkNotNull('first_name'));
+		it('should require a last_name to create', () => checkNotNull('last_name'));
+		it('should require a username to create', () => checkNotNull('username'));
+		it('should require a email to create', () => checkNotNull('email'));
+		it('should require a gender to create', () => checkNotNull('gender'));
+		it('should require a age to create', () => checkNotNull('age'));
+		it('should require a field_id to create', () => checkNotNull('field_id'));
+
+		// check that certain fields have to be unique to create
+		it('should raise an exception if the username isn\'t unique (unique field)', () => checkUnique('username'));
+		it('should raise an exception if the email isn\'t unique (unique field)', () => checkUnique('email'));
+
+		// check that certain fields have to be unique to create
+		it('should raise an exception if given an incorrect field_id (foreign key not found)', () => checkForeign('field_id'));
 	});
 
 
@@ -94,24 +188,7 @@ describe('Clients Model', () => {
 		});
 
 		it('should create a new client record if given valid data, create new created_at and updated_at fields, and return the client object without the username or password', async() => {
-			expect(result).to.be.an.object();
-			expect(result.id).to.equal(specificId);
-			expect(result.first_name).to.equal(first_name);
-			expect(result.last_name).to.equal(last_name);
-			expect(result.email).to.equal(specificEmail);
-			expect(result.gender).to.equal(gender);
-			expect(result.age).to.equal(age);
-			expect(result.field_id).to.equal(field_id);
-			expect(result.summary).to.equal(summary);
-			expect(result.state).to.equal(state);
-			expect(result.city).to.equal(city);
-			expect(result.zip).to.equal(zip);
-			expect(result.phone).to.equal(phone);
-			expect(result.dob).to.equal(new Date(dob));
-			expect(result.created_at).to.be.a.date();
-			expect(result.updated_at).to.equal(null);
-			expect(result.username).to.equal(undefined);
-			expect(result.username).to.equal(undefined);
+			return checkFields(result, specificId, specificEmail);
 		});
 
 		it('should create the new record with the given username and the plain password', async() => {

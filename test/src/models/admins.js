@@ -9,7 +9,7 @@ const Admins = require(`${process.cwd()}/src/models/admins`);
 const { db, random, knex, _ } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe.only('Admins Model', () => {
+describe('Admins Model', () => {
 	const id = random.guid(),
 		first_name = 'first',
 		last_name = 'last',
