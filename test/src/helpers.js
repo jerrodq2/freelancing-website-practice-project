@@ -4,6 +4,7 @@
 const connectionOptions = require(`${process.cwd()}/knexfile.js`)[`${process.env.NODE_ENV}`];
 const knex = require('knex')(connectionOptions);
 const random = require(`${process.cwd()}/randoms`);
+const { expect } = require('code');
 const _ = require('lodash');
 
 
@@ -29,6 +30,7 @@ const pgTables = [
 	'skills',
 ];
 
+
 const helpers = {
 	knex,
 	random,
@@ -46,6 +48,30 @@ const helpers = {
 		resetTable: (table) => {
 			return knex.raw(`TRUNCATE ${table} CASCADE;`);
 		},
+	},
+
+	// The below object and methods are used to check the errors that the model methods return. Since the same errors are returned and checked by multiple models, I put them here to re-use them and improve DRYness
+	checkErr: {
+		// checks the actual error message to determine the cause, what it was attempting, etc. used by all below checkErr methods
+		checkMessage: (err, table, action, field, result, cause) => {
+			// ex: The client you are attempting to create couldn't be completed. You gave an id that wasn't in proper uuid format
+			expect(err.message).to.include(table); // ex: client
+			expect(err.message).to.include(action); //ex: create, find, delete
+			expect(err.message).to.include(field);
+			expect(err.message).to.include(result); // ex: 'couldn't be completed', 'does not exist'
+			expect(err.message).to.include(cause); // ex: 'not found', 'violated the unique constraint'
+		},
+
+		// check that certain fields are required upon create
+		checkNotNull: async(Model, table, data, field) => {
+			const createData = _.omit(data, field);
+			
+			try {
+				await Model.create(createData);
+			} catch (err) {
+				return helpers.checkErr.checkMessage(err, table, 'create', field, 'couldn\'t be completed', 'violated the not-null constraint');
+			}
+		}
 	},
 
 

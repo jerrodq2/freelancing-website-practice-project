@@ -6,10 +6,10 @@ const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 const { describe, it, before } = lab;
 const Clients = require(`${process.cwd()}/src/models/clients`);
-const { db, random, knex, _ } = require(`${process.cwd()}/test/src/helpers`);
+const { db, random, knex, checkErr, _ } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe.only('Clients Model', () => {
+describe('Clients Model', () => {
 	const id = random.guid(),
 		first_name = random.name(),
 		last_name = random.name(),
@@ -159,6 +159,15 @@ describe.only('Clients Model', () => {
 
 		// check that certain fields are required to create
 		it('should require a first_name to create', () => checkNotNull('first_name'));
+
+		it.only('requires first', async() => {
+			const specificId = random.guid(),
+				specificUsername = `username - ${specificId}`,
+				specificEmail = `${specificId}@email.com`,
+				createData = Object.assign({}, data, { id: specificId, username: specificUsername, email: specificEmail });
+
+			return checkErr.checkNotNull(Clients, 'client', createData, 'first_name');
+		});
 		it('should require a last_name to create', () => checkNotNull('last_name'));
 		it('should require a username to create', () => checkNotNull('username'));
 		it('should require a email to create', () => checkNotNull('email'));
