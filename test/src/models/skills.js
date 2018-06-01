@@ -6,7 +6,7 @@ const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 const { describe, it, before } = lab;
 const Skills = require(`${process.cwd()}/src/models/skills`);
-const { db, random } = require(`${process.cwd()}/test/src/helpers`);
+const { db, random, checkErr } = require(`${process.cwd()}/test/src/helpers`);
 
 
 describe('Skills Model', () => {
@@ -34,46 +34,19 @@ describe('Skills Model', () => {
 		});
 
 		it('should raise an exception if given an invalid id (not in uuid format)', async() => {
-			const specificId = 1,
-				createData = { id: specificId, skill: random.word() };
+			const createData = { id: 1, skill: random.word() };
 
-			try {
-				await Skills.create(createData);
-			} catch (err) {
-				expect(err.message).to.include('skill');
-				expect(err.message).to.include('create');
-				expect(err.message).to.include('couldn\'t be completed');
-				expect(err.message).to.include('id');
-				expect(err.message).to.include('proper uuid format');
-			}
+			return checkErr.checkIdFormat(Skills, 'create', 'create', 'skill', createData);
 		});
 
 		it('should require a skill to create', async() => {
-			const createData = { id: random.guid() };
-
-			try {
-				await Skills.create(createData);
-			} catch (err) {
-				expect(err.message).to.include('skill');
-				expect(err.message).to.include('create');
-				expect(err.message).to.include('couldn\'t be completed');
-				expect(err.message).to.include('not-null constraint');
-				expect(err.message).to.include('\'skill\'');
-			}
+			return checkErr.checkNotNull(Skills, 'skill', { id: random.guid() }, 'skill');
 		});
 
 		it('should raise an exception if the skill isn\'t unique (unique field)', async() => {
 			const createData = { id: random.guid(), skill };
 
-			try {
-				await Skills.create(createData);
-			} catch (err) {
-				expect(err.message).to.include('skill');
-				expect(err.message).to.include('create');
-				expect(err.message).to.include('couldn\'t be completed');
-				expect(err.message).to.include('unique constraint');
-				expect(err.message).to.include('\'skill\'');
-			}
+			return checkErr.checkUnique(Skills, 'skill', createData, 'skill', skill);
 		});
 	});
 

@@ -25,6 +25,7 @@ const checkErr = {
 
 			cause: the specific reason that caused the error, ex: not found, violated the not-null constraint
 		*/
+		// console.log(err.message);
 		expect(err.message).to.include(table);
 		expect(err.message).to.include(action);
 		expect(err.message).to.include(field);
@@ -34,31 +35,31 @@ const checkErr = {
 
 
 	// check that the given id is in uuid format, used in most methods
-	checkIdFormat: async(Model, method, action, table, data = {}) => {
+	checkIdFormat: async(Model, table, action, data = {}) => {
 		/* Examples of parameters below
 	    Model: name of model, ex: Clients, Admins
 
-	    method: method being performed, ex: create, findOne
+			table: name of table as it will be shown in the error message, basically the models singular, ex: client, job, skill
 
-	    action: same as method, but how it will be displayed in the error message, ex: findOne is shown as 'find' in the error message
-
-	    table: name of table as it will be shown in the error message, basically the models singular, ex: client, job, skill
+			action:  method being performed, but how it will be displayed in the error message, ex: findOne is shown as 'find' in the error message while 'create' is still create
 
 	    data: the object data needed to perform the query
 	  */
 		try {
-			if (method === 'update') {
+			if (action === 'update') {
 				// in the event of update, where we have to pass in the id and data
 				await Model.update(1, data);
-			} else if (method === 'findOne') {
+			} else if (action === 'find') {
 				// in the event of findOne, where we have to pass in just the id
 				await Model.findOne(1);
-			} else if (method === 'create'){
+			} else if (action === 'create'){
 				// in the event of create, where we just pass in the data
 				await Model.create(data);
-			} else if (method === 'delete'){
+			} else if (action === 'delete'){
 				// in the event of delete, where we have to pass in just the id
 				await Model.delete(1);
+			} else {
+				throw new Error('You need to give one of the above actions');
 			}
 		} catch (err) {
 			return checkErr.checkMessage(err, table, action, 'id', 'couldn\'t be completed', 'proper uuid format');
@@ -66,30 +67,30 @@ const checkErr = {
 	},
 
 	// check that giving an incorrect id (or one that doesn't belong to a record in the db) raises an error. Used for findOne, update, and delete mainly
-	checkNotFound: async(Model, method, action, table, id, data = {}) => {
+	checkNotFound: async(Model, table, action, id, data = {}) => {
 		/* Examples of parameters below
 	    Model: name of model, ex: Clients, Admins
 
-	    method: method being performed, ex: create, findOne
+			table: name of table as it will be shown in the error message, basically the models singular, ex: client, job, skill
 
-	    action: same as method, but how it will be displayed in the error message, ex: findOne is shown as 'find' in the error message
+			action:  method being performed, but how it will be displayed in the error message, ex: findOne is shown as 'find' in the error message while 'create' is still create
 
-	    table: name of table as it will be shown in the error message, basically the models singular, ex: client, job, skill
-
-			if: the random id given, I make it a given parameter instead of creating a random id here for simplicity
+			id: the random id given, I make it a given parameter instead of creating a random id here for simplicity
 
 	    data: the object data needed to perform the update query
 	  */
 		try {
-			if (method === 'update') {
+			if (action === 'update') {
 				// in the event of update, where we have to pass in the id and data
 				await Model.update(id, data);
-			} else if (method === 'findOne') {
+			} else if (action === 'find') {
 				// in the event of findOne, where we have to pass in just the id
 				await Model.findOne(id);
-			} else if (method === 'delete'){
+			} else if (action === 'delete'){
 				// in the event of delete, where we have to pass in just the id
 				await Model.delete(id);
+			} else {
+				throw new Error('You need to give one of the above actions');
 			}
 		} catch (err) {
 			return checkErr.checkMessage(err, table, action, 'id', 'does not exist', 'not found');

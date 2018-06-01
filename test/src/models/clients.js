@@ -105,7 +105,7 @@ describe.only('Clients Model', () => {
 		it('should raise an exception if given an invalid id (not in uuid format)', async() => {
 			const createData = createNewData();
 			createData.id = 1;
-			return checkErr.checkIdFormat(Clients, 'create', 'create', 'client', createData);
+			return checkErr.checkIdFormat(Clients, 'client', 'create', createData);
 		});
 
 		// check that certain fields are required to create
@@ -186,11 +186,11 @@ describe.only('Clients Model', () => {
 		});
 
 		it('should raise an exception if given an incorrect id (not found)', async() => {
-			return checkErr.checkNotFound(Clients, 'findOne', 'find', 'client', random.guid());
+			return checkErr.checkNotFound(Clients, 'client', 'find', random.guid());
 		});
 
 		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
-			return checkErr.checkIdFormat(Clients, 'findOne', 'find', 'client', {});
+			return checkErr.checkIdFormat(Clients, 'client', 'find', {});
 		});
 	});
 
@@ -271,11 +271,11 @@ describe.only('Clients Model', () => {
 		});
 
 		it('should raise an exception if given an incorrect id (not found)', async() => {
-			return checkErr.checkNotFound(Clients, 'update', 'update', 'client', random.guid());
+			return checkErr.checkNotFound(Clients, 'client', 'update', random.guid());
 		});
 
 		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
-			return checkErr.checkIdFormat(Clients, 'update', 'update', 'client', {});
+			return checkErr.checkIdFormat(Clients, 'client', 'update', {});
 		});
 	});
 
@@ -293,15 +293,15 @@ describe.only('Clients Model', () => {
 			expect(afterDelete).to.equal(true);
 
 			// check that trying to find the record now returns a not found error
-			return checkErr.checkNotFound(Clients, 'findOne', 'find', 'client', specificId);
+			return checkErr.checkNotFound(Clients, 'client', 'find', specificId);
 		});
 
 		it('should raise an exception if given an incorrect id (not found)', async() => {
-			return checkErr.checkNotFound(Clients, 'delete', 'delete', 'client', random.guid());
+			return checkErr.checkNotFound(Clients, 'client', 'delete', random.guid());
 		});
 
 		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
-			return checkErr.checkIdFormat(Clients, 'delete', 'delete', 'client', {});
+			return checkErr.checkIdFormat(Clients, 'client', 'delete', {});
 		});
 	});
 });
