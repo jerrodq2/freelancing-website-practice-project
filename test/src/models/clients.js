@@ -75,15 +75,6 @@ describe.only('Clients Model', () => {
 		expect(obj.password).to.equal(undefined);
 	};
 
-	// checks the error message for the below methods, just putting re-used code in its own function for DRYness
-	const checkError = (err, action, givenField, expectedError, errMessage = 'couldn\'t be completed' ) => {
-		expect(err.message).to.include('client');
-		expect(err.message).to.include(action);
-		expect(err.message).to.include(errMessage);
-		expect(err.message).to.include(expectedError);
-		expect(err.message).to.include(givenField);
-	};
-
 
 	describe('has a create method', async() => {
 		const createData = createNewData(),
@@ -195,11 +186,7 @@ describe.only('Clients Model', () => {
 		});
 
 		it('should raise an exception if given an incorrect id (not found)', async() => {
-			try {
-				await Clients.findOne(random.guid());
-			} catch (err) {
-				return checkError(err, 'find', 'id', 'does not exist', 'not found');
-			}
+			return checkErr.checkNotFound(Clients, 'findOne', 'find', 'client', random.guid());
 		});
 
 		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
@@ -299,11 +286,8 @@ describe.only('Clients Model', () => {
 			const afterDelete = await Clients.delete(specificId);
 			expect(afterDelete).to.equal(true);
 
-			try {
-				await Clients.findOne(specificId);
-			} catch (err) {
-				return checkError(err, 'find', 'id', 'does not exist', 'not found');
-			}
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(Clients, 'findOne', 'find', 'client', specificId);
 		});
 	});
 });

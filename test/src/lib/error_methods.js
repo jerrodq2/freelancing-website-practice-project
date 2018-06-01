@@ -25,6 +25,7 @@ const checkErr = {
 
 			cause: the specific reason that caused the error, ex: not found, violated the not-null constraint
 		*/
+		console.log(err.message);
 		expect(err.message).to.include(table);
 		expect(err.message).to.include(action);
 		expect(err.message).to.include(field);
@@ -33,7 +34,7 @@ const checkErr = {
 	},
 
 
-	// check that the given id is in uuid format
+	// check that the given id is in uuid format, used in most methods
 	checkIdFormat: async(Model, method, action, table, data = {}) => {
 		/* Examples of parameters below
 	    Model: name of model, ex: Clients, Admins
@@ -62,8 +63,39 @@ const checkErr = {
 		}
 	},
 
+	// check that giving an incorrect id (or one that doesn't belong to a record in the db) raises an error. Used for findOne, update, and delete mainly
+	checkNotFound: async(Model, method, action, table, id, data = {}) => {
+		/* Examples of parameters below
+	    Model: name of model, ex: Clients, Admins
 
-	// check that certain fields are required upon create
+	    method: method being performed, ex: create, findOne
+
+	    action: same as method, but how it will be displayed in the error message, ex: findOne is shown as 'find' in the error message
+
+	    table: name of table as it will be shown in the error message, basically the models singular, ex: client, job, skill
+
+			if: the random id given, I make it a given parameter instead of creating a random id here for simplicity
+
+	    data: the object data needed to perform the update query
+	  */
+		try {
+			if (method === 'update') {
+				// in the event of update, where we have to pass in the id and data
+				await Model.update(id, data);
+			} else if (method === 'findOne') {
+				// in the event of findOne, where we have to pass in just the id
+				await Model.findOne(id);
+			} else if (method === 'delete'){
+				// in the event of delete, where we have to pass in just the id
+				await Model.delete(id);
+			}
+		} catch (err) {
+			return checkErr.checkMessage(err, table, action, 'id', 'does not exist', 'not found');
+		}
+	},
+
+
+	// check that certain fields are required upon create, used only for create
 	checkNotNull: async(Model, table, data, field) => {
 		/* Examples of parameters below
 	    Model: name of model, ex: Clients, Admins
@@ -84,7 +116,7 @@ const checkErr = {
 	},
 
 
-	//checks that certain fields must be unique in order to create, ex: no duplicate emails
+	//checks that certain fields must be unique in order to create, ex: no duplicate emails, used only for create
 	checkUnique: async(Model, table, data, field, duplicateValue) => {
 		/* Examples of parameters below
 	    Model: name of model, ex: Clients, Admins
@@ -107,7 +139,7 @@ const checkErr = {
 	},
 
 
-	//checks that foreign key fields require a correct id, or an id belonging to a record in the database, to create
+	//checks that foreign key fields require a correct id, or an id belonging to a record in the database, to create, used only for create
 	checkForeign: async(Model, table, data, field, randomId) => {
 		/* Examples of parameters below
 	    Model: name of model, ex: Clients, Admins
