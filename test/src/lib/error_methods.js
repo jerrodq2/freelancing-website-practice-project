@@ -25,7 +25,6 @@ const checkErr = {
 
 			cause: the specific reason that caused the error, ex: not found, violated the not-null constraint
 		*/
-		console.log(err.message);
 		expect(err.message).to.include(table);
 		expect(err.message).to.include(action);
 		expect(err.message).to.include(field);
@@ -57,6 +56,9 @@ const checkErr = {
 			} else if (method === 'create'){
 				// in the event of create, where we just pass in the data
 				await Model.create(data);
+			} else if (method === 'delete'){
+				// in the event of delete, where we have to pass in just the id
+				await Model.delete(1);
 			}
 		} catch (err) {
 			return checkErr.checkMessage(err, table, action, 'id', 'couldn\'t be completed', 'proper uuid format');

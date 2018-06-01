@@ -268,8 +268,14 @@ describe.only('Clients Model', () => {
 			expect(updatedClient.id).to.equal(specificId);
 			expect(updatedClient.first_name).to.equal(newFirstName);
 			expect(updatedClient.updated_at).to.be.a.date();
+		});
 
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(Clients, 'update', 'update', 'client', random.guid());
+		});
 
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(Clients, 'update', 'update', 'client', {});
 		});
 	});
 
@@ -288,6 +294,14 @@ describe.only('Clients Model', () => {
 
 			// check that trying to find the record now returns a not found error
 			return checkErr.checkNotFound(Clients, 'findOne', 'find', 'client', specificId);
+		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(Clients, 'delete', 'delete', 'client', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(Clients, 'delete', 'delete', 'client', {});
 		});
 	});
 });
