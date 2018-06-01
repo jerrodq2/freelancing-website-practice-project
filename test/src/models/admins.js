@@ -6,23 +6,36 @@ const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 const { describe, it, before } = lab;
 const Admins = require(`${process.cwd()}/src/models/admins`);
-const { db, random, knex, _ } = require(`${process.cwd()}/test/src/helpers`);
+const { db, random, knex, checkErr, _ } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe('Admins Model', () => {
+describe.only('Admins Model', () => {
 	const id = random.guid(),
 		first_name = 'first',
 		last_name = 'last',
 		username = 'username',
 		email = 'email@email.com',
-		password = 'password';
-	const data = { id, first_name, last_name, username, email, password };
+		password = 'password',
+		data = { id, first_name, last_name, username, email, password };
 
 
 	before(async() => {
 		await db.resetTable('admins');
 		return random.admin(data);
 	});
+
+
+	// simple funciton used to create the necessary unique variables to create a new admin and add it to the above data object
+	const createNewData = () => {
+		const specificId = random.guid(),
+			specificUsername = `username - ${specificId}`,
+			specificEmail = `${specificId}@email.com`,
+
+			obj = { id: specificId, username: specificUsername, email: specificEmail },
+			createData = Object.assign({}, data, obj);
+
+		return createData;
+	};
 
 
 	describe('has a create method', () => {
@@ -58,15 +71,14 @@ describe('Admins Model', () => {
 		};
 
 
-		const specificId = random.guid(),
-			specificUsername = 'create',
-			specificEmail = 'create@email.com';
+		const createData = createNewData(),
+			specificId = createData.id,
+			specificEmail = createData.email,
+			specificUsername = createData.username;
 		let result, admin, record;
 
-		const newData = Object.assign({}, data, { id: specificId, username: specificUsername, email: specificEmail });
-
 		before(async() => {
-			result = await Admins.create(newData);
+			result = await Admins.create(createData);
 			record = await knex('admins').where({ id: specificId });
 			admin = record[0];
 		});
@@ -93,35 +105,27 @@ describe('Admins Model', () => {
 		});
 
 		it('should raise an exception if given an invalid id (not in uuid format)', async() => {
-			const specificId = 1,
-				createData = Object.assign({}, data, { id: specificId, username: 'fail', email: 'fail@email.com' });
+			const createData = createNewData();
+			createData.id = 1;
 
-			try {
-				await Admins.create(createData);
-			} catch (err) {
-				expect(err.message).to.include('admin');
-				expect(err.message).to.include('create');
-				expect(err.message).to.include('couldn\'t be completed');
-				expect(err.message).to.include('id');
-				expect(err.message).to.include('proper uuid format');
-			}
+			return checkErr.checkIdFormat(Admins, 'admin', 'create', createData);
 		});
 
 
 		it('should require a first_name to create', async() => {
-			return checkRequired('first_name');
+			return checkErr.checkNotNull(Admins, 'admin', createNewData(), 'first_name');
 		});
 		it('should require a last_name to create', async() => {
-			return checkRequired('last_name');
+			return checkErr.checkNotNull(Admins, 'admin', createNewData(), 'last_name');
 		});
 		it('should require a username to create', async() => {
-			return checkRequired('username');
+			return checkErr.checkNotNull(Admins, 'admin', createNewData(), 'username');
 		});
 		it('should require a email to create', async() => {
-			return checkRequired('email');
+			return checkErr.checkNotNull(Admins, 'admin', createNewData(), 'email');
 		});
 		it('should require a password to create', async() => {
-			return checkRequired('password');
+			return checkErr.checkNotNull(Admins, 'admin', createNewData(), 'password');
 		});
 
 

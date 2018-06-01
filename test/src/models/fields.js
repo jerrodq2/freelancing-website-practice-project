@@ -9,7 +9,7 @@ const Fields = require(`${process.cwd()}/src/models/fields`);
 const { db, random, checkErr } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe.only('Fields Model', () => {
+describe('Fields Model', () => {
 	const id = random.guid(),
 		fieldName = random.word(),
 		data = { id, field: fieldName };
