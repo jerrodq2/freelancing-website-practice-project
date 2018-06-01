@@ -36,7 +36,7 @@ describe.only('Clients Model', () => {
 	});
 
 
-	// simple funciton used to create the necessary unique variables to create a new client
+	// simple funciton used to create the necessary unique variables to create a new client and add it to the above data object
 	const createNewData = () => {
 		const specificId = random.guid(),
 			specificUsername = `username - ${specificId}`,
@@ -82,38 +82,6 @@ describe.only('Clients Model', () => {
 		expect(err.message).to.include(errMessage);
 		expect(err.message).to.include(expectedError);
 		expect(err.message).to.include(givenField);
-	};
-
-	// checks that certain fields have to be unique to create
-	const checkUnique = async(givenField) => {
-		const specificId = random.guid(),
-			specificUsername = `username - ${specificId}`,
-			specificEmail = `${specificId}@email.com`,
-			obj = { id: specificId, username: specificUsername, email: specificEmail },
-			createData = Object.assign({}, data, obj);
-		createData[`${givenField}`] = givenField;
-
-		try {
-			await Clients.create(createData);
-		} catch (err) {
-			return checkError(err, 'create', givenField, 'violated the unique constraint');
-		}
-	};
-
-	// checks that foreign key fields require a correct id to create
-	const checkForeign = async(givenField) => {
-		const specificId = random.guid(),
-			specificUsername = `username - ${specificId}`,
-			specificEmail = `${specificId}@email.com`,
-			obj = { id: specificId, username: specificUsername, email: specificEmail },
-			createData = Object.assign({}, data, obj);
-		createData[`${givenField}`] = random.guid();
-
-		try {
-			await Clients.create(createData);
-		} catch (err) {
-			return checkError(err, 'create', givenField, 'violated the foreign key constraint');
-		}
 	};
 
 
@@ -176,11 +144,17 @@ describe.only('Clients Model', () => {
 		});
 
 		// check that certain fields have to be unique to create
-		it('should raise an exception if the username isn\'t unique (unique field)', () => checkUnique('username'));
-		it('should raise an exception if the email isn\'t unique (unique field)', () => checkUnique('email'));
+		it('should raise an exception if the username isn\'t unique (unique field)', () => {
+			return checkErr.checkUnique(Clients, 'client', createNewData(), 'username', username);
+		});
+		it('should raise an exception if the email isn\'t unique (unique field)', () => {
+			return checkErr.checkUnique(Clients, 'client', createNewData(), 'email', email);
+		});
 
 		// check that certain fields have to be unique to create
-		it('should raise an exception if given an incorrect field_id (foreign key not found)', () => checkForeign('field_id'));
+		it('should raise an exception if given an incorrect field_id (foreign key not found)', () => {
+			return checkErr.checkForeign(Clients, 'client', createNewData(), 'field_id', random.guid());
+		});
 	});
 
 
