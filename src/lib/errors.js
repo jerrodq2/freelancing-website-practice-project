@@ -18,6 +18,7 @@ module.exports = {
 	violatesUnique: (err) => err.message.indexOf('duplicate key value violates unique constraint') >= 0,
 
 
+	// returns a not found message with the table, action and column that wasn't found as injected parameters
 	notFound: (table, action, searchedColumn = 'id', data = {}) => {
 		const message = `The ${table} you are attempting to ${action} does not exist, the record with that ${searchedColumn} was not found.`;
 
@@ -25,6 +26,7 @@ module.exports = {
 	},
 
 
+	// returns a violated not-null constraint message with the table, action, and column that violated the constraint as injected parameters
 	badNull: (table, action, column, data = {}) => {
 		const message = `The ${table} you are attempting to ${action} couldn't be completed. You violated the not-null constraint in the '${column}' column`;
 
@@ -32,6 +34,7 @@ module.exports = {
 	},
 
 
+	// retunrs a bad id format message with the table and action as injected parameters
 	badId: (table, action, data = {}) => {
 		const message = `The ${table} you are attempting to ${action} couldn't be completed. You gave an id that wasn't in proper uuid format`;
 
@@ -39,6 +42,7 @@ module.exports = {
 	},
 
 
+	// returns a violated foreign key constraint message with the table, action, and column that violated the constraint as injected parameters
 	badForeignKey: (table, action, column, data = {}) => {
 		const message = `The ${table} you are attempting to ${action} couldn't be completed. You violated the foreign key constraint in the '${column}' column`;
 
@@ -46,6 +50,7 @@ module.exports = {
 	},
 
 
+	// returns a violated unique constraint message with the table, action, and column that violated the constraint as injected parameters
 	badUnique: (table, action, column, data = {}) => {
 		const message = `The ${table} you are attempting to ${action} couldn't be completed. You violated the unique constraint in the '${column}' column`;
 
