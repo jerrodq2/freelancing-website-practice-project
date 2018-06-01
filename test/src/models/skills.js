@@ -9,7 +9,7 @@ const Skills = require(`${process.cwd()}/src/models/skills`);
 const { db, random, checkErr } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe.only('Skills Model', () => {
+describe('Skills Model', () => {
 	const id = random.guid(),
 		skill = random.word(),
 		data = { id, skill };

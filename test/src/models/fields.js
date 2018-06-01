@@ -6,10 +6,10 @@ const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 const { describe, it, before } = lab;
 const Fields = require(`${process.cwd()}/src/models/fields`);
-const { db, random } = require(`${process.cwd()}/test/src/helpers`);
+const { db, random, checkErr } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe('Fields Model', () => {
+describe.only('Fields Model', () => {
 	const id = random.guid(),
 		fieldName = random.word(),
 		data = { id, field: fieldName };
@@ -35,45 +35,17 @@ describe('Fields Model', () => {
 		});
 
 		it('should raise an exception if given an invalid id (not in uuid format)', async() => {
-			const specificId = 1,
-				createData = { id: specificId, field: random.word() };
+			const createData = { id: 1, field: random.word() };
 
-			try {
-				await Fields.create(createData);
-			} catch (err) {
-				expect(err.message).to.include('field');
-				expect(err.message).to.include('create');
-				expect(err.message).to.include('couldn\'t be completed');
-				expect(err.message).to.include('id');
-				expect(err.message).to.include('proper uuid format');
-			}
+			return checkErr.checkIdFormat(Fields, 'field', 'create', createData);
 		});
 
 		it('should require a field to create', async() => {
-			const createData = { id: random.guid() };
-			try {
-				await Fields.create(createData);
-			} catch (err) {
-				expect(err.message).to.include('field');
-				expect(err.message).to.include('create');
-				expect(err.message).to.include('couldn\'t be completed');
-				expect(err.message).to.include('not-null constraint');
-				expect(err.message).to.include('\'field\'');
-			}
+			return checkErr.checkNotNull(Fields, 'field', { id: random.guid() }, 'field');
 		});
 
 		it('should raise an exception if the field isn\'t unique (unique field)', async() => {
-			const createData = { id: random.guid(), field: fieldName };
-
-			try {
-				await Fields.create(createData);
-			} catch (err) {
-				expect(err.message).to.include('field');
-				expect(err.message).to.include('create');
-				expect(err.message).to.include('couldn\'t be completed');
-				expect(err.message).to.include('unique constraint');
-				expect(err.message).to.include('\'field\'');
-			}
+			return checkErr.checkUnique(Fields, 'field', { id: random.guid() }, 'field', fieldName);
 		});
 	});
 
@@ -87,27 +59,11 @@ describe('Fields Model', () => {
 		});
 
 		it('should raise an exception if given an incorrect id (not found)', async() => {
-			try {
-				await Fields.findOne(random.guid());
-			} catch (err) {
-				expect(err.message).to.include('field');
-				expect(err.message).to.include('find');
-				expect(err.message).to.include('does not exist');
-				expect(err.message).to.include('id');
-				expect(err.message).to.include('not found');
-			}
+			return checkErr.checkNotFound(Fields, 'field', 'find', random.guid());
 		});
 
-		it('should raise an exception if given an invalid id (not in uuid format)', async() => {
-			try {
-				await Fields.findOne(1);
-			} catch (err) {
-				expect(err.message).to.include('field');
-				expect(err.message).to.include('find');
-				expect(err.message).to.include('couldn\'t be completed');
-				expect(err.message).to.include('id');
-				expect(err.message).to.include('wasn\'t in proper uuid format');
-			}
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(Fields, 'field', 'find', {});
 		});
 	});
 
@@ -137,27 +93,11 @@ describe('Fields Model', () => {
 		});
 
 		it('should raise an exception if given an incorrect id (not found)', async() => {
-			try {
-				await Fields.update(random.guid(), { field: random.word() });
-			} catch (err) {
-				expect(err.message).to.include('field');
-				expect(err.message).to.include('update');
-				expect(err.message).to.include('does not exist');
-				expect(err.message).to.include('id');
-				expect(err.message).to.include('not found');
-			}
+			return checkErr.checkNotFound(Fields, 'field', 'update', random.guid());
 		});
 
-		it('should raise an exception if given an invalid id (not in uuid format)', async() => {
-			try {
-				await Fields.update(1, { field: random.word() });
-			} catch (err) {
-				expect(err.message).to.include('field');
-				expect(err.message).to.include('update');
-				expect(err.message).to.include('couldn\'t be completed');
-				expect(err.message).to.include('id');
-				expect(err.message).to.include('wasn\'t in proper uuid format');
-			}
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(Fields, 'field', 'update', {});
 		});
 	});
 
@@ -185,27 +125,11 @@ describe('Fields Model', () => {
 		});
 
 		it('should raise an exception if given an incorrect id (not found)', async() => {
-			try {
-				await Fields.delete(random.guid());
-			} catch (err) {
-				expect(err.message).to.include('field');
-				expect(err.message).to.include('delete');
-				expect(err.message).to.include('does not exist');
-				expect(err.message).to.include('id');
-				expect(err.message).to.include('not found');
-			}
+			return checkErr.checkNotFound(Fields, 'field', 'delete', random.guid());
 		});
 
-		it('should raise an exception if given an invalid id (not in uuid format)', async() => {
-			try {
-				await Fields.delete(1);
-			} catch (err) {
-				expect(err.message).to.include('field');
-				expect(err.message).to.include('delete');
-				expect(err.message).to.include('couldn\'t be completed');
-				expect(err.message).to.include('id');
-				expect(err.message).to.include('wasn\'t in proper uuid format');
-			}
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(Fields, 'field', 'delete', {});
 		});
 	});
 });
