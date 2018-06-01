@@ -9,7 +9,7 @@ const Skills = require(`${process.cwd()}/src/models/skills`);
 const { db, random, checkErr } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe('Skills Model', () => {
+describe.only('Skills Model', () => {
 	const id = random.guid(),
 		skill = random.word(),
 		data = { id, skill };
@@ -36,7 +36,7 @@ describe('Skills Model', () => {
 		it('should raise an exception if given an invalid id (not in uuid format)', async() => {
 			const createData = { id: 1, skill: random.word() };
 
-			return checkErr.checkIdFormat(Skills, 'create', 'create', 'skill', createData);
+			return checkErr.checkIdFormat(Skills, 'skill', 'create', createData);
 		});
 
 		it('should require a skill to create', async() => {
@@ -60,27 +60,11 @@ describe('Skills Model', () => {
 		});
 
 		it('should raise an exception if not found', async() => {
-			try {
-				await Skills.findOne(random.guid());
-			} catch (err) {
-				expect(err.message).to.include('skill');
-				expect(err.message).to.include('find');
-				expect(err.message).to.include('does not exist');
-				expect(err.message).to.include('id');
-				expect(err.message).to.include('not found');
-			}
+			return checkErr.checkNotFound(Skills, 'skill', 'find', random.guid());
 		});
 
 		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
-			try {
-				await Skills.findOne(1);
-			} catch (err) {
-				expect(err.message).to.include('skill');
-				expect(err.message).to.include('find');
-				expect(err.message).to.include('couldn\'t be completed');
-				expect(err.message).to.include('id');
-				expect(err.message).to.include('proper uuid format');
-			}
+			return checkErr.checkIdFormat(Skills, 'skill', 'find', {});
 		});
 	});
 
@@ -98,11 +82,7 @@ describe('Skills Model', () => {
 			try {
 				await Skills.findByName('skill?');
 			} catch (err) {
-				expect(err.message).to.include('skill');
-				expect(err.message).to.include('findByName');
-				expect(err.message).to.include('does not exist');
-				expect(err.message).to.include('skill name');
-				expect(err.message).to.include('not found');
+				return checkErr.checkMessage(err, 'skill', 'findByName', 'skill name', 'does not exist', 'not found');
 			}
 		});
 	});
@@ -133,27 +113,11 @@ describe('Skills Model', () => {
 		});
 
 		it('should raise an exception if given an incorrect id (not found)', async() => {
-			try {
-				await Skills.update(random.guid(), { skill: random.word() });
-			} catch (err) {
-				expect(err.message).to.include('skill');
-				expect(err.message).to.include('update');
-				expect(err.message).to.include('does not exist');
-				expect(err.message).to.include('id');
-				expect(err.message).to.include('not found');
-			}
+			return checkErr.checkNotFound(Skills, 'skill', 'update', random.guid());
 		});
 
-		it('should raise an exception if given an invalid id (not in uuid format)', async() => {
-			try {
-				await Skills.update(1, { skill: random.word() });
-			} catch (err) {
-				expect(err.message).to.include('skill');
-				expect(err.message).to.include('update');
-				expect(err.message).to.include('couldn\'t be completed');
-				expect(err.message).to.include('id');
-				expect(err.message).to.include('wasn\'t in proper uuid format');
-			}
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(Skills, 'skill', 'update', {});
 		});
 	});
 
@@ -180,27 +144,11 @@ describe('Skills Model', () => {
 		});
 
 		it('should raise an exception if given an incorrect id (not found)', async() => {
-			try {
-				await Skills.delete(random.guid());
-			} catch (err) {
-				expect(err.message).to.include('skill');
-				expect(err.message).to.include('delete');
-				expect(err.message).to.include('does not exist');
-				expect(err.message).to.include('id');
-				expect(err.message).to.include('not found');
-			}
+			return checkErr.checkNotFound(Skills, 'skill', 'delete', random.guid());
 		});
 
-		it('should raise an exception if given an invalid id (not in uuid format)', async() => {
-			try {
-				await Skills.delete(1);
-			} catch (err) {
-				expect(err.message).to.include('skill');
-				expect(err.message).to.include('delete');
-				expect(err.message).to.include('couldn\'t be completed');
-				expect(err.message).to.include('id');
-				expect(err.message).to.include('wasn\'t in proper uuid format');
-			}
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(Skills, 'skill', 'delete', {});
 		});
 	});
 
