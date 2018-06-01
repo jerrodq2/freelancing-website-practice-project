@@ -7,7 +7,7 @@ const lab = exports.lab = Lab.script();
 const { describe, it, before } = lab;
 const Jobs = require(`${process.cwd()}/src/models/jobs`);
 const Clients = require(`${process.cwd()}/src/models/clients`);
-const { db, random, _ } = require(`${process.cwd()}/test/src/helpers`);
+const { db, random, checkErr, _ } = require(`${process.cwd()}/test/src/helpers`);
 
 
 describe.only('Jobs Model', () => {
@@ -43,6 +43,16 @@ describe.only('Jobs Model', () => {
 
 		freelancerData = { id: freelancer_id, field_id, first_name: freelancer_first_name, last_name: freelancer_last_name, job_title: freelancer_job_title, experience_level: freelancer_experience_level };
 
+
+	// creates an object with a new id needed to create a new job record, conditionally removes the freeancer_id
+	const createNewData = (remove = false) => {
+		const specificId = random.guid();
+		let createData = Object.assign({}, data, { id: specificId });
+
+		if (remove) createData = _.omit(createData, 'freelancer_id');
+
+		return createData;
+	};
 
 	// checks all fields in a given job, conditionally checks the freelancer_id to test a being created without one
 	const checkFields = (job, givenId, checkFreelancer = true) => {
@@ -120,66 +130,54 @@ describe.only('Jobs Model', () => {
 
 
 		it('should create a new job if given valid data, create new created_at and updated_at fields, and return the new job object', async() => {
-			const specificId = random.guid(),
-				createData = Object.assign({}, data, { id: specificId });
+			const createData = createNewData(),
+				specificId = createData.id;
 
 			const job = await Jobs.create(createData);
 			return checkFields(job, specificId);
 		});
 
 		it('should be able to create a job without a freelancer_id', async() => {
-			const specificId = random.guid();
-			let createData = Object.assign({}, data, { id: specificId });
-			createData = _.omit(createData, 'freelancer_id');
+			const createData = createNewData(true),
+				specificId = createData.id;
 
 			const job = await Jobs.create(createData);
 			checkFields(job, specificId, false);
 			expect(job.freelancer_id).to.equal(null);
 		});
 
-		it('should require a id in proper uuid format', async() => {
-			const specificId = 1,
-				createData = Object.assign({}, data, { id: specificId });
-
-			try {
-				await Jobs.create(createData);
-			} catch (err) {
-				expect(err.message).to.include('job');
-				expect(err.message).to.include('create');
-				expect(err.message).to.include('couldn\'t be completed');
-				expect(err.message).to.include('id');
-				expect(err.message).to.include('proper uuid format');
-			}
+		it('should raise an exception if given an invalid id (not in uuid format', async() => {
+			return checkErr.checkIdFormat(Jobs, 'job', 'create', createNewData());
 		});
 
 
 		it('should require the title to create', () => {
-			return checkError('title');
+			return checkErr.checkNotNull(Jobs, 'job', createNewData(), 'title');
 		});
 
 		it('should require a field_id to create', () => {
-			return checkError('field_id');
+			return checkErr.checkNotNull(Jobs, 'job', createNewData(), 'field_id');
 		});
 
 		it('should require a client_id to create', () => {
-			return checkError('client_id');
+			return checkErr.checkNotNull(Jobs, 'job', createNewData(), 'client_id');
 		});
 
 		it('should require a rate to create', () => {
-			return checkError('rate');
+			return checkErr.checkNotNull(Jobs, 'job', createNewData(), 'rate');
 		});
 
 		it('should require a description to create', () => {
-			return checkError('description');
+			return checkErr.checkNotNull(Jobs, 'job', createNewData(), 'description');
 		});
 
 
-		it('should raise an exception if given an incorrect client_id', () => {
-			return checkIncorrectId('client_id');
+		it('should raise an exception if given an incorrect client_id (foreign key not found)', () => {
+			return checkErr.checkForeign(Jobs, 'job', createNewData(), 'client_id', random.guid());
 		});
 
-		it('should raise an exception if given an incorrect field_id', () => {
-			return checkIncorrectId('field_id');
+		it('should raise an exception if given an incorrect field_id (foreign key not found)', () => {
+			return checkErr.checkForeign(Jobs, 'job', createNewData(), 'field_id', random.guid());
 		});
 
 
