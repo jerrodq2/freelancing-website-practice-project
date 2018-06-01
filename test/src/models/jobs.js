@@ -10,7 +10,7 @@ const Clients = require(`${process.cwd()}/src/models/clients`);
 const { db, random, _ } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe('Jobs Model', () => {
+describe.only('Jobs Model', () => {
 	// info used to create first job
 	const id = random.guid(),
 		field_id = random.guid(),

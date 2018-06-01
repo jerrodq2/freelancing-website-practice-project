@@ -36,7 +36,7 @@ describe('Clients Model', () => {
 	});
 
 
-	// simple funciton used to create the necessary unique variables to create a new client and add it to the above data object
+	// simple function used to create the necessary unique variables to create a new client and add it to the above data object
 	const createNewData = () => {
 		const specificId = random.guid(),
 			specificUsername = `username - ${specificId}`,

@@ -113,15 +113,8 @@ describe('Fields Model', () => {
 
 			const afterDelete = await Fields.delete(specificId);
 			expect(afterDelete).to.equal(true);
-			try {
-				await Fields.findOne(specificId);
-			} catch (err) {
-				expect(err.message).to.include('field');
-				expect(err.message).to.include('find');
-				expect(err.message).to.include('does not exist');
-				expect(err.message).to.include('id');
-				expect(err.message).to.include('not found');
-			}
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(Fields, 'field', 'find', specificId);
 		});
 
 		it('should raise an exception if given an incorrect id (not found)', async() => {

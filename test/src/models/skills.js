@@ -133,14 +133,8 @@ describe('Skills Model', () => {
 
 			const afterDelete = await Skills.delete(specificId);
 			expect(afterDelete).to.equal(true);
-			try {
-				await Skills.findOne(specificId);
-			} catch (err) {
-				expect(err.message).to.include('skill');
-				expect(err.message).to.include('find');
-				expect(err.message).to.include('does not exist');
-				expect(err.message).to.include('not found');
-			}
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(Skills, 'skill', 'find', specificId);
 		});
 
 		it('should raise an exception if given an incorrect id (not found)', async() => {
