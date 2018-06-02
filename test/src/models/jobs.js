@@ -44,7 +44,7 @@ describe.only('Jobs Model', () => {
 		freelancerData = { id: freelancer_id, field_id, first_name: freelancer_first_name, last_name: freelancer_last_name, job_title: freelancer_job_title, experience_level: freelancer_experience_level };
 
 
-	// creates an object with a new id needed to create a new job record, conditionally removes the freeancer_id
+	// creates an object with a new id needed to create a new job record, conditionally removes the freelancer_id
 	const createNewData = (remove = false) => {
 		const specificId = random.guid();
 		let createData = Object.assign({}, data, { id: specificId });
@@ -88,34 +88,6 @@ describe.only('Jobs Model', () => {
 
 
 	describe('has a create method', () => {
-		// contains code used by both the checkError and checkIncorrectId functions below, just improves DRYness
-		const checkMessage = async (givenData, field) => {
-			const createData = _.omit(givenData, field);
-			try {
-				await Jobs.create(createData);
-			} catch (err) {
-				expect(err.message).to.include('job');
-				expect(err.message).to.include('create');
-				expect(err.message).to.include('couldn\'t be completed');
-				expect(err.message).to.include(field);
-			}
-		};
-
-		// checks that certain fields are required upon create by removing that field from the createData sent over to the model
-		const checkError = async (field) => {
-			const specificId = random.guid();
-			const createData = Object.assign({}, data, { id: specificId });
-			return checkMessage(createData, field);
-		};
-
-		// checks that field_id, client_id, and freelancer_id have to be given correct id's or id's of records currently in the db
-		const checkIncorrectId = async (field) => {
-			const specificId = random.guid();
-			const createData = Object.assign({}, data, { id: specificId });
-			createData[`${field}`] = random.guid();
-			return checkMessage(createData, field);
-		};
-
 		// checks that certain fields default to a certain value upon create if not given in the createData object
 		const checkDefault = async (field, defaultValue) => {
 			const specificId = random.guid();
@@ -220,27 +192,11 @@ describe.only('Jobs Model', () => {
 		});
 
 		it('should raise an exception if given an incorrect id (not found)', async() => {
-			try {
-				await Jobs.findOne(random.guid());
-			} catch (err) {
-				expect(err.message).to.include('job');
-				expect(err.message).to.include('find');
-				expect(err.message).to.include('does not exist');
-				expect(err.message).to.include('not found');
-			}
-
+			return checkErr.checkNotFound(Jobs, 'job', 'find', random.guid());
 		});
 
-		it('should raise exception when given an invalid id (not in uuid format)', async() => {
-			try {
-				await Jobs.findOne(1);
-			} catch (err) {
-				expect(err.message).to.include('job');
-				expect(err.message).to.include('find');
-				expect(err.message).to.include('couldn\'t be completed');
-				expect(err.message).to.include('id');
-				expect(err.message).to.include('proper uuid format');
-			}
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(Jobs, 'job', 'find', {});
 		});
 	});
 
@@ -283,8 +239,8 @@ describe.only('Jobs Model', () => {
 		});
 
 		it('should update the job record if given a valid id and data, update the \'updated_at\' field, and return the updated job object', async() => {
-			const specificId = random.guid(),
-				createData = Object.assign({}, data, { id: specificId });
+			const createData = createNewData(),
+				specificId = createData.id;
 
 			const oldJob = await Jobs.create(createData);
 			expect(oldJob).to.be.an.object();
@@ -313,9 +269,9 @@ describe.only('Jobs Model', () => {
 		});
 
 		it('should update the job record if given a valid id and data, even if only given one field ', async() => {
-			const specificId = random.guid(),
-				specificTitle = random.word(),
-				createData = Object.assign({}, data, { id: specificId });
+			const createData = createNewData(),
+				specificId = createData.id,
+				specificTitle = random.word();
 
 			const oldJob = await Jobs.create(createData);
 			expect(oldJob).to.be.an.object();
@@ -331,33 +287,17 @@ describe.only('Jobs Model', () => {
 		});
 
 		it('should raise an exception if given an incorrect id (not found)', async() => {
-			try {
-				await Jobs.update(random.guid(), {});
-			} catch (err) {
-				expect(err.message).to.include('job');
-				expect(err.message).to.include('update');
-				expect(err.message).to.include('does not exist');
-				expect(err.message).to.include('id');
-				expect(err.message).to.include('not found');
-			}
+			return checkErr.checkNotFound(Jobs, 'job', 'update', random.guid());
 		});
 
-		it('should raise an exception if given an invalid id (not in uuid format)', async() => {
-			try {
-				await Jobs.update(1, {});
-			} catch (err) {
-				expect(err.message).to.include('job');
-				expect(err.message).to.include('update');
-				expect(err.message).to.include('couldn\'t be completed');
-				expect(err.message).to.include('id');
-				expect(err.message).to.include('proper uuid format');
-			}
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(Jobs, 'job', 'update', {});
 		});
 	});
 
 
 	describe('has a delete method', () => {
-		const createData = { field_id, client_id, freelancer_id };
+		const createData = createNewData();
 
 		it('should delete the record if given a correct id and return true if successful', async() => {
 			const specificId = random.guid();
@@ -371,45 +311,26 @@ describe.only('Jobs Model', () => {
 			const result = await Jobs.delete(specificId);
 			expect(result).to.equal(true);
 
-			try {
-				await Jobs.findOne(random.guid());
-			} catch (err) {
-				expect(err.message).to.include('job');
-				expect(err.message).to.include('find');
-				expect(err.message).to.include('does not exist');
-				expect(err.message).to.include('not found');
-			}
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(Jobs, 'job', 'find', specificId);
 		});
 
 		it('should raise an exception if given an incorrect id (not found)', async() => {
-			try {
-				await Jobs.delete(random.guid());
-			} catch (err) {
-				expect(err.message).to.include('job');
-				expect(err.message).to.include('delete');
-				expect(err.message).to.include('does not exist');
-				expect(err.message).to.include('not found');
-			}
+			return checkErr.checkNotFound(Jobs, 'job', 'delete', random.guid());
 		});
 
-		it('should raise an exception if given an invalid id (not in uuid format)', async() => {
-			try {
-				await Jobs.delete(1);
-			} catch (err) {
-				expect(err.message).to.include('job');
-				expect(err.message).to.include('delete');
-				expect(err.message).to.include('couldn\'t be completed');
-				expect(err.message).to.include('id');
-				expect(err.message).to.include('proper uuid format');
-			}
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(Jobs, 'job', 'delete', {});
 		});
 	});
 
 	describe('has a client_id with \'cascade\' onDelete,', () => {
 		it('should be deleted in the event of the client who created it is deleted.', async() => {
-			const specificId = random.guid(),
-				specificClientId = random.guid(),
-				createData = Object.assign({}, data, { id: specificId, client_id: specificClientId });
+			const createData = createNewData(),
+				specificId = random.guid(),
+				specificClientId = random.guid();
+			createData.id = specificId;
+			createData.client_id = specificClientId;
 
 			await random.client({ id: specificClientId, field_id });
 			const job = await Jobs.create(createData);
@@ -421,14 +342,8 @@ describe.only('Jobs Model', () => {
 			const result = await Clients.delete(specificClientId);
 			expect(result).to.equal(true);
 
-			try {
-				await Jobs.findOne(random.guid());
-			} catch (err) {
-				expect(err.message).to.include('job');
-				expect(err.message).to.include('find');
-				expect(err.message).to.include('does not exist');
-				expect(err.message).to.include('not found');
-			}
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(Jobs, 'job', 'find', specificId);
 		});
 	});
 });
