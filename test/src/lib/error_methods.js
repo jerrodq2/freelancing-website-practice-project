@@ -25,7 +25,7 @@ const checkErr = {
 
 			cause: the specific reason that caused the error, ex: not found, violated the not-null constraint
 		*/
-		console.log(err.message);
+		// console.log(err.message);
 		expect(err.message).to.include(table);
 		expect(err.message).to.include(action);
 		expect(err.message).to.include(field);
