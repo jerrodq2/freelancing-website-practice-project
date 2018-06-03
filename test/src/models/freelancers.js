@@ -6,10 +6,10 @@ const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 const { describe, it, before } = lab;
 const Freelancers = require(`${process.cwd()}/src/models/freelancers`);
-const { db, random, knex } = require(`${process.cwd()}/test/src/helpers`);
+const { db, random, knex, checkErr } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe('Freelancers Model', () => {
+describe.only('Freelancers Model', () => {
 	const id = random.guid(),
 		first_name = random.name(),
 		last_name = random.name(),
@@ -43,11 +43,23 @@ describe('Freelancers Model', () => {
 	});
 
 
-	describe('has a create method', () => {
+	// simple function used to and an object with the necessary unique variables to create a new freelancer
+	const createNewData = () => {
 		const specificId = random.guid(),
 			specificUsername = `username - ${specificId}`,
 			specificEmail = `${specificId}@email.com`,
-			createData = Object.assign({}, data, { id: specificId, username: specificUsername, email: specificEmail });
+			obj = { id: specificId, username: specificUsername, email: specificEmail },
+
+			createData = Object.assign({}, data, obj);
+		return createData;
+	};
+
+
+	describe('has a create method', () => {
+		const createData = createNewData(),
+			specificId = createData.id,
+			specificUsername = createData.username,
+			specificEmail = createData.email;
 		let record, freelancer, result;
 
 		before(async() => {
@@ -172,11 +184,12 @@ describe('Freelancers Model', () => {
 			expect(freelancer.field_id).to.equal(undefined);
 		});
 
-		it('should return an empty object if not found or given an incorrect id', async() => {
-			const freelancer = await Freelancers.findOne(random.guid());
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(Freelancers, 'freelancer', 'find', random.guid());
+		});
 
-			expect(freelancer).to.be.an.object();
-			expect(freelancer).to.equal({});
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(Freelancers, 'freelancer', 'find', {});
 		});
 	});
 
@@ -270,7 +283,7 @@ describe('Freelancers Model', () => {
 
 
 	describe('has a delete method', () => {
-		it('should delete the record if given a correct id', async() => {
+		it('should delete the record if given a correct id and return true if successful', async() => {
 			const specificId = random.guid();
 			await random.freelancer({ id: specificId, field_id });
 
@@ -278,12 +291,11 @@ describe('Freelancers Model', () => {
 			expect(freelancer).to.be.an.object();
 			expect(freelancer.id).to.equal(specificId);
 
-			await Freelancers.delete(specificId);
-			const afterDelete = await Freelancers.findOne(specificId);
+			const afterDelete = await Freelancers.delete(specificId);
+			expect(afterDelete).to.equal(true);
 
-			expect(afterDelete).to.be.an.object();
-			expect(afterDelete).to.equal({});
-
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(Freelancers, 'freelancer', 'find', specificId);
 		});
 	});
 });
