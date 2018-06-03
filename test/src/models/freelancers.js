@@ -9,7 +9,7 @@ const Freelancers = require(`${process.cwd()}/src/models/freelancers`);
 const { db, random, knex, checkErr, _ } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe.only('Freelancers Model', () => {
+describe('Freelancers Model', () => {
 	const id = random.guid(),
 		first_name = random.name(),
 		last_name = random.name(),
