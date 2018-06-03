@@ -4,6 +4,8 @@
 const MainModel = require('./main_model');
 const knex = require('../config/knex');
 const { hashPassword } = require(`${process.cwd()}/src/lib/helper_functions`);
+const Errors = require(`${process.cwd()}/src/lib/errors`);
+const { toSingular } = require(`${process.cwd()}/src/lib/helper_functions`);
 const _ = require('lodash');
 
 
@@ -16,8 +18,10 @@ class UserModel extends MainModel {
 
 
 	createUser (data) {
+		if (!data.password) throw Errors.badNull(toSingular(this.tableName), 'create', 'password');
 		// hash the password
 		data.password = hashPassword(data.password);
+
 		return this.create(data)
 			.then((result) => _.omit(result, 'password', 'username'));
 	}
@@ -37,8 +41,21 @@ class UserModel extends MainModel {
 			.select(selectedColumns)
 			.where(knex.raw(`${this.tableName}.id = '${id}'`))
 			.innerJoin('fields', `${this.tableName}.field_id`, 'fields.id')
-			.then((result) => result[0])
-			.then((result) => _.omit(result, 'password', 'field_id', 'username'));
+			.then((result) => {
+				// throw error if the record with the given id couldn't be found
+				if (!result[0]) throw Errors.notFound(toSingular(this.tableName), 'find');
+
+				return result[0];
+			})
+			.then((result) => _.omit(result, 'password', 'field_id', 'username'))
+			.catch((err) => {
+				// throw error if the id wasn't given in proper uuid format
+				if (Errors.violatesIdSyntax(err))
+					throw Errors.badId(toSingular(this.tableName), 'find');
+
+				// if the cause of the error wasn't found above, throw the given error
+				throw err;
+			});
 	}
 
 

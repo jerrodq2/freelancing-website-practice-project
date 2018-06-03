@@ -3,6 +3,7 @@
 
 const knex = require('../config/knex');
 const Errors = require(`${process.cwd()}/src/lib/errors`);
+const { toSingular, findColumn } = require(`${process.cwd()}/src/lib/helper_functions`);
 
 
 // This is the main Model that is inherited by all other models
@@ -17,19 +18,23 @@ class MainModel {
 		return knex(this.tableName).insert(data).returning('*')
 			.then((result) => result[0])
 			.catch((err) => {
-				// check if not-null constraint was violated
+				// throw error if a not-null constraint was violated
 				if (Errors.violatesNull(err))
-					throw Errors.badNull(this.tableName, 'create', err.column);
+					throw Errors.badNull(toSingular(this.tableName), 'create', err.column);
 
-				// check if id is in proper uuid format
+				// throw error if the id wasn't given in proper uuid format
 				if (Errors.violatesIdSyntax(err))
-					throw Errors.badId(this.tableName, 'create');
+					throw Errors.badId(toSingular(this.tableName), 'create');
 
-				// check if a foreign key constraint was violated
+				// throw error if a foreign key constraint was violated
 				if (Errors.violatesForeignKey(err))
-					throw Errors.badForeignKey(this.tableName, 'create', err.constraint);
+					throw Errors.badForeignKey(toSingular(this.tableName), 'create', findColumn(err.constraint));
 
-				// if the cause of the error wasn't found above, throw the error
+				// throw error if a unique constraint was violated
+				if (Errors.violatesUnique(err))
+					throw Errors.badUnique(toSingular(this.tableName), 'create', findColumn(err.constraint));
+
+				// if the cause of the error wasn't found above, throw the given error
 				throw err;
 			});
 	}
@@ -37,28 +42,31 @@ class MainModel {
 
 	findOne (id) {
 		return knex(this.tableName).where({ id })
-			.then((array) => {
-				// In the event of no record found, we still return an empty object for consistency
-				const result = array[0] ? array[0] : {};
-				return result;
+			.then((result) => {
+				// throw error if the record with the given id couldn't be found
+				if (!result[0]) throw Errors.notFound(toSingular(this.tableName), 'find');
+
+				return result[0];
 			})
 			.catch((err) => {
-				// check if id is in proper uuid format
+				// throw error if the id wasn't given in proper uuid format
 				if (Errors.violatesIdSyntax(err))
-					throw Errors.badId('jobs', 'findOne');
+					throw Errors.badId(toSingular(this.tableName), 'find');
 
-				// if the cause of the error wasn't found above, throw the error
+				// if the cause of the error wasn't found above, throw the given error
 				throw err;
 			});
 	}
 
 
+	// TODO: Add error sfor not found and bad id syntax
 	// find the employment or education history for one freelancer
 	findHistory (id) {
 		return knex(this.tableName).where({ freelancer_id: id });
 	}
 
 
+	// TODO: Add error sfor not found and bad id syntax
 	// find a single client or freelancer review
 	findReview (id) {
 		const mainColumns = [`${this.tableName}.*`];
@@ -77,36 +85,46 @@ class MainModel {
 	}
 
 
-	// TODO: add boom errors for not found, doesn't currently give any indication other than an empty object
 	updateById (id, data) {
 		data.updated_at = new Date();
 		return knex(this.tableName).where({ id }).update(data).returning('*')
-			.then((array) => {
-				// In the event of no record found, we still return an empty object for consistency
-				const result = array[0] ? array[0] : {};
-				return result;
+			.then((result) => {
+				// throw error if the record with the given id couldn't be found
+				if (!result[0]) throw Errors.notFound(toSingular(this.tableName), 'update');
+
+				return result[0];
 			})
 			.catch((err) => {
+				// throw error if a not-null constraint was violated
 				if (Errors.violatesNull(err))
-					throw Errors.badRequest(this.tableName, 'update', err.column);
+					throw Errors.badRequest(toSingular(this.tableName), 'update', err.column);
 
+				// throw error if the id wasn't given in proper uuid format
 				if (Errors.violatesIdSyntax(err)) {
-					throw Errors.badId(this.tableName, 'update');
+					throw Errors.badId(toSingular(this.tableName), 'update');
 				}
+
+				// if the cause of the error wasn't found above, throw the given error
 				throw err;
 			});
 	}
 
 
-	// TODO: test cascading delete (ex: delete a client, does that client's job dissappear as well?)
 	delete (id) {
 		return knex(this.tableName).where({ id }).del()
 			// By default, it returns 1 if successful and 2 if not found. I changed this to return true and false respectively, just preference
-			.then((result) => result? true : false)
-			.catch((err) => {
-				if (Errors.violatesIdSyntax(err))
-					throw Errors.badId(this.tableName, 'delete');
+			.then((result) => {
+				// throw error if the record with the given id couldn't be found
+				if (!result) throw Errors.notFound(toSingular(this.tableName), 'delete');
 
+				return true;
+			})
+			.catch((err) => {
+				// throw error if the id wasn't given in proper uuid format
+				if (Errors.violatesIdSyntax(err))
+					throw Errors.badId(toSingular(this.tableName), 'delete');
+
+				// if the cause of the error wasn't found above, throw the given error
 				throw err;
 			});
 	}

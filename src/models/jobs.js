@@ -33,17 +33,18 @@ module.exports = {
 			.innerJoin('fields', 'jobs.field_id', 'fields.id')
 			.innerJoin('clients as c', 'jobs.client_id', 'c.id')
 			.innerJoin('freelancers as f', 'jobs.freelancer_id', 'f.id')
-			.then((array) => {
-				// In the event of no record found, we still return an empty object for consistency
-				const result = array[0] ? array[0] : {};
-				return result;
+			.then((result) => {
+				// throw error if the record with the given id couldn't be found
+				if (!result[0]) throw Errors.notFound('job', 'find');
+
+				return result[0];
 			})
 			.catch((err) => {
-				// check if id is in proper uuid format
+				// throw error if the id wasn't given in proper uuid format
 				if (Errors.violatesIdSyntax(err))
-					throw Errors.badId('jobs', 'findOne');
+					throw Errors.badId('job', 'find');
 
-				// if the cause of the error wasn't found above, throw the error
+				// if the cause of the error wasn't found, throw the error
 				throw err;
 			});
 	},

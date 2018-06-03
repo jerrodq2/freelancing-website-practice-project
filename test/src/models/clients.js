@@ -6,7 +6,7 @@ const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 const { describe, it, before } = lab;
 const Clients = require(`${process.cwd()}/src/models/clients`);
-const { db, random, knex } = require(`${process.cwd()}/test/src/helpers`);
+const { db, random, knex, checkErr } = require(`${process.cwd()}/test/src/helpers`);
 
 
 describe('Clients Model', () => {
@@ -35,11 +35,52 @@ describe('Clients Model', () => {
 		return random.client(data);
 	});
 
-	describe('has a create method', async() => {
+
+	// simple function used to create the necessary unique variables to create a new client and add it to the above data object
+	const createNewData = () => {
 		const specificId = random.guid(),
 			specificUsername = `username - ${specificId}`,
 			specificEmail = `${specificId}@email.com`,
-			createData = Object.assign({}, data, { id: specificId, username: specificUsername, email: specificEmail });
+
+			obj = { id: specificId, username: specificUsername, email: specificEmail },
+			createData = Object.assign({}, data, obj);
+
+		return createData;
+	};
+
+	// checks all fields returned from the create or createWithoutHash method
+	const checkFields = (obj, givenId, givenEmail, checkField = true) => {
+		expect(obj).to.be.an.object();
+		expect(obj.id).to.equal(givenId);
+		expect(obj.first_name).to.equal(first_name);
+		expect(obj.last_name).to.equal(last_name);
+		expect(obj.email).to.equal(givenEmail);
+		expect(obj.gender).to.equal(gender);
+		expect(obj.age).to.equal(age);
+		if (checkField) {
+			expect(obj.field_id).to.equal(field_id);
+		} else {
+			// this is checked in the findOne
+			expect(obj.field_id).to.equal(undefined);
+		}
+		expect(obj.summary).to.equal(summary);
+		expect(obj.state).to.equal(state);
+		expect(obj.city).to.equal(city);
+		expect(obj.zip).to.equal(zip);
+		expect(obj.phone).to.equal(phone);
+		expect(obj.dob).to.equal(new Date(dob));
+		expect(obj.created_at).to.be.a.date();
+		expect(obj.updated_at).to.equal(null);
+		expect(obj.username).to.equal(undefined);
+		expect(obj.password).to.equal(undefined);
+	};
+
+
+	describe('has a create method', async() => {
+		const createData = createNewData(),
+			specificId = createData.id,
+			specificEmail = createData.email,
+			specificUsername = createData.username;
 		let record, client, result;
 
 		before(async() => {
@@ -49,24 +90,7 @@ describe('Clients Model', () => {
 		});
 
 		it('should create a new client record if given valid data, create new created_at and updated_at fields, and return the client object without the username or password', async() => {
-			expect(result).to.be.an.object();
-			expect(result.id).to.equal(specificId);
-			expect(result.first_name).to.equal(first_name);
-			expect(result.last_name).to.equal(last_name);
-			expect(result.email).to.equal(specificEmail);
-			expect(result.gender).to.equal(gender);
-			expect(result.age).to.equal(age);
-			expect(result.field_id).to.equal(field_id);
-			expect(result.summary).to.equal(summary);
-			expect(result.state).to.equal(state);
-			expect(result.city).to.equal(city);
-			expect(result.zip).to.equal(zip);
-			expect(result.phone).to.equal(phone);
-			expect(result.dob).to.equal(new Date(dob));
-			expect(result.created_at).to.be.a.date();
-			expect(result.updated_at).to.equal(null);
-			expect(result.username).to.equal(undefined);
-			expect(result.username).to.equal(undefined);
+			return checkFields(result, specificId, specificEmail);
 		});
 
 		it('should create the new record with the given username and the hashed password', async() => {
@@ -77,14 +101,60 @@ describe('Clients Model', () => {
 			expect(client.password).to.not.equal(password);
 			expect(client.password.length).to.be.above(password.length);
 		});
+
+		it('should raise an exception if given an invalid id (not in uuid format)', async() => {
+			const createData = createNewData();
+			createData.id = 1;
+			return checkErr.checkIdFormat(Clients, 'client', 'create', createData);
+		});
+
+		// check that certain fields are required to create
+		it('should require a first_name to create', async() => {
+			return checkErr.checkNotNull(Clients, 'client', createNewData(), 'first_name');
+		});
+		it('should require a last_name to create', () => {
+			return checkErr.checkNotNull(Clients, 'client', createNewData(), 'last_name');
+		});
+		it('should require a username to create', () => {
+			return checkErr.checkNotNull(Clients, 'client', createNewData(), 'username');
+		});
+		it('should require a email to create', () => {
+			return checkErr.checkNotNull(Clients, 'client', createNewData(), 'email');
+		});
+		it('should require a gender to create', () => {
+			return checkErr.checkNotNull(Clients, 'client', createNewData(), 'gender');
+		});
+		it('should require a age to create', () => {
+			return checkErr.checkNotNull(Clients, 'client', createNewData(), 'age');
+		});
+		it('should require a field_id to create', () => {
+			return checkErr.checkNotNull(Clients, 'client', createNewData(), 'field_id');
+		});
+		it('should require a password to create', () => {
+			return checkErr.checkNotNull(Clients, 'client', createNewData(), 'password');
+		});
+
+		// check that certain fields have to be unique to create
+		it('should raise an exception if the username isn\'t unique (unique field)', () => {
+			return checkErr.checkUnique(Clients, 'client', createNewData(), 'username', username);
+		});
+		it('should raise an exception if the email isn\'t unique (unique field)', () => {
+			return checkErr.checkUnique(Clients, 'client', createNewData(), 'email', email);
+		});
+
+		// check that the field_id must belong to an actual field in the db
+		it('should raise an exception if given an incorrect field_id (foreign key not found)', () => {
+			return checkErr.checkForeign(Clients, 'client', createNewData(), 'field_id', random.guid());
+		});
 	});
 
 
+	// I don't re-test all of the errors test above here because the createWithoutHash method still goes through the create method to actually create the record. This is to speed up tests and not be overly tedious
 	describe('has a createWithoutHash method used for testing that doesn\'t hash the given password,', async() => {
-		const specificId = random.guid(),
-			specificUsername = `username - ${specificId}`,
-			specificEmail = `${specificId}@email.com`,
-			createData = Object.assign({}, data, { id: specificId, username: specificUsername, email: specificEmail });
+		const createData = createNewData(),
+			specificId = createData.id,
+			specificEmail = createData.email,
+			specificUsername = createData.username;
 		let record, client, result;
 
 		before(async() => {
@@ -94,24 +164,7 @@ describe('Clients Model', () => {
 		});
 
 		it('should create a new client record if given valid data, create new created_at and updated_at fields, and return the client object without the username or password', async() => {
-			expect(result).to.be.an.object();
-			expect(result.id).to.equal(specificId);
-			expect(result.first_name).to.equal(first_name);
-			expect(result.last_name).to.equal(last_name);
-			expect(result.email).to.equal(specificEmail);
-			expect(result.gender).to.equal(gender);
-			expect(result.age).to.equal(age);
-			expect(result.field_id).to.equal(field_id);
-			expect(result.summary).to.equal(summary);
-			expect(result.state).to.equal(state);
-			expect(result.city).to.equal(city);
-			expect(result.zip).to.equal(zip);
-			expect(result.phone).to.equal(phone);
-			expect(result.dob).to.equal(new Date(dob));
-			expect(result.created_at).to.be.a.date();
-			expect(result.updated_at).to.equal(null);
-			expect(result.username).to.equal(undefined);
-			expect(result.username).to.equal(undefined);
+			return checkFields(result, specificId, specificEmail);
 		});
 
 		it('should create the new record with the given username and the plain password', async() => {
@@ -127,30 +180,17 @@ describe('Clients Model', () => {
 		it('should retrieve a specific client with a given id, and return an object without the password, username, or field_id, but with the name of the field', async() => {
 			const client = await Clients.findOne(id);
 
-			expect(client).to.be.an.object();
-			expect(client.id).to.equal(id);
-			expect(client.first_name).to.equal(first_name);
-			expect(client.last_name).to.equal(last_name);
-			expect(client.email).to.equal(email);
-			expect(client.gender).to.equal(gender);
-			expect(client.age).to.equal(age);
+			// check the usual fields first
+			checkFields(client, id, email, false);
 			expect(client.field).to.equal(field);
-			expect(client.summary).to.equal(summary);
-			expect(client.state).to.equal(state);
-			expect(client.city).to.equal(city);
-			expect(client.zip).to.equal(zip);
-			expect(client.phone).to.equal(phone);
-			expect(client.dob).to.equal(new Date(dob));
-			expect(client.username).to.equal(undefined);
-			expect(client.password).to.equal(undefined);
-			expect(client.field_id).to.equal(undefined);
 		});
 
-		it('should return an empty object if not found or given an incorrect id', async() => {
-			const client = await Clients.findOne(random.guid());
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(Clients, 'client', 'find', random.guid());
+		});
 
-			expect(client).to.be.an.object();
-			expect(client).to.equal({});
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(Clients, 'client', 'find', {});
 		});
 	});
 
@@ -174,10 +214,10 @@ describe('Clients Model', () => {
 		before(() => random.field({ id: newFieldId }));
 
 		it('should update the client record if given a valid id and data, and return the updated object without password or username', async() => {
-			const specificId = random.guid(),
-				specificEmail = `${specificId}@email.com`,
-				newEmail = `update-${specificEmail}`,
-				createData = { id: specificId, email: specificEmail, field_id };
+			const createData = createNewData(),
+				specificId = createData.id,
+				specificEmail = createData.email,
+				newEmail = `update-${specificEmail}`;
 			updateData = Object.assign(updateData, { email: newEmail });
 
 			await random.client(createData);
@@ -209,9 +249,9 @@ describe('Clients Model', () => {
 		});
 
 		it('should update the client record with the given id if given valid data, even if only given one field', async() => {
-			const specificId = random.guid(),
-				specificEmail = `${specificId}@email.com`,
-				createData = { id: specificId, email: specificEmail, field_id };
+			const createData = createNewData(),
+				specificId = createData.id,
+				specificEmail = createData.email;
 			updateData = { first_name: newFirstName };
 
 			await random.client(createData);
@@ -228,8 +268,14 @@ describe('Clients Model', () => {
 			expect(updatedClient.id).to.equal(specificId);
 			expect(updatedClient.first_name).to.equal(newFirstName);
 			expect(updatedClient.updated_at).to.be.a.date();
+		});
 
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(Clients, 'client', 'update', random.guid());
+		});
 
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(Clients, 'client', 'update', {});
 		});
 	});
 
@@ -243,11 +289,19 @@ describe('Clients Model', () => {
 			expect(client).to.be.an.object();
 			expect(client.id).to.equal(specificId);
 
-			await Clients.delete(specificId);
-			const afterDelete = await Clients.findOne(specificId);
+			const afterDelete = await Clients.delete(specificId);
+			expect(afterDelete).to.equal(true);
 
-			expect(afterDelete).to.be.an.object();
-			expect(afterDelete).to.equal({});
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(Clients, 'client', 'find', specificId);
+		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(Clients, 'client', 'delete', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(Clients, 'client', 'delete', {});
 		});
 	});
 });

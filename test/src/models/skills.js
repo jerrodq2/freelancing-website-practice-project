@@ -6,7 +6,7 @@ const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 const { describe, it, before } = lab;
 const Skills = require(`${process.cwd()}/src/models/skills`);
-const { db, random } = require(`${process.cwd()}/test/src/helpers`);
+const { db, random, checkErr } = require(`${process.cwd()}/test/src/helpers`);
 
 
 describe('Skills Model', () => {
@@ -20,19 +20,33 @@ describe('Skills Model', () => {
 	});
 
 	describe('has a create method', () => {
-		const specificId = random.guid(),
-			specificSkill = random.word(),
-			newData = { id: specificId, skill: specificSkill };
-		let result;
-
-		before(async() => result = await Skills.create(newData));
-
 		it('should create a new skill record if given valid data, create new created_at and updated_at fields, and return the skill object', async() => {
+			const specificId = random.guid(),
+				specificSkill = random.word(),
+				createData = { id: specificId, skill: specificSkill },
+				result = await Skills.create(createData);
+
 			expect(result).to.be.an.object();
 			expect(result.id).to.equal(specificId);
 			expect(result.skill).to.equal(specificSkill);
 			expect(result.created_at).to.be.a.date();
 			expect(result.updated_at).to.equal(null);
+		});
+
+		it('should raise an exception if given an invalid id (not in uuid format)', async() => {
+			const createData = { id: 1, skill: random.word() };
+
+			return checkErr.checkIdFormat(Skills, 'skill', 'create', createData);
+		});
+
+		it('should require a skill to create', async() => {
+			return checkErr.checkNotNull(Skills, 'skill', { id: random.guid() }, 'skill');
+		});
+
+		it('should raise an exception if the skill isn\'t unique (unique field)', async() => {
+			const createData = { id: random.guid(), skill };
+
+			return checkErr.checkUnique(Skills, 'skill', createData, 'skill', skill);
 		});
 	});
 
@@ -45,11 +59,12 @@ describe('Skills Model', () => {
 			expect(result.skill).to.equal(skill);
 		});
 
-		it('should return an empty object if not found', async() => {
-			const result = await Skills.findOne(random.guid());
+		it('should raise an exception if not found', async() => {
+			return checkErr.checkNotFound(Skills, 'skill', 'find', random.guid());
+		});
 
-			expect(result).to.be.an.object();
-			expect(result).to.equal({});
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(Skills, 'skill', 'find', {});
 		});
 	});
 
@@ -63,12 +78,12 @@ describe('Skills Model', () => {
 			expect(result.skill).to.equal(skill);
 		});
 
-		it('should return an empty object if not found', async() => {
-			const result = await Skills.findByName('skill?');
-
-			expect(result).to.be.an.object();
-			expect(result.id).to.equal(undefined);
-			expect(result.skill).to.equal(undefined);
+		it('should raise an exception if not found', async() => {
+			try {
+				await Skills.findByName('skill?');
+			} catch (err) {
+				return checkErr.checkMessage(err, 'skill', 'findByName', 'skill name', 'does not exist', 'not found');
+			}
 		});
 	});
 
@@ -96,11 +111,19 @@ describe('Skills Model', () => {
 			expect(updatedSkill.skill).to.equal(newSkill);
 			expect(updatedSkill.updated_at).to.be.a.date();
 		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(Skills, 'skill', 'update', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(Skills, 'skill', 'update', {});
+		});
 	});
 
 
 	describe('has a delete method', () => {
-		it('should delete a skill record if given a proper id', async() => {
+		it('should delete a skill record if given a proper id and return true if successful', async() => {
 			const specificId = random.guid();
 			await random.skill({ id: specificId });
 
@@ -108,11 +131,18 @@ describe('Skills Model', () => {
 			expect(result).to.be.an.object();
 			expect(result.id).to.equal(specificId);
 
-			await Skills.delete(specificId);
-			const afterDelete = await Skills.findOne(specificId);
+			const afterDelete = await Skills.delete(specificId);
+			expect(afterDelete).to.equal(true);
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(Skills, 'skill', 'find', specificId);
+		});
 
-			expect(afterDelete).to.be.an.object();
-			expect(afterDelete).to.equal({});
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(Skills, 'skill', 'delete', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(Skills, 'skill', 'delete', {});
 		});
 	});
 

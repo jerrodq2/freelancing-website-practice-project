@@ -5,6 +5,7 @@ const connectionOptions = require(`${process.cwd()}/knexfile.js`)[`${process.env
 const knex = require('knex')(connectionOptions);
 const random = require(`${process.cwd()}/randoms`);
 const _ = require('lodash');
+const checkErr = require('./lib/error_methods');
 
 
 // TODO: Look into more elegant solution to clear/truncate all tables from db besides a hard coded array.
@@ -29,9 +30,11 @@ const pgTables = [
 	'skills',
 ];
 
+
 const helpers = {
 	knex,
 	random,
+	checkErr,
 	_,
 
 	db: {

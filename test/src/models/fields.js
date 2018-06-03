@@ -6,7 +6,7 @@ const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 const { describe, it, before } = lab;
 const Fields = require(`${process.cwd()}/src/models/fields`);
-const { db, random } = require(`${process.cwd()}/test/src/helpers`);
+const { db, random, checkErr } = require(`${process.cwd()}/test/src/helpers`);
 
 
 describe('Fields Model', () => {
@@ -21,19 +21,31 @@ describe('Fields Model', () => {
 
 
 	describe('has a create method', () => {
-		const specificId = random.guid(),
-			specificField = random.word(),
-			createData = { id: specificId, field: specificField };
-		let field;
-
-		before(async() => field = await Fields.create(createData));
-
 		it('should create a new field record if given valid data, create new created_at and updated_at fields, and return the field object', async() => {
+			const specificId = random.guid(),
+				specificField = random.word(),
+				createData = { id: specificId, field: specificField },
+				field = await Fields.create(createData);
+
 			expect(field).to.be.an.object();
 			expect(field.id).to.equal(specificId);
 			expect(field.field).to.equal(specificField);
 			expect(field.created_at).to.be.a.date();
 			expect(field.updated_at).to.equal(null);
+		});
+
+		it('should raise an exception if given an invalid id (not in uuid format)', async() => {
+			const createData = { id: 1, field: random.word() };
+
+			return checkErr.checkIdFormat(Fields, 'field', 'create', createData);
+		});
+
+		it('should require a field to create', async() => {
+			return checkErr.checkNotNull(Fields, 'field', { id: random.guid() }, 'field');
+		});
+
+		it('should raise an exception if the field isn\'t unique (unique field)', async() => {
+			return checkErr.checkUnique(Fields, 'field', { id: random.guid() }, 'field', fieldName);
 		});
 	});
 
@@ -46,18 +58,17 @@ describe('Fields Model', () => {
 			expect(field.field).to.equal(fieldName);
 		});
 
-		it('should return an empty object if not found', async() => {
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(Fields, 'field', 'find', random.guid());
+		});
 
-			const field = await Fields.findOne(random.guid());
-
-			expect(field).to.be.an.object();
-			expect(field).to.equal({});
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(Fields, 'field', 'find', {});
 		});
 	});
 
 
 	describe('has an update method', () => {
-
 		it('should update the field record if given a valid id and data, and return the updated object', async() => {
 			const specificId = random.guid(),
 				specificField = random.word(),
@@ -80,11 +91,19 @@ describe('Fields Model', () => {
 			expect(newField.field).to.equal(newFieldName);
 			expect(newField.updated_at).to.be.a.date();
 		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(Fields, 'field', 'update', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(Fields, 'field', 'update', {});
+		});
 	});
 
 
 	describe('has a delete method', () => {
-		it('should delete a field record if given a proper id', async() => {
+		it('should delete a field record if given a proper id and return true if successful', async() => {
 			const specificId = random.guid();
 			await random.field({ id: specificId });
 
@@ -92,13 +111,18 @@ describe('Fields Model', () => {
 			expect(field).to.be.an.object();
 			expect(field.id).to.equal(specificId);
 
-			await Fields.delete(specificId);
-			const afterDelete = await Fields.findOne(specificId);
+			const afterDelete = await Fields.delete(specificId);
+			expect(afterDelete).to.equal(true);
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(Fields, 'field', 'find', specificId);
+		});
 
-			expect(afterDelete).to.be.an.object();
-			expect(afterDelete).to.equal({});
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(Fields, 'field', 'delete', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(Fields, 'field', 'delete', {});
 		});
 	});
-
-
 });
