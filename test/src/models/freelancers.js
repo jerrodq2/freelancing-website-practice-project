@@ -6,7 +6,7 @@ const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 const { describe, it, before } = lab;
 const Freelancers = require(`${process.cwd()}/src/models/freelancers`);
-const { db, random, knex, checkErr } = require(`${process.cwd()}/test/src/helpers`);
+const { db, random, knex, checkErr, _ } = require(`${process.cwd()}/test/src/helpers`);
 
 
 describe.only('Freelancers Model', () => {
@@ -54,6 +54,34 @@ describe.only('Freelancers Model', () => {
 		return createData;
 	};
 
+	//// checks all fields returned from the create or createWithoutHash method
+	const checkFields = (obj, givenId, givenEmail) => {
+		expect(obj).to.be.an.object();
+		expect(obj.id).to.equal(givenId);
+		expect(obj.first_name).to.equal(first_name);
+		expect(obj.last_name).to.equal(last_name);
+		expect(obj.email).to.equal(givenEmail);
+		expect(obj.job_title).to.equal(job_title);
+		expect(obj.rate).to.equal(rate);
+		expect(obj.experience_level).to.equal(experience_level);
+		expect(obj.video_url).to.equal(video_url);
+		expect(obj.portfolio_url).to.equal(portfolio_url);
+		expect(obj.available).to.equal(available);
+		expect(obj.gender).to.equal(gender);
+		expect(obj.age).to.equal(age);
+		expect(obj.field_id).to.equal(field_id);
+		expect(obj.summary).to.equal(summary);
+		expect(obj.state).to.equal(state);
+		expect(obj.city).to.equal(city);
+		expect(obj.zip).to.equal(zip);
+		expect(obj.phone).to.equal(phone);
+		expect(obj.dob).to.equal(new Date(dob));
+		expect(obj.created_at).to.be.a.date();
+		expect(obj.updated_at).to.equal(null);
+		expect(obj.username).to.equal(undefined);
+		expect(obj.password).to.equal(undefined);
+	};
+
 
 	describe('has a create method', () => {
 		const createData = createNewData(),
@@ -69,30 +97,7 @@ describe.only('Freelancers Model', () => {
 		});
 
 		it('should create a new freelancer record if given valid data, create new created_at and updated_at fields, and return the freelancer object without the username or password', async() => {
-			expect(result).to.be.an.object();
-			expect(result.id).to.equal(specificId);
-			expect(result.first_name).to.equal(first_name);
-			expect(result.last_name).to.equal(last_name);
-			expect(result.email).to.equal(specificEmail);
-			expect(result.job_title).to.equal(job_title);
-			expect(result.rate).to.equal(rate);
-			expect(result.experience_level).to.equal(experience_level);
-			expect(result.video_url).to.equal(video_url);
-			expect(result.portfolio_url).to.equal(portfolio_url);
-			expect(result.available).to.equal(available);
-			expect(result.gender).to.equal(gender);
-			expect(result.age).to.equal(age);
-			expect(result.field_id).to.equal(field_id);
-			expect(result.summary).to.equal(summary);
-			expect(result.state).to.equal(state);
-			expect(result.city).to.equal(city);
-			expect(result.zip).to.equal(zip);
-			expect(result.phone).to.equal(phone);
-			expect(result.dob).to.equal(new Date(dob));
-			expect(result.created_at).to.be.a.date();
-			expect(result.updated_at).to.equal(null);
-			expect(result.username).to.equal(undefined);
-			expect(result.password).to.equal(undefined);
+			return checkFields(result, specificId, specificEmail);
 		});
 
 		it('should create the new record with the given username and the hashed password', async() => {
@@ -102,6 +107,71 @@ describe.only('Freelancers Model', () => {
 			expect(freelancer.password).to.be.a.string();
 			expect(freelancer.password).to.not.equal(password);
 			expect(freelancer.password.length).to.be.above(password.length);
+		});
+
+		it('should raise an exception if given an invalid id (not in uuid format)', async() => {
+			const createData = createNewData();
+			createData.id = 1;
+			return checkErr.checkIdFormat(Freelancers, 'freelancer', 'create', createData);
+		});
+
+		// check that certain fields are required to create
+		it('should require a first_name to create', async() => {
+			return checkErr.checkNotNull(Freelancers, 'freelancer', createNewData(), 'first_name');
+		});
+		it('should require a last_name to create', () => {
+			return checkErr.checkNotNull(Freelancers, 'freelancer', createNewData(), 'last_name');
+		});
+		it('should require a username to create', () => {
+			return checkErr.checkNotNull(Freelancers, 'freelancer', createNewData(), 'username');
+		});
+		it('should require a email to create', () => {
+			return checkErr.checkNotNull(Freelancers, 'freelancer', createNewData(), 'email');
+		});
+		it('should require a job_title to create', () => {
+			return checkErr.checkNotNull(Freelancers, 'freelancer', createNewData(), 'job_title');
+		});
+		it('should require a rate to create', () => {
+			return checkErr.checkNotNull(Freelancers, 'freelancer', createNewData(), 'rate');
+		});
+		it('should require a gender to create', () => {
+			return checkErr.checkNotNull(Freelancers, 'freelancer', createNewData(), 'gender');
+		});
+		it('should require a age to create', () => {
+			return checkErr.checkNotNull(Freelancers, 'freelancer', createNewData(), 'age');
+		});
+		it('should require a field_id to create', () => {
+			return checkErr.checkNotNull(Freelancers, 'freelancer', createNewData(), 'field_id');
+		});
+		it('should require a experience_level to create', () => {
+			return checkErr.checkNotNull(Freelancers, 'freelancer', createNewData(), 'experience_level');
+		});
+		it('should require a password to create', () => {
+			return checkErr.checkNotNull(Freelancers, 'freelancer', createNewData(), 'password');
+		});
+
+		// check that certain fields have to be unique to create
+		it('should raise an exception if the username isn\'t unique (unique field)', () => {
+			return checkErr.checkUnique(Freelancers, 'freelancer', createNewData(), 'username', username);
+		});
+		it('should raise an exception if the email isn\'t unique (unique field)', () => {
+			return checkErr.checkUnique(Freelancers, 'freelancer', createNewData(), 'email', email);
+		});
+
+		// check that the field_id must belong to an actual field in the db
+		it('should raise an exception if given an incorrect field_id (foreign key not found)', () => {
+			return checkErr.checkForeign(Freelancers, 'freelancer', createNewData(), 'field_id', random.guid());
+		});
+
+		it('should have an \'available\' field that defaults to true if not given upon create', async() => {
+			const data = createNewData(),
+				specificId = data.id,
+				createData = _.omit(data, 'available'),
+				freelancer = await Freelancers.create(createData);
+
+			expect(freelancer).to.be.an.object();
+			expect(freelancer.id).to.equal(specificId);
+			expect(freelancer.available).to.equal(true);
 		});
 	});
 

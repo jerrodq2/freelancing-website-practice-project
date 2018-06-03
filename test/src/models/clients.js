@@ -142,7 +142,7 @@ describe('Clients Model', () => {
 			return checkErr.checkUnique(Clients, 'client', createNewData(), 'email', email);
 		});
 
-		// check that certain fields have to be unique to create
+		// check that the field_id must belong to an actual field in the db
 		it('should raise an exception if given an incorrect field_id (foreign key not found)', () => {
 			return checkErr.checkForeign(Clients, 'client', createNewData(), 'field_id', random.guid());
 		});
