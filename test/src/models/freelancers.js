@@ -336,5 +336,13 @@ describe.only('Freelancers Model', () => {
 			// check that trying to find the record now returns a not found error
 			return checkErr.checkNotFound(Freelancers, 'freelancer', 'find', specificId);
 		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(Freelancers, 'freelancer', 'delete', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(Freelancers, 'freelancer', 'delete', {});
+		});
 	});
 });
