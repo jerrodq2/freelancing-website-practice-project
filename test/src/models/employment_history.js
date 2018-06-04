@@ -13,8 +13,8 @@ describe.only('Exmploymen History Model', () => {
 	const id = random.guid(),
 		title = random.word(),
 		company = random.word(),
-		start_date = random.date(),
-		end_date = random.date(),
+		start_date = random.date({ string: true }),
+		end_date = random.date({ string: true }),
 		present_job = true,
 		summary = random.paragraph(),
 		freelancer_id = random.guid(),
@@ -28,9 +28,36 @@ describe.only('Exmploymen History Model', () => {
 	});
 
 
-	describe('has a create method', () => {
-		it('test', async() => {
+	// simple function used to create a new id in order to create a new employment_history record
+	const createNewData = () => {
+		const specificId = random.guid(),
+			createData = Object.assign({}, data, { id: specificId });
+		return createData;
+	};
 
+	// function that checks all of the fields of a given object match the fields created at the top
+	const checkFields = (obj, givenId) => {
+		expect(obj).to.be.an.object();
+		expect(obj.id).to.equal(givenId);
+		expect(obj.title).to.equal(title);
+		expect(obj.company).to.equal(company);
+		expect(obj.start_date).to.equal(new Date(start_date));
+		expect(obj.end_date).to.equal(new Date(end_date));
+		expect(obj.present_job).to.equal(present_job);
+		expect(obj.summary).to.equal(summary);
+		expect(obj.freelancer_id).to.equal(freelancer_id);
+	};
+
+
+	describe('has a create method', () => {
+		const createData = createNewData(),
+			specificId = createData.id;
+		let history;
+
+		before(async() => history = await EmploymentHistory.create(createData));
+
+		it('should create a new employment_history record if given valid data, create new created_at and updated_at fields, and return the employment_history object', async() => {
+			return checkFields(history, specificId);
 		});
 	});
 
