@@ -9,10 +9,29 @@ const EmploymentHistory = require(`${process.cwd()}/src/models/employment_histor
 const { db, random, knex, checkErr } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe('Exmploymen History Model', () => {
+describe.only('Exmploymen History Model', () => {
+	const id = random.guid(),
+		title = random.word(),
+		company = random.word(),
+		start_date = random.date(),
+		end_date = random.date(),
+		present_job = true,
+		summary = random.paragraph(),
+		freelancer_id = random.guid(),
+		field_id = random.guid(),
+		data = { id, title, company, start_date, end_date, present_job, summary, freelancer_id };
+
+	before(async() => {
+		await random.field({ id: field_id });
+		await random.freelancer({ id: freelancer_id, field_id });
+		await random.employment_history(data);
+	});
+
 
 	describe('has a create method', () => {
+		it('test', async() => {
 
+		});
 	});
 
 
