@@ -20,6 +20,7 @@ module.exports = {
 		return EmploymentHistory.findOne(id);
 	},
 
+	// TODO: No reason to update/change the freelancer_id some check to stop that?
 	update (id, data) {
 		return EmploymentHistory.updateById(id, data);
 	},

@@ -47,6 +47,8 @@ describe.only('Exmploymen History Model', () => {
 		expect(obj.present_job).to.equal(present_job);
 		expect(obj.summary).to.equal(summary);
 		expect(obj.freelancer_id).to.equal(freelancer_id);
+		expect(obj.created_at).to.be.a.date();
+		expect(obj.updated_at).to.equal(null);
 	};
 
 
@@ -126,7 +128,69 @@ describe.only('Exmploymen History Model', () => {
 
 
 	describe('has an update method', () => {
+		const new_title = random.word(),
+			new_company = random.word(),
+			new_start_date = random.date({ string: true }),
+			new_end_date = random.date({ string: true }),
+			new_present_job = true,
+			new_summary = random.paragraph();
+		let updateData = {
+			title: new_title,
+			company: new_company,
+			start_date: new_start_date,
+			end_date: new_end_date,
+			present_job: new_present_job,
+			summary: new_summary
+		};
 
+		it('should update the employment_history record if given a valid id and data, and return the updated object', async() => {
+			const createData = createNewData(),
+				specificId = createData.id;
+
+			const oldHistory = await random.employment_history(createData);
+			expect(oldHistory).to.be.an.object();
+			expect(oldHistory.id).to.equal(specificId);
+			expect(oldHistory.updated_at).to.equal(null);
+
+			const updatedHistory = await EmploymentHistory.update(specificId, updateData);
+
+			expect(updatedHistory).to.be.an.object();
+			expect(updatedHistory.id).to.equal(specificId);
+			expect(updatedHistory.title).to.equal(new_title);
+			expect(updatedHistory.company).to.equal(new_company);
+			expect(updatedHistory.start_date).to.equal(new Date(new_start_date));
+			expect(updatedHistory.end_date).to.equal(new Date(new_end_date));
+			expect(updatedHistory.present_job).to.equal(new_present_job);
+			expect(updatedHistory.summary).to.equal(new_summary);
+			expect(updatedHistory.freelancer_id).to.equal(freelancer_id);
+			expect(updatedHistory.updated_at).to.be.a.date();
+		});
+
+		it('should update the employment_history record with the given id if given valid data, even if only given one field', async() => {
+			const createData = createNewData(),
+				specificId = createData.id;
+			updateData = { title: new_title };
+
+			const oldHistory = await random.employment_history(createData);
+			expect(oldHistory).to.be.an.object();
+			expect(oldHistory.id).to.equal(specificId);
+			expect(oldHistory.title).to.equal(title);
+			expect(oldHistory.updated_at).to.equal(null);
+
+			const updatedHistory = await EmploymentHistory.update(specificId, updateData);
+
+			expect(updatedHistory).to.be.an.object();
+			expect(updatedHistory.id).to.equal(specificId);
+			expect(updatedHistory.title).to.equal(new_title);
+		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(EmploymentHistory, 'employment_history', 'update', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(EmploymentHistory, 'employment_history', 'update', {});
+		});
 	});
 
 
