@@ -9,7 +9,7 @@ const EmploymentHistory = require(`${process.cwd()}/src/models/employment_histor
 const { db, random, checkErr, _ } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe.only('Exmploymen History Model', () => {
+describe.only('Employment History Model', () => {
 	const id = random.guid(),
 		title = random.word(),
 		company = random.word(),
@@ -104,8 +104,38 @@ describe.only('Exmploymen History Model', () => {
 	});
 
 
-	describe('has a getAll method', () => {
+	describe('has a findHistory method', () => {
+		const secondFreelancerId = random.guid(),
+			specificTitle = random.word();
 
+		before(async() => {
+			await random.freelancer({ id: secondFreelancerId, field_id });
+			await random.employment_histories(5, { freelancer_id: secondFreelancerId, title: specificTitle });
+		});
+
+		it('should retrieve all of the employment_history records for a specific freelancer and return an array objects', async() => {
+			const arr = await EmploymentHistory.findHistory(secondFreelancerId);
+
+			expect(arr).to.be.an.array();
+			expect(arr.length).to.equal(5);
+			const history = arr[0];
+			expect(history).to.be.an.object();
+			expect(history.freelancer_id).to.equal(secondFreelancerId);
+			expect(history.title).to.equal(specificTitle);
+		});
+
+		it('should return an empty array if that freelancer has no employment_history records', async() => {
+			const specificId = random.guid();
+			await random.freelancer({ id: specificId, field_id });
+
+			const arr = await EmploymentHistory.findHistory(specificId);
+			expect(arr).to.be.an.array();
+			expect(arr.length).to.equal(0);
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(EmploymentHistory, 'employment_history', 'find history for', {});
+		});
 	});
 
 

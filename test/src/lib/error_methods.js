@@ -58,6 +58,9 @@ const checkErr = {
 			} else if (action === 'delete'){
 				// in the event of delete, where we have to pass in just the id
 				await Model.delete(1);
+			} else if (action === 'find history for'){
+				// in the event of findHistory, where we have to pass in just the id
+				await Model.findHistory(1);
 			} else {
 				throw new Error('You need to give one of the above actions');
 			}

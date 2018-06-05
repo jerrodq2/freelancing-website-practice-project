@@ -12,7 +12,7 @@ module.exports = {
 	},
 
 	// get all the employment_history for one user
-	getAll (freelancer_id) {
+	findHistory (freelancer_id) {
 		return EmploymentHistory.findHistory(freelancer_id);
 	},
 
