@@ -6,10 +6,11 @@ const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 const { describe, it, before } = lab;
 const EmploymentHistory = require(`${process.cwd()}/src/models/employment_history`);
+const Freelancers = require(`${process.cwd()}/src/models/freelancers`);
 const { db, random, checkErr, _ } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe.only('Employment History Model', () => {
+describe('Employment History Model', () => {
 	const id = random.guid(),
 		title = random.word(),
 		company = random.word(),
@@ -89,6 +90,7 @@ describe.only('Employment History Model', () => {
 			return checkErr.checkForeign(EmploymentHistory, 'employment_history', createNewData(), 'freelancer_id', random.guid());
 		});
 
+		// checks default values
 		it('should default the \'present_job\' field to false if not given', async() => {
 			const data = createNewData(),
 				specificId = data.id,
@@ -212,6 +214,7 @@ describe.only('Employment History Model', () => {
 			expect(updatedHistory).to.be.an.object();
 			expect(updatedHistory.id).to.equal(specificId);
 			expect(updatedHistory.title).to.equal(new_title);
+			expect(updatedHistory.updated_at).to.be.a.date();
 		});
 
 		it('should raise an exception if given an incorrect id (not found)', async() => {
@@ -246,6 +249,29 @@ describe.only('Employment History Model', () => {
 
 		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
 			return checkErr.checkIdFormat(EmploymentHistory, 'employment_history', 'delete', {});
+		});
+	});
+
+
+	describe('has a freelancer_id with \'cascade\' onDelete', () => {
+		it('should be deleted in the event of the freelancer it belongs to is deleted', async() => {
+			const createData = createNewData(),
+				specificId = createData.id,
+				specificFreelancer = random.guid();
+			createData.freelancer_id = specificFreelancer;
+
+			await random.freelancer({ id: specificFreelancer, field_id });
+			const history = await EmploymentHistory.create(createData);
+
+			expect(history).to.be.an.object();
+			expect(history.id).to.equal(specificId);
+			expect(history.freelancer_id).to.equal(specificFreelancer);
+
+			const result = await Freelancers.delete(specificFreelancer);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(EmploymentHistory, 'employment_history', 'find', specificId);
 		});
 	});
 });
