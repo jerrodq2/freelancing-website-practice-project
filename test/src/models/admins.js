@@ -84,7 +84,7 @@ describe('Admins Model', () => {
 			return checkErr.checkIdFormat(Admins, 'admin', 'create', createData);
 		});
 
-
+		// check that certain fields are required to create
 		it('should require a first_name to create', async() => {
 			return checkErr.checkNotNull(Admins, 'admin', createNewData(), 'first_name');
 		});
@@ -101,7 +101,7 @@ describe('Admins Model', () => {
 			return checkErr.checkNotNull(Admins, 'admin', createNewData(), 'password');
 		});
 
-
+		// check that certain fields have to be unique to create
 		it('should raise an exception if the username isn\'t unique (unique field)', async() => {
 			return checkErr.checkUnique(Admins, 'admin', createNewData(), 'username', username);
 		});

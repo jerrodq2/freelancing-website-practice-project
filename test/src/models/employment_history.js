@@ -6,7 +6,7 @@ const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 const { describe, it, before } = lab;
 const EmploymentHistory = require(`${process.cwd()}/src/models/employment_history`);
-const { db, random, knex, checkErr } = require(`${process.cwd()}/test/src/helpers`);
+const { db, random, checkErr, _ } = require(`${process.cwd()}/test/src/helpers`);
 
 
 describe.only('Exmploymen History Model', () => {
@@ -22,6 +22,7 @@ describe.only('Exmploymen History Model', () => {
 		data = { id, title, company, start_date, end_date, present_job, summary, freelancer_id };
 
 	before(async() => {
+		await db.resetTable('employment_history');
 		await random.field({ id: field_id });
 		await random.freelancer({ id: freelancer_id, field_id });
 		await random.employment_history(data);
@@ -58,6 +59,45 @@ describe.only('Exmploymen History Model', () => {
 
 		it('should create a new employment_history record if given valid data, create new created_at and updated_at fields, and return the employment_history object', async() => {
 			return checkFields(history, specificId);
+		});
+
+		it('should raise an exception if given an invalid id (not in uuid format)', async() => {
+			const createData = createNewData();
+			createData.id = 1;
+
+			return checkErr.checkIdFormat(EmploymentHistory, 'employment_history', 'create', createData);
+		});
+
+		// check that certain fields are required to create
+		it('should require a title to create', async() => {
+			return checkErr.checkNotNull(EmploymentHistory, 'employment_history', createNewData(), 'title');
+		});
+		it('should require a company to create', async() => {
+			return checkErr.checkNotNull(EmploymentHistory, 'employment_history', createNewData(), 'company');
+		});
+		it('should require a start_date to create', async() => {
+			return checkErr.checkNotNull(EmploymentHistory, 'employment_history', createNewData(), 'start_date');
+		});
+		it('should require a freelancer_id to create', async() => {
+			return checkErr.checkNotNull(EmploymentHistory, 'employment_history', createNewData(), 'freelancer_id');
+		});
+
+		// check that the freelancer_id must belong to an actual field in the db
+		it('should raise an exception if given an incorrect freelancer_id (foreign key not found)', () => {
+			return checkErr.checkForeign(EmploymentHistory, 'employment_history', createNewData(), 'freelancer_id', random.guid());
+		});
+
+		it('should default the \'present_job\' field to false if not given', async() => {
+			const data = createNewData(),
+				specificId = data.id,
+				createData = _.omit(data, 'present_job');
+
+			const history = await EmploymentHistory.create(createData);
+
+			expect(history).to.be.an.object();
+			expect(history.id).to.equal(specificId);
+			expect(history.present_job).to.equal(false);
+
 		});
 	});
 
