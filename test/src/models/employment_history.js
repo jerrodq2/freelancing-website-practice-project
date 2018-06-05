@@ -195,6 +195,27 @@ describe.only('Exmploymen History Model', () => {
 
 
 	describe('has a delete method', () => {
+		it('should delete the record if given a correct id', async() => {
+			const specificId = random.guid();
+			await random.employment_history({ id: specificId, freelancer_id });
 
+			const history = await EmploymentHistory.findOne(specificId);
+			expect(history).to.be.an.object();
+			expect(history.id).to.equal(specificId);
+
+			const afterDelete = await EmploymentHistory.delete(specificId);
+			expect(afterDelete).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(EmploymentHistory, 'employment_history', 'find', specificId);
+		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(EmploymentHistory, 'employment_history', 'delete', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(EmploymentHistory, 'employment_history', 'delete', {});
+		});
 	});
 });
