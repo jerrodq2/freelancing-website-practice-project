@@ -12,6 +12,6 @@ module.exports = (opts = {}) => EmploymentHistory.create({
 	start_date: opts.start_date || random.date({ string: true }),
 	end_date: opts.end_date || random.date({ string: true }),
 	present_job: opts.present_job == undefined? random.bool() : opts.present_job,
-	summary: opts.password || random.paragraph(),
+	summary: opts.summary || random.paragraph(),
 	freelancer_id: opts.freelancer_id,
 });

@@ -108,7 +108,20 @@ describe.only('Exmploymen History Model', () => {
 
 
 	describe('has a findOne method', () => {
+		it('should retrieve a specific employment_history record with a given id, and return the object', async() => {
+			const history = await EmploymentHistory.findOne(id);
 
+			// check the usual fields first
+			checkFields(history, id);
+		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(EmploymentHistory, 'employment_history', 'find', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(EmploymentHistory, 'employment_history', 'find', {});
+		});
 	});
 
 
