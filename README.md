@@ -35,6 +35,7 @@ The project is directory is broken down into a few key sub directories listed be
 * **seeds** - Used by knex to populate the database via scripts
 * **src** - This is the back end code, knex options, models, helper files, etc.
 * **test** - This is the test directory, meant to mirror the main directory and the applicable folders, so it has a sub src and public directory
+* **info** - This is only used for information purposes. Gives a more detailed explanations about the db, tables, and npm modules used in this project, for understanding and a refresher incase I or anyone else needs it
 
 
 ## Testing
@@ -46,6 +47,8 @@ npm run test
 ```
 
 ## General Info
+You can see more detailed information about both the database, and npm modules I use in this project in the info folder.
+
 A note about the general syntax of the project. I prefer to add spaces throughout the project for readability and to make things clearer, just a preference. I also added comments throughout the project, both for the understanding of anyone who isn't familiar with the project and for myself when I inevitably come back to this code weeks later and don't remember what I wrote.
 
 Last updated: 5/22/18
