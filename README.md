@@ -29,13 +29,13 @@ The project is directory is broken down into a few key sub directories listed be
 * **.circleci** - Used by CircleCi
 * **.github** - Used by github, contains PR template
 * **bin** - Contains executable scripts, such as the scripts to create the database and initial admin
+* **info** - This is only used for information purposes. Gives a more detailed explanations about the db, tables, and npm modules used in this project, for understanding and a refresher incase I or anyone else needs it
 * **migrations** - The migrations files used by knex to structure the databases
 * **public** -This is the client facing directory, contains front end code, templates, static files, etc.
 * **randoms** - Contains my custom mixins for the Chance module
 * **seeds** - Used by knex to populate the database via scripts
 * **src** - This is the back end code, knex options, models, helper files, etc.
 * **test** - This is the test directory, meant to mirror the main directory and the applicable folders, so it has a sub src and public directory
-* **info** - This is only used for information purposes. Gives a more detailed explanations about the db, tables, and npm modules used in this project, for understanding and a refresher incase I or anyone else needs it
 
 
 ## Testing
