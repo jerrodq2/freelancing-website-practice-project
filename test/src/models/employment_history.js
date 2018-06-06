@@ -10,7 +10,7 @@ const Freelancers = require(`${process.cwd()}/src/models/freelancers`);
 const { db, random, checkErr, _ } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe('Employment History Model', () => {
+describe.only('Employment History Model', () => {
 	const id = random.guid(),
 		title = random.word(),
 		company = random.word(),
@@ -87,7 +87,7 @@ describe('Employment History Model', () => {
 
 		// check that the freelancer_id must belong to an actual field in the db
 		it('should raise an exception if given an incorrect freelancer_id (foreign key not found)', () => {
-			return checkErr.checkForeign(EmploymentHistory, 'employment_history', createNewData(), 'freelancer_id', random.guid());
+			return checkErr.checkForeign(EmploymentHistory, 'employment_history', 'create', createNewData(), 'freelancer_id', random.guid());
 		});
 
 		// checks default values
@@ -101,7 +101,6 @@ describe('Employment History Model', () => {
 			expect(history).to.be.an.object();
 			expect(history.id).to.equal(specificId);
 			expect(history.present_job).to.equal(false);
-
 		});
 	});
 
@@ -172,7 +171,7 @@ describe('Employment History Model', () => {
 			start_date: new_start_date,
 			end_date: new_end_date,
 			present_job: new_present_job,
-			summary: new_summary
+			summary: new_summary,
 		};
 
 		it('should update the employment_history record if given a valid id and data, and return the updated object', async() => {
@@ -224,6 +223,12 @@ describe('Employment History Model', () => {
 		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
 			return checkErr.checkIdFormat(EmploymentHistory, 'employment_history', 'update', {});
 		});
+
+		it('should raise an exception if given an incorrect freelancer_id (foreign key not found)', () => {
+			return checkErr.checkForeign(EmploymentHistory, 'employment_history', 'update', updateData, 'freelancer_id', random.guid(), id);
+		});
+
+
 	});
 
 

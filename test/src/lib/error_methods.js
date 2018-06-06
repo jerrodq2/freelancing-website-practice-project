@@ -145,12 +145,14 @@ const checkErr = {
 	},
 
 
-	//checks that foreign key fields require a correct id, or an id belonging to a record in the database, to create, used only for create
-	checkForeign: async(Model, table, data, field, randomId) => {
+	//checks that foreign key fields require a correct id, or an id belonging to a record in the database, used only for create and update
+	checkForeign: async(Model, table, action, data, field, randomId, updateId = null) => {
 		/* Examples of parameters below
 	    Model: name of model, ex: Clients, Admins
 
 			table: name of table as it will be shown in the error message, basically the models singular, ex: client, job, skill
+
+			action: method being performed as it will be shown in the error message, only create or update
 
 			data: the object data needed to perform the query
 
@@ -161,9 +163,15 @@ const checkErr = {
 		// first we ensure that the given field has a random id
 		data[`${field}`] = randomId;
 		try {
-			await Model.create(data);
+			if (action === 'create') {
+				await Model.create(data);
+			} else if (action === 'update') {
+				await Model.update(updateId, data);
+			} else {
+				throw new Error('You need to provide an action of create or update');
+			}
 		} catch (err) {
-			return checkErr.checkMessage(err, table, 'create', field, 'couldn\'t be completed', 'violated the foreign key constraint');
+			return checkErr.checkMessage(err, table, action, field, 'couldn\'t be completed', 'violated the foreign key constraint');
 		}
 	},
 };

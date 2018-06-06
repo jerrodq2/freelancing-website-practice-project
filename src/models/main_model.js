@@ -108,9 +108,16 @@ class MainModel {
 					throw Errors.badRequest(toSingular(this.tableName), 'update', err.column);
 
 				// throw error if the id wasn't given in proper uuid format
-				if (Errors.violatesIdSyntax(err)) {
+				if (Errors.violatesIdSyntax(err))
 					throw Errors.badId(toSingular(this.tableName), 'update');
-				}
+
+				// throw error if a foreign key constraint was violated
+				if (Errors.violatesForeignKey(err))
+					throw Errors.badForeignKey(toSingular(this.tableName), 'update', findColumn(err.constraint, this.tableName));
+
+				// throw error if a unique constraint was violated
+				if (Errors.violatesUnique(err))
+					throw Errors.badUnique(toSingular(this.tableName), 'update', findColumn(err.constraint, this.tableName));
 
 				// if the cause of the error wasn't found above, throw the given error
 				throw err;
