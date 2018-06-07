@@ -1,7 +1,12 @@
 # This file explains the basic purpose of the database, tables, and how everything fits together
 
 ## Database tables
-Below are the individual tables, their purposes/use, examples of each (Ex:), and how they relate to one another (Relates:)
+Below are the individual tables, their purposes/use, examples of each (Ex:), and how they relate to one another (Relates:), starting with an example bullet
+
+Example Bullet:
+* **Table_name** - Basic description
+	* Ex: Example of record or use
+	* Relates: description of how it relates to other tables and its relationships
 
 * **admins** - These are the users who have admin privileges. Only mean to act as admins, not post or accept any jobs. Created as a separate Table from clients and freelancers due to them having unnecessary fields/columns for an admin.
 	* Ex: The Admin created in the init process, which can see flagged records, mark other users as inactive, etc.
