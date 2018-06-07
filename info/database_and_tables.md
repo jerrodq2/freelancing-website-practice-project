@@ -65,14 +65,14 @@ Below are the individual tables, their purposes/use, examples of each (Ex:), and
 
 * **saved_jobs** - This table is so freelancers can save jobs that they want to view later so they have quick access to them later. Similar to a saved videos playlist on youtube.
 	* Ex: A freelancer is searching through the jobs, sees a few he likes and might take, saves them for later
-	* Relates: as a one-to-many relationship with both jobs and freelancers with the saved_jobs being the many
+	* Relates: has a one-to-many relationship with both jobs and freelancers with the saved_jobs being the many
 
+* **job_activity** - This table is a list of jobs that a freelancer has previously worked on. The freelancer has no control over it, once the freelancer accepts the job, and the job is finished, that job is added to their job_activity. It is focused on the freelancer, it comes with a client and job id for information purposes.
+	* Ex: Freelancer finishes a job, it is then added to their job_activity
+	* Relates: it has a one-to-many relationship with freelancers, clients, and jobs, with the job_activity being the many.
 
+* **inappropriate_flags** - This last table is so that either clients or freelancers can mark a record as inappropriate, so that it can then be viewed by an admin later. A job, client, freelancer, client_review, freelancer_review, proposal, or invitation can all be flagged as inappropriate. aside from a client or freelancer being the object flagged, it also saves either the client_id or freelancer_id of the user who actually flagged the object.
+	* Ex: A client flags a review from a freelancer for explicit language, or a freelancer flags a client who they think is a fake profile.
+	* Relates: It has a one-to-many relationship with jobs, clients, freelancers, client_reviews, freelancer_reviews, proposals, and invitations with inappropriate_flags being the many.
 
-* **inappropriate_flags** - Info
-	* Ex: example
-	* Relates: relates
-
-* **job_activity** - Info
-	* Ex: example
-	* Relates: relates
+	******************** NOTE: is it alright that, say a job, could be flagged multiple times? ************
