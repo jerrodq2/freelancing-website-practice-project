@@ -21,34 +21,20 @@ Below are the individual tables, their purposes/use, examples of each (Ex:), and
 * **clients** - These are users who post different jobs, basically the 'client' in the job relationship, the ones who have a need, and need a developers help, ex: need a website made. I made this a separate table from freelancers partially due to the extra fields/columns that freelancers have, and partially just for clarity. It was easier to think of them as separate entities this way. They can create/post jobs, control everything related to said jobs, write reviews about freelancers they've worked with, search for freelancers, mark things as inappropriate, save freelancers, and invite freelancers to accept a job.
 	* Ex: A user that posts a job, accepts a contract with a freelancer, and pays the freelancer for their work (if this was in production at least)
 	* One-To-One: N/A
-	* One-To-Many: has one with fields where a client can only have one field. It also has this relationship with jobs, client_reviews, freelancer_reviews, and invitations, where one client can have many of each.
+	* One-To-Many: has one with fields where a client can only have one field. It also has this relationship with jobs, client_reviews, freelancer_reviews, saved_jobs, saved_clients, proposals, and invitations, where one client can have many of each.
 	* Many-To-Many: Both saved_clients and saved_freelancers act as intermediary tables for a many-to-many relationship between clients and freelancers
-	* Relates: it has a
-
-
-
-
-
-
-
-
 
 * **freelancers** - These are the users who come to the site to accept work/jobs. These are the developers who accept and fulfill the job requests and get paid (if this was in production at least). These are the 'workers' in the job relationship. This table is more complex than the client, it has a few more fields such as summary and job_title, and it has several other tables that are only associated with it, such as freelancer_skills, education_history, employment_history and job_activity. For these reasons, I made it a separate table from clients and admins. This type of user can accept jobs, search for clients/jobs, write proposals for a job, write reviews about clients they've worked with, mark things as inappropriate, save clients, and control everything related to them such as their skills and education/employment history.
 	* Ex: A user who writes a proposal to a client to take on a job and gets paid for it (if it was in production)
 	* One-To-One: N/A
-	* One-To-Many: has one with fields where a freelancer can only have one field
-	* Many-To-Many: Both saved_clients and saved_freelancers act as intermediary tables for a many-to-many relationship between clients and freelancers
-
-	* Relates: it has a one-to-one relationship with the fields table. It has a many-to-many relationship with skills via the freelancer_skills table acting as an intermediary. It also has a one-to-many with saved_jobs, saved_clients, saved_freelancers, job_activity, client_reviews, freelancer_reviews, education_history, employment_history, inappropriate_flags, jobs, proposals, and invitations with the freelancer being the one in each relationship.
-
-
+	* One-To-Many: has one with fields where a freelancer can only have one field. It also has this relationship with jobs, client_reviews, freelancer_reviews, saved_jobs, saved_clients, saved_freelancers, job_activity, education_history, employment_history, inappropriate_flags, proposals, and invitations, where one freelancer can have many of each.
+	* Many-To-Many: Both saved_clients and saved_freelancers act as intermediary tables for a many-to-many relationship between clients and freelancers. It also has a many-to-many relationship with skills through the freelancer_skills table.
 
 * **fields** - This is a table that is pre-generated via the seeds, it wasn't intended to have any user interaction. It simply shows the general area that certain fields are involved in, ex: web development, Wordpress, front end, mobile app, etc. These are not meant to be added onto or changed in any way.
 	* Ex: web development, Wordpress, front end, mobile app, etc.
 	* One-To-One: N/A
-	* One-To-Many: N/A
+	* One-To-Many: has this with jobs, clients, and freelancers where they can only have on field, and one field can be associated with many jobs, clients, and freelancers
 	* Many-To-Many: N/A
-	* Relates: has a one-to-one relationship with jobs, clients, and freelancers
 
 
 
