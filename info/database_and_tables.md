@@ -5,6 +5,8 @@ Example Bullet: Just demonstrating the format for the below tables
 	* Ex: Example of record or use
 	* Relates: description of how it relates to other tables and its relationships
 
+
+
 ## Database tables
 Below are the individual tables, their purposes/use, examples of each (Ex:), and how they relate to one another (Relates:), starting with an example bullet
 
