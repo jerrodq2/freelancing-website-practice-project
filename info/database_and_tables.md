@@ -8,6 +8,7 @@ Example Bullet:
 	* Ex: Example of record or use
 	* Relates: description of how it relates to other tables and its relationships
 
+
 * **admins** - These are the users who have admin privileges. Only mean to act as admins, not post or accept any jobs. Created as a separate Table from clients and freelancers due to them having unnecessary fields/columns for an admin.
 	* Ex: The Admin created in the init process, which can see flagged records, mark other users as inactive, etc.
 	* Relates: not related to other tables
@@ -79,5 +80,3 @@ Example Bullet:
 * **inappropriate_flags** - This last table is so that either clients or freelancers can mark a record as inappropriate, so that it can then be viewed by an admin later. A job, client, freelancer, client_review, freelancer_review, proposal, or invitation can all be flagged as inappropriate. aside from a client or freelancer being the object flagged, it also saves either the client_id or freelancer_id of the user who actually flagged the object.
 	* Ex: A client flags a review from a freelancer for explicit language, or a freelancer flags a client who they think is a fake profile.
 	* Relates: It has a one-to-many relationship with jobs, clients, freelancers, client_reviews, freelancer_reviews, proposals, and invitations with inappropriate_flags being the many.
-
-	******************** NOTE: is it alright that, say a job, could be flagged multiple times? ************
