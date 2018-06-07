@@ -78,65 +78,44 @@ Below are the individual tables, their purposes/use, examples of each (Ex:), and
 	* One-To-Many: has this with clients, freelancers, and jobs, where a proposal can only have one of each
 	* Many-To-Many: N/A
 
-
-
 * **client_reviews** - This table is where freelancers can write reviews about clients they have worked with, or basically where clients get reviewed. After working on a job for a client, the freelancer can then write a single review about the client.
 	* Ex: freelancer takes a clients job, finishes it, and gives the client a 5 star review about how great of a client he was.
-	* One-To-One: N/A
-	* One-To-Many: N/A
+	* One-To-One: It has this relationship with jobs
+	* One-To-Many: it has this with clients and freelancers with the client_review only having one of each
 	* Many-To-Many: N/A
-	* Relates: it has a one-to-many with clients, freelancers with the client_review being the one. It also has a one-to-one relationship with jobs.
-
-
 
 * **freelancer_reviews** - This table is where clients can write reviews about freelancers they have worked with, or basically where freelancers get reviewed. After having a freelancer take their job, the client can then write a single review about the freelancer.
 	* Ex: A client has a freelancer take and complete their job, the client then writes about what an amazing job the freelancer did.
-	* One-To-One: N/A
-	* One-To-Many: N/A
+	* One-To-One: It has this relationship with jobs
+	* One-To-Many: it has this with clients and freelancers with the freelancer_review only having one of each
 	* Many-To-Many: N/A
-	* Relates: it has a one-to-many with clients, freelancers with the freelancer_review being the one. It also has a one-to-one relationship with jobs.
-
-
 
 * **saved_clients** - This table is so freelancers can save clients that they like so they have quick access to them later. Similar to a saved videos playlist on youtube.
 	* Ex: Freelancer sees or works with a client he likes, saves the client so they can easily find them later.
 	* One-To-One: N/A
-	* One-To-Many: N/A
+	* One-To-Many: has this relationship with both clients and freelancers with the saved_clients only having one of each
 	* Many-To-Many: N/A
-	* Relates: has a one-to-many relationship with both clients and freelancers with the saved_clients being the many
-
-
 
 * **saved_freelancers** - This table is so clients can save freelancers that they like so they have quick access to them later. Similar to a saved videos playlist on youtube.
 	* Ex: Client sees or works with a freelancer he likes, saves the freelancer so they can easily find them later.
 	* One-To-One: N/A
-	* One-To-Many: N/A
+	* One-To-Many: has this relationship with both clients and freelancers with the saved_freelancers only having one of each
 	* Many-To-Many: N/A
-	* Relates: has a one-to-many relationship with both clients and freelancers with the saved_freelancers being the many
-
-
 
 * **saved_jobs** - This table is so freelancers can save jobs that they want to view later so they have quick access to them later. Similar to a saved videos playlist on youtube.
 	* Ex: A freelancer is searching through the jobs, sees a few he likes and might take, saves them for later
 	* One-To-One: N/A
-	* One-To-Many: N/A
+	* One-To-Many: has this relationship with clients, freelancers, and jobs with the saved_jobs only having one of each
 	* Many-To-Many: N/A
-	* Relates: has a one-to-many relationship with both jobs and freelancers with the saved_jobs being the many
-
-
 
 * **job_activity** - This table is a list of jobs that a freelancer has previously worked on. The freelancer has no control over it, once the freelancer accepts the job, and the job is finished, that job is added to their job_activity. It is focused on the freelancer, it comes with a client and job id for information purposes.
 	* Ex: Freelancer finishes a job, it is then added to their job_activity
 	* One-To-One: N/A
-	* One-To-Many: N/A
+	* One-To-Many: has this relationship with clients, freelancers, and jobs with the job_activity only having one of each
 	* Many-To-Many: N/A
-	* Relates: it has a one-to-many relationship with freelancers, clients, and jobs, with the job_activity being the many.
-
-
 
 * **inappropriate_flags** - This last table is so that either clients or freelancers can mark a record as inappropriate, so that it can then be viewed by an admin later. A job, client, freelancer, client_review, freelancer_review, proposal, or invitation can all be flagged as inappropriate. aside from a client or freelancer being the object flagged, it also saves either the client_id or freelancer_id of the user who actually flagged the object.
 	* Ex: A client flags a review from a freelancer for explicit language, or a freelancer flags a client who they think is a fake profile.
 	* One-To-One: N/A
-	* One-To-Many: N/A
+	* One-To-Many: It has this relationship with jobs, clients, freelancers, client_reviews, freelancer_reviews, proposals, and invitations with inappropriate_flags only having one of each.
 	* Many-To-Many: N/A
-	* Relates: It has a one-to-many relationship with jobs, clients, freelancers, client_reviews, freelancer_reviews, proposals, and invitations with inappropriate_flags being the many.
