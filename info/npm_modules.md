@@ -52,6 +52,23 @@ Below are the individual npm modules/packages I have installed in the project, s
 	* Where: N/A
 	* Other: N/A
 
+* **date-fns** - provides the most comprehensive, yet simple and consistent toolset for manipulating JavaScript dates in a browser & Node.js
+	* Name: "date-fns": "^1.29.0"
+	* Why: I use it to manipulate and format dates.
+	* Where: currently only used in seeds and models
+	* Other: N/A
+
+* **lodash** - A modern JavaScript utility library delivering modularity, performance, & extras.
+	* Name: "lodash": "^4.17.5"
+	* Why: I use lodash for it's helpful methods, such as omitting certain keys in an object with .omit
+	* Where: currently is is used in the models and tests
+	* Other: N/A
+
+* **pluralize** - package used to pluralize and singularize any word.
+	* Name: "pluralize": "^7.0.0"
+	* Why: Simply used in my error messages to make table plural or singular
+	* Where: currently only used in the src/lib/helper functions and throughout my models
+	* Other: N/A
 
 
 
@@ -90,30 +107,6 @@ Below are the individual npm modules/packages I have installed in the project, s
 	* Other: N/A
 
 * **better-npm-run** - Info
-	* Name: nameAndVersion
-	* Why: why
-	* Where: where
-	* Other: N/A
-
-
-
-
-
-* **date-fns** - Info
-	* Name: nameAndVersion
-	* Why: why
-	* Where: where
-	* Other: N/A
-
-* **lodash** - Info
-	* Name: nameAndVersion
-	* Why: why
-	* Where: where
-	* Other: N/A
-
-
-
-* **pluralize** - Info
 	* Name: nameAndVersion
 	* Why: why
 	* Where: where
