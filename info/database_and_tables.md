@@ -35,9 +35,16 @@ Below are the individual tables, their purposes/use, examples of each (Ex:), and
 	* Ex: freelancer worked at google for 8 years, from date A to date B
 	* Relates: has a one-to-many relationship with freelancers, with employment_history being the many.
 
+* **jobs** - This table is the main part of the project, it is the jobs that connect the other main tables. These are jobs that are created and post by clients, and accepted by freelancers. The main focus of this project is centerd around this table and how it works with other tables.
+	* Ex: a 'job' to create a simple front end website can be created by a client, then later accepted by a freelancer.
+	* Relates: Has a one-to-many relationship with clients, with the client being the one. It also has a one-to-one relationship with freelancers, fields, client_reviews, freelancer_reviews, and job_activity
 
 
+saved_jobs
 
+m-m with either clients or freelancers - update the freelancer and client relationship descriptions above.
+proposals
+invitaitons
 
 
 * **client_reviews** - Info
@@ -48,25 +55,28 @@ Below are the individual tables, their purposes/use, examples of each (Ex:), and
 	* Ex: example
 	* Relates: relates
 
+
 * **inappropriate_flags** - Info
 	* Ex: example
 	* Relates: relates
 
+
 * **invitations** - Info
-	* Ex: example
-	* Relates: relates
-
-* **job_activity** - Info
-	* Ex: example
-	* Relates: relates
-
-* **jobs** - Info
 	* Ex: example
 	* Relates: relates
 
 * **proposals** - Info
 	* Ex: example
 	* Relates: relates
+
+
+* **job_activity** - Info
+	* Ex: example
+	* Relates: relates
+
+
+
+
 
 * **saved_clients** - Info
 	* Ex: example
