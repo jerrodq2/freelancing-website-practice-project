@@ -36,68 +36,47 @@ Below are the individual tables, their purposes/use, examples of each (Ex:), and
 	* One-To-Many: has this with jobs, clients, and freelancers where they can only have on field, and one field can be associated with many jobs, clients, and freelancers
 	* Many-To-Many: N/A
 
-
-
 * **skills** - This table is only used for freelancers. It is used to list which skills they have. Since a freelancer can have many skills and each skill can belong to many freelancer, I created this table to have a many-to-many relationship with freelancers through the freelancer_skills table, it doesn't touch any other table. Since many freelancers can have an 'html' skill, the skills model checks that a skill isn't already in the database before it is created.
 	* Ex: html, python, Wordpress, node, etc.
 	* One-To-One: N/A
 	* One-To-Many: N/A
-	* Many-To-Many: N/A
-	* Relates: Has a many-to-many relationship with freelancer_skills table, doesn't touch any other table.
-
-
+	* Many-To-Many: It has a many-to-many relationship with freelancers through the freelancer_skills table
 
 * **freelancer_skills** - This table acts as an intermediary between the many-to-many relationship between freelancers and skills, has no other purpose.
 	* Ex: has the freelancer_id and skill_id for a freelancer that has an 'html' skill.
 	* One-To-One: N/A
-	* One-To-Many: N/A
+	* One-To-Many: has this relationship with both skills and freelancer_skills where one skill or freelancer can have many freelancer_skills
 	* Many-To-Many: N/A
-	* Relates: Has a one-to-many relationship with both freelancers and skills, with the freelancer_skills being the many.
-
-
 
 * **education_history** - This table is only used for freelancers. It is used to keep track of the past education of a freelancer for their profile.
 	* Ex: freelancer went to texas tech from 1/8/2011 to 5/1/2015
 	* One-To-One: N/A
-	* One-To-Many: N/A
+	* One-To-Many: has this with freelancers, with one freelancer having many education_histories
 	* Many-To-Many: N/A
-	* Relates: has a one-to-many relationship with freelancers, with education_history being the many.
-
-
 
 * **employment_history** - This table is only used for freelancers. It is used to keep track of the past jobs of a freelancer for their profile.
 	* Ex: freelancer worked at google for 8 years, from date A to date B
 	* One-To-One: N/A
-	* One-To-Many: N/A
+	* One-To-Many: has this with freelancers, with one freelancer having many employment_histories
 	* Many-To-Many: N/A
-	* Relates: has a one-to-many relationship with freelancers, with employment_history being the many.
-
-
 
 * **jobs** - This table is the main part of the project, it is the jobs that connect the other main tables. These are jobs that are created and post by clients, and accepted by freelancers. The main focus of this project is centerd around this table and how it works with other tables.
 	* Ex: a 'job' to create a simple front end website can be created by a client, then later accepted by a freelancer.
-	* One-To-One: N/A
-	* One-To-Many: N/A
+	* One-To-One: client_reviews, freelancer_reviews, job_activity
+	* One-To-Many: has one with fields, clients, and freelancers where a job can only have one of each. It also has this relationship with proposals, invitations, saved_jobs where one job can have many of each.
 	* Many-To-Many: N/A
-	* Relates: Has a one-to-many relationship with clients, with the client being the one. It also has a one-to-many relationship with proposals and invitations with the job being the one. Lastly, it has a one-to-one relationship with freelancers, fields, client_reviews, freelancer_reviews, saved_jobs, and job_activity.
-
-
 
 * **invitations** - This table is used so clients can 'invite' a freelancer to take a job. Basically, they send this to the freelancer, it has basic info about the job, and they are asking the freelancer to take said job.
 	* Ex: A client creates a job, sends out invitations to 10 different freelancers to try and get a taker.
 	* One-To-One: N/A
-	* One-To-Many: N/A
+	* One-To-Many: has this with clients, freelancers, and jobs, where an invitation can only have one of each
 	* Many-To-Many: N/A
-	* Relates: It has a one-to-many relationship with both clients, freelancers, and jobs, with invitations being the one in all three cases.
-
-
 
 * **proposals** - This table is used so a freelancer can 'propose' to take a job for a client. Basically, they send this to the client, saying what they can do for the client, and ask the client if they can take said job.
 	* Ex: A freelancer is searching for jobs, finds one, likes it, and sends a proposal to the client asking if they can take the job.
 	* One-To-One: N/A
-	* One-To-Many: N/A
+	* One-To-Many: has this with clients, freelancers, and jobs, where a proposal can only have one of each
 	* Many-To-Many: N/A
-	* Relates: It has a one-to-many relationship with both clients, freelancers, and jobs, with proposals being the one in all three cases.
 
 
 
