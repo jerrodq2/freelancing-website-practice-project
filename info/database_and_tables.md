@@ -5,7 +5,7 @@ Example Bullet: Just demonstrating the format for the below tables
 	* Ex: Example of record or use
 	* One-To-One: Describes which tables it has a one-to-one relationship with
 	* One-To-Many: Describes which tables it has a one-to-many relationship with, and which it is in the relationship
-	* Many-To-Many: Describes which tables it has a many-to-many relationship with
+	* Many-To-Many: Describes which tables it has a many-to-many relationship with and which table serves as an intermediary table between the two
 
 
 
