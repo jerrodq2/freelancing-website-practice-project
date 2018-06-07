@@ -37,14 +37,17 @@ Below are the individual tables, their purposes/use, examples of each (Ex:), and
 
 * **jobs** - This table is the main part of the project, it is the jobs that connect the other main tables. These are jobs that are created and post by clients, and accepted by freelancers. The main focus of this project is centerd around this table and how it works with other tables.
 	* Ex: a 'job' to create a simple front end website can be created by a client, then later accepted by a freelancer.
-	* Relates: Has a one-to-many relationship with clients, with the client being the one. It also has a one-to-one relationship with freelancers, fields, client_reviews, freelancer_reviews, and job_activity
+	* Relates: Has a one-to-many relationship with clients, with the client being the one. It also has a one-to-many relationship with proposals and invitations with the job being the one. Lastly, it has a one-to-one relationship with freelancers, fields, client_reviews, freelancer_reviews, saved_jobs, and job_activity.
+
+* **invitations** - This table is used so clients can 'invite' a freelancer to take a job. Basically, they send this to the freelancer, it has basic info about the job, and they are asking the freelancer to take said job.
+	* Ex: A client creates a job, sends out invitations to 10 different freelancers to try and get a taker.
+	* Relates: It has a one-many relationship with both clients, freelancers, and jobs, with invitations being the one in all three cases.
+
+* **proposals** - This table is used so a freelancer can 'propose' to take a job for a client. Basically, they send this to the client, saying what they can do for the client, and ask the client if they can take said job.
+	* Ex: A freelancer is searching for jobs, finds one, likes it, and sends a proposal to the client asking if they can take the job.
+	* Relates: It has a one-many relationship with both clients, freelancers, and jobs, with proposals being the one in all three cases.
 
 
-saved_jobs
-
-m-m with either clients or freelancers - update the freelancer and client relationship descriptions above.
-proposals
-invitaitons
 
 
 * **client_reviews** - Info
@@ -61,13 +64,7 @@ invitaitons
 	* Relates: relates
 
 
-* **invitations** - Info
-	* Ex: example
-	* Relates: relates
 
-* **proposals** - Info
-	* Ex: example
-	* Relates: relates
 
 
 * **job_activity** - Info
