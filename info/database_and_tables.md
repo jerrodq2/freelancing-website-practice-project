@@ -41,48 +41,38 @@ Below are the individual tables, their purposes/use, examples of each (Ex:), and
 
 * **invitations** - This table is used so clients can 'invite' a freelancer to take a job. Basically, they send this to the freelancer, it has basic info about the job, and they are asking the freelancer to take said job.
 	* Ex: A client creates a job, sends out invitations to 10 different freelancers to try and get a taker.
-	* Relates: It has a one-many relationship with both clients, freelancers, and jobs, with invitations being the one in all three cases.
+	* Relates: It has a one-to-many relationship with both clients, freelancers, and jobs, with invitations being the one in all three cases.
 
 * **proposals** - This table is used so a freelancer can 'propose' to take a job for a client. Basically, they send this to the client, saying what they can do for the client, and ask the client if they can take said job.
 	* Ex: A freelancer is searching for jobs, finds one, likes it, and sends a proposal to the client asking if they can take the job.
-	* Relates: It has a one-many relationship with both clients, freelancers, and jobs, with proposals being the one in all three cases.
+	* Relates: It has a one-to-many relationship with both clients, freelancers, and jobs, with proposals being the one in all three cases.
 
+* **client_reviews** - This table is where freelancers can write reviews about clients they have worked with, or basically where clients get reviewed. After working on a job for a client, the freelancer can then write a single review about the client.
+	* Ex: freelancer takes a clients job, finishes it, and gives the client a 5 star review about how great of a client he was.
+	* Relates: it has a one-to-many with clients, freelancers with the client_review being the one. It also has a one-to-one relationship with jobs.
 
+* **freelancer_reviews** - This table is where clients can write reviews about freelancers they have worked with, or basically where freelancers get reviewed. After having a freelancer take their job, the client can then write a single review about the freelancer.
+	* Ex: A client has a freelancer take and complete their job, the client then writes about what an amazing job the freelancer did.
+	* Relates: it has a one-to-many with clients, freelancers with the freelancer_review being the one. It also has a one-to-one relationship with jobs.
 
+* **saved_clients** - This table is so freelancers can save clients that they like so they have quick access to them later. Similar to a saved videos playlist on youtube.
+	* Ex: Freelancer sees or works with a client he likes, saves the client so they can easily find them later.
+	* Relates: has a one-to-many relationship with both clients and freelancers with the saved_clients being the many
 
-* **client_reviews** - Info
-	* Ex: example
-	* Relates: relates
+* **saved_freelancers** - This table is so clients can save freelancers that they like so they have quick access to them later. Similar to a saved videos playlist on youtube.
+	* Ex: Client sees or works with a freelancer he likes, saves the freelancer so they can easily find them later.
+	* Relates: has a one-to-many relationship with both clients and freelancers with the saved_freelancers being the many
 
-* **freelancer_reviews** - Info
-	* Ex: example
-	* Relates: relates
+* **saved_jobs** - This table is so freelancers can save jobs that they want to view later so they have quick access to them later. Similar to a saved videos playlist on youtube.
+	* Ex: A freelancer is searching through the jobs, sees a few he likes and might take, saves them for later
+	* Relates: as a one-to-many relationship with both jobs and freelancers with the saved_jobs being the many
+
 
 
 * **inappropriate_flags** - Info
 	* Ex: example
 	* Relates: relates
 
-
-
-
-
 * **job_activity** - Info
-	* Ex: example
-	* Relates: relates
-
-
-
-
-
-* **saved_clients** - Info
-	* Ex: example
-	* Relates: relates
-
-* **saved_freelancers** - Info
-	* Ex: example
-	* Relates: relates
-
-* **saved_jobs** - Info
 	* Ex: example
 	* Relates: relates
