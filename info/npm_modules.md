@@ -70,44 +70,38 @@ Below are the individual npm modules/packages I have installed in the project, s
 	* Where: currently only used in the src/lib/helper functions and throughout my models
 	* Other: N/A
 
-
-
-
-
-* **code** - Info
-	* Name: nameAndVersion
-	* Why: why
-	* Where: where
+* **bcrypt** - Used to hash passwords
+	* Name: "bcrypt": "^1.0.3"
+	* Why: hash my user passwords
+	* Where: in the models
 	* Other: N/A
 
-* **lab** - Info
-	* Name: nameAndVersion
-	* Why: why
-	* Where: where
+* **better-npm-run** - Better NPM scripts runner, allows more complex writing of your scripts
+	* Name: "better-npm-run": "^0.1.0"
+	* Why: it allows the use of basically abstracting your scripts into smaller more re-usable scripts.
+	* Where: package.json
 	* Other: N/A
 
-* **boom** - Info
-	* Name: nameAndVersion
-	* Why: why
-	* Where: where
+* **code** - BDD assertion library.
+	* Name: "code": "^5.2.0"
+	* Why: Allows the use of statements like 'expect' to test my code
+	* Where: test directory
 	* Other: N/A
 
-* **chance** - Info
-	* Name: nameAndVersion
-	* Why: why
-	* Where: where
+* **lab** - Node test utility
+	* Name: "lab": "^15.3.1"
+	* Why: Allows the testing of my code
+	* Where: test directory
 	* Other: N/A
 
-
-
-* **bcrypt** - Info
-	* Name: nameAndVersion
-	* Why: why
-	* Where: where
+* **boom** - HTTP-friendly error objects
+	* Name: "boom": "^7.2.0"
+	* Why: Allows me to manipulate errors and return http friendly error objects with customized messages.
+	* Where: used throughout the project, but created in the src/lib/errors file
 	* Other: N/A
 
-* **better-npm-run** - Info
-	* Name: nameAndVersion
-	* Why: why
-	* Where: where
-	* Other: N/A
+* **chance** - Random generator helper for JavaScript
+	* Name: "chance": "^1.0.16"
+	* Why: I use it to create random things, ex: random name, word, paragraph, mainly used in testing.
+	* Where: test and randoms directory
+	* Other: the randoms directory is dedicated to this module and my own custom mixins/methods for it
