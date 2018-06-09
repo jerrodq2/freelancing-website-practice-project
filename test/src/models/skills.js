@@ -46,7 +46,7 @@ describe('Skills Model', () => {
 		it('should raise an exception if the skill isn\'t unique (unique field)', async() => {
 			const createData = { id: random.guid(), skill };
 
-			return checkErr.checkUnique(Skills, 'skill', createData, 'skill', skill);
+			return checkErr.checkUnique(Skills, 'skill', 'create', createData, 'skill', skill);
 		});
 	});
 
@@ -89,6 +89,10 @@ describe('Skills Model', () => {
 
 
 	describe('has an update method', () => {
+		const specificId = random.guid(); //used in the checkUnique error test below
+
+		before(() => random.skill({ id: specificId }));
+
 		it('should update the skill record if given a valid id and data, and return the updated object ', async() => {
 			const specificId = random.guid(),
 				specificSkill = random.word(),
@@ -118,6 +122,12 @@ describe('Skills Model', () => {
 
 		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
 			return checkErr.checkIdFormat(Skills, 'skill', 'update', {});
+		});
+
+		it('should raise an exception if the skill isn\'t unique (unique field)', async() => {
+			const createData = { id: random.guid(), skill };
+
+			return checkErr.checkUnique(Skills, 'skill', 'update', createData, 'skill', skill, specificId);
 		});
 	});
 
