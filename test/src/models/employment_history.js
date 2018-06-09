@@ -10,7 +10,7 @@ const Freelancers = require(`${process.cwd()}/src/models/freelancers`);
 const { db, random, checkErr, _ } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe.only('Employment History Model', () => {
+describe('Employment History Model', () => {
 	const id = random.guid(),
 		title = random.word(),
 		company = random.word(),

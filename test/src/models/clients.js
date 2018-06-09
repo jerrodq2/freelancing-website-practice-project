@@ -9,7 +9,7 @@ const Clients = require(`${process.cwd()}/src/models/clients`);
 const { db, random, knex, checkErr } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe('Clients Model', () => {
+describe.only('Clients Model', () => {
 	const id = random.guid(),
 		first_name = random.name(),
 		last_name = random.name(),
@@ -136,15 +136,15 @@ describe('Clients Model', () => {
 
 		// check that certain fields have to be unique to create
 		it('should raise an exception if the username isn\'t unique (unique field)', () => {
-			return checkErr.checkUnique(Clients, 'client', createNewData(), 'username', username);
+			return checkErr.checkUnique(Clients, 'client', 'create', createNewData(), 'username', username);
 		});
 		it('should raise an exception if the email isn\'t unique (unique field)', () => {
-			return checkErr.checkUnique(Clients, 'client', createNewData(), 'email', email);
+			return checkErr.checkUnique(Clients, 'client', 'create', createNewData(), 'email', email);
 		});
 
 		// check that the field_id must belong to an actual field in the db
 		it('should raise an exception if given an incorrect field_id (foreign key not found)', () => {
-			return checkErr.checkForeign(Clients, 'client', createNewData(), 'field_id', random.guid());
+			return checkErr.checkForeign(Clients, 'client', 'create', createNewData(), 'field_id', random.guid());
 		});
 	});
 
@@ -206,12 +206,16 @@ describe('Clients Model', () => {
 			newCity = random.word(),
 			newZip = random.zip(),
 			newPhone = random.phone(),
-			newDob = random.date({ string: true });
+			newDob = random.date({ string: true }),
+			specificId = random.guid(); // used in below checkUnique error tests
 
 		let updateData = { field_id: newFieldId, first_name: newFirstName, last_name: newLastName, gender: newGender, age: newAge, summary: newSummary, state: newState, city: newCity, zip: newZip, phone: newPhone, dob: newDob };
 
 
-		before(() => random.field({ id: newFieldId }));
+		before(async() => {
+			await random.field({ id: newFieldId });
+			return random.client({ id: specificId, field_id });
+		});
 
 		it('should update the client record if given a valid id and data, and return the updated object without password or username', async() => {
 			const createData = createNewData(),
@@ -276,6 +280,18 @@ describe('Clients Model', () => {
 
 		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
 			return checkErr.checkIdFormat(Clients, 'client', 'update', {});
+		});
+
+		it('should raise an exception if the username isn\'t unique (unique field)', () => {
+			return checkErr.checkUnique(Clients, 'client', 'update', createNewData(), 'username', username, specificId);
+		});
+
+		it('should raise an exception if the email isn\'t unique (unique field)', () => {
+			return checkErr.checkUnique(Clients, 'client', 'update', createNewData(), 'email', email, specificId);
+		});
+
+		it('should raise an exception if given an incorrect field_id (foreign key not found)', () => {
+			return checkErr.checkForeign(Clients, 'client', 'update', updateData, 'field_id', random.guid(), id);
 		});
 	});
 

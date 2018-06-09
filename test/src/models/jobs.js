@@ -293,6 +293,18 @@ describe('Jobs Model', () => {
 		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
 			return checkErr.checkIdFormat(Jobs, 'job', 'update', {});
 		});
+
+		it('should raise an exception if given an incorrect freelancer_id (foreign key not found)', () => {
+			return checkErr.checkForeign(Jobs, 'job', 'update', updateData, 'freelancer_id', random.guid(), id);
+		});
+
+		it('should raise an exception if given an incorrect client_id (foreign key not found)', () => {
+			return checkErr.checkForeign(Jobs, 'job', 'update', updateData, 'client_id', random.guid(), id);
+		});
+
+		it('should raise an exception if given an incorrect field_id (foreign key not found)', () => {
+			return checkErr.checkForeign(Jobs, 'job', 'update', updateData, 'field_id', random.guid(), id);
+		});
 	});
 
 
