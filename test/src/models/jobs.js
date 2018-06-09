@@ -145,11 +145,11 @@ describe('Jobs Model', () => {
 
 
 		it('should raise an exception if given an incorrect client_id (foreign key not found)', () => {
-			return checkErr.checkForeign(Jobs, 'job', createNewData(), 'client_id', random.guid());
+			return checkErr.checkForeign(Jobs, 'job', 'create', createNewData(), 'client_id', random.guid());
 		});
 
 		it('should raise an exception if given an incorrect field_id (foreign key not found)', () => {
-			return checkErr.checkForeign(Jobs, 'job', createNewData(), 'field_id', random.guid());
+			return checkErr.checkForeign(Jobs, 'job', 'create', createNewData(), 'field_id', random.guid());
 		});
 
 
