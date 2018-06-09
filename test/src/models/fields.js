@@ -9,7 +9,7 @@ const Fields = require(`${process.cwd()}/src/models/fields`);
 const { db, random, checkErr } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe('Fields Model', () => {
+describe.only('Fields Model', () => {
 	const id = random.guid(),
 		fieldName = random.word(),
 		data = { id, field: fieldName };
@@ -45,7 +45,7 @@ describe('Fields Model', () => {
 		});
 
 		it('should raise an exception if the field isn\'t unique (unique field)', async() => {
-			return checkErr.checkUnique(Fields, 'field', { id: random.guid() }, 'field', fieldName);
+			return checkErr.checkUnique(Fields, 'field', 'create', { id: random.guid() }, 'field', fieldName);
 		});
 	});
 
@@ -69,6 +69,10 @@ describe('Fields Model', () => {
 
 
 	describe('has an update method', () => {
+		const specificId = random.guid(); //used in the checkUnique error test below
+
+		before(() => random.field({ id: specificId }));
+
 		it('should update the field record if given a valid id and data, and return the updated object', async() => {
 			const specificId = random.guid(),
 				specificField = random.word(),
@@ -98,6 +102,10 @@ describe('Fields Model', () => {
 
 		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
 			return checkErr.checkIdFormat(Fields, 'field', 'update', {});
+		});
+
+		it('should raise an exception if the field isn\'t unique (unique field)', async() => {
+			return checkErr.checkUnique(Fields, 'field', 'update', { id: random.guid() }, 'field', fieldName, specificId);
 		});
 	});
 
