@@ -70,6 +70,28 @@ describe.only('Education History Model', () => {
 
 			return checkErr.checkIdFormat(EducationHistory, 'education_history', 'create', createData);
 		});
+
+		// check that certain fields are required to create
+		it('should require a degree to create', async() => {
+			return checkErr.checkNotNull(EducationHistory, 'education_history', createNewData(), 'degree');
+		});
+		it('should require a school to create', async() => {
+			return checkErr.checkNotNull(EducationHistory, 'education_history', createNewData(), 'school');
+		});
+		it('should require a school to area_of_study', async() => {
+			return checkErr.checkNotNull(EducationHistory, 'education_history', createNewData(), 'area_of_study');
+		});
+		it('should require a start_date to create', async() => {
+			return checkErr.checkNotNull(EducationHistory, 'education_history', createNewData(), 'start_date');
+		});
+		it('should require a freelancer_id to create', async() => {
+			return checkErr.checkNotNull(EducationHistory, 'education_history', createNewData(), 'freelancer_id');
+		});
+
+		// check that the freelancer_id must belong to an actual field in the db
+		it('should raise an exception if given an incorrect freelancer_id (foreign key not found)', () => {
+			return checkErr.checkForeign(EducationHistory, 'education_history', 'create', createNewData(), 'freelancer_id', random.guid());
+		});
 	});
 
 
