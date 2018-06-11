@@ -15,11 +15,12 @@ const toPlural = (text) => pluralize.plural(text);
 const toSingular = (text) => pluralize.singular(text);
 
 
-// Used to find the column for a specific constraint in error messages. We take out the table name and type of constrain withint the given string and return only the field, ex: jobs_client_id_foreign becomes 'client_id' or admin_username_unique becomes 'username'
+// Used to find the column for a specific constraint in error messages. We take out the table name and type of constraint within the given string and return only the field, ex: jobs_client_id_foreign becomes 'client_id' or admin_username_unique becomes 'username'
 const findColumn = (text, table) => {
+	// starting str example: 'admin_username_unique'
 	let str = text;
-	str = str.replace(`${table}_`, '');
-	str = str.replace('_unique', '');
+	str = str.replace(`${table}_`, ''); // becomes 'username_unique'
+	str = str.replace('_unique', ''); // becomes 'username'
 	str = str.replace('_foreign', '');
 	return str;
 };
