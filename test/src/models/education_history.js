@@ -17,10 +17,11 @@ describe.only('Education History Model', () => {
 		area_of_study = random.word(),
 		start_date = random.date({ string: true }),
 		end_date = random.date({ string: true }),
+		currently_attending = true,
 		description = random.paragraph(),
 		freelancer_id = random.guid(),
 		field_id = random.guid(),
-		data = { id, degree, school, area_of_study, start_date, end_date, description, freelancer_id };
+		data = { id, degree, school, area_of_study, start_date, end_date, currently_attending, description, freelancer_id };
 
 	before(async() => {
 		await db.resetTable('education_history');
@@ -46,6 +47,7 @@ describe.only('Education History Model', () => {
 		expect(obj.area_of_study).to.equal(area_of_study);
 		expect(obj.start_date).to.equal(new Date(start_date));
 		expect(obj.end_date).to.equal(new Date(end_date));
+		expect(obj.currently_attending).to.equal(currently_attending);
 		expect(obj.description).to.equal(description);
 		expect(obj.freelancer_id).to.equal(freelancer_id);
 		expect(obj.created_at).to.be.a.date();
@@ -91,6 +93,19 @@ describe.only('Education History Model', () => {
 		// check that the freelancer_id must belong to an actual field in the db
 		it('should raise an exception if given an incorrect freelancer_id (foreign key not found)', () => {
 			return checkErr.checkForeign(EducationHistory, 'education_history', 'create', createNewData(), 'freelancer_id', random.guid());
+		});
+
+		// checks default values
+		it('should default the \'present_job\' field to false if not given', async() => {
+			const data = createNewData(),
+				specificId = data.id,
+				createData = _.omit(data, 'currently_attending');
+
+			const history = await EducationHistory.create(createData);
+
+			expect(history).to.be.an.object();
+			expect(history.id).to.equal(specificId);
+			expect(history.currently_attending).to.equal(false);
 		});
 	});
 
