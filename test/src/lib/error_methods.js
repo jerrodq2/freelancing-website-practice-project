@@ -25,7 +25,7 @@ const checkErr = {
 
 			cause: the specific reason that caused the error, ex: not found, violated the not-null constraint
 		*/
-		// console.log(err.message);
+		console.log(err.message);
 		expect(err.message).to.include(table);
 		expect(err.message).to.include(action);
 		expect(err.message).to.include(field);
@@ -58,6 +58,9 @@ const checkErr = {
 			} else if (action === 'delete'){
 				// in the event of delete, where we have to pass in just the id
 				await Model.delete(1);
+			} else if (action === 'find history for'){
+				// in the event of findHistory, where we have to pass in just the id
+				await Model.findHistory(1);
 			} else {
 				throw new Error('You need to give one of the above actions');
 			}
@@ -120,47 +123,67 @@ const checkErr = {
 
 
 	//checks that certain fields must be unique in order to create, ex: no duplicate emails, used only for create
-	checkUnique: async(Model, table, data, field, duplicateValue) => {
+	checkUnique: async(Model, table, action, data, field, duplicateValue, updateId = null) => {
 		/* Examples of parameters below
 	    Model: name of model, ex: Clients, Admins
 
 			table: name of table as it will be shown in the error message, basically the models singular, ex: client, job, skill
+
+			action: method being performed as it will be shown in the error message, only create or update
 
 			data: the object data needed to perform the query
 
 	    field: specific field that caused the error, ex: id, email, client_id
 
 			duplicateValue: the duplicateValue we make the field in the data equal to, ex: an email already in use by a client
+
+			updateId: a given id used in the update method, null by default so it doesn't have to be provided when checking the create method
 		*/
 		// first we ensure that the given field has a duplicate value
 		data[`${field}`] = duplicateValue;
 		try {
-			await Model.create(data);
+			if (action === 'create') {
+				await Model.create(data);
+			} else if (action === 'update') {
+				await Model.update(updateId, data);
+			} else {
+				throw new Error('You need to provide an action of create or update');
+			}
 		} catch (err) {
-			return checkErr.checkMessage(err, table, 'create', field, 'couldn\'t be completed', 'violated the unique constraint');
+			return checkErr.checkMessage(err, table, action, field, 'couldn\'t be completed', 'violated the unique constraint');
 		}
 	},
 
 
-	//checks that foreign key fields require a correct id, or an id belonging to a record in the database, to create, used only for create
-	checkForeign: async(Model, table, data, field, randomId) => {
+	//checks that foreign key fields require a correct id, or an id belonging to a record in the database, used only for create and update
+	checkForeign: async(Model, table, action, data, field, randomId, updateId = null) => {
 		/* Examples of parameters below
 	    Model: name of model, ex: Clients, Admins
 
 			table: name of table as it will be shown in the error message, basically the models singular, ex: client, job, skill
+
+			action: method being performed as it will be shown in the error message, only create or update
 
 			data: the object data needed to perform the query
 
 	    field: specific field that caused the error, ex: id, email, client_id
 
 			duplicateValue: random id we make the field equal to. I make the it a given parameter instead of importing random and creating it here for simplicity
+
+			updateId: a given id used in the update method, null by default so it doesn't have to be provided when checking the create method
 		*/
 		// first we ensure that the given field has a random id
 		data[`${field}`] = randomId;
 		try {
-			await Model.create(data);
+			if (action === 'create') {
+				await Model.create(data);
+			} else if (action === 'update') {
+				await Model.update(updateId, data);
+			} else {
+				throw new Error('You need to provide an action of create or update');
+			}
 		} catch (err) {
-			return checkErr.checkMessage(err, table, 'create', field, 'couldn\'t be completed', 'violated the foreign key constraint');
+			return checkErr.checkMessage(err, table, action, field, 'couldn\'t be completed', 'violated the foreign key constraint');
 		}
 	},
 };

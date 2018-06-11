@@ -84,7 +84,7 @@ describe('Admins Model', () => {
 			return checkErr.checkIdFormat(Admins, 'admin', 'create', createData);
 		});
 
-
+		// check that certain fields are required to create
 		it('should require a first_name to create', async() => {
 			return checkErr.checkNotNull(Admins, 'admin', createNewData(), 'first_name');
 		});
@@ -101,12 +101,12 @@ describe('Admins Model', () => {
 			return checkErr.checkNotNull(Admins, 'admin', createNewData(), 'password');
 		});
 
-
+		// check that certain fields have to be unique to create
 		it('should raise an exception if the username isn\'t unique (unique field)', async() => {
-			return checkErr.checkUnique(Admins, 'admin', createNewData(), 'username', username);
+			return checkErr.checkUnique(Admins, 'admin', 'create', createNewData(), 'username', username);
 		});
 		it('should raise an exception if the email isn\'t unique (unique field)', async() => {
-			return checkErr.checkUnique(Admins, 'admin', createNewData(), 'email', email);
+			return checkErr.checkUnique(Admins, 'admin', 'create', createNewData(), 'email', email);
 		});
 	});
 
@@ -129,7 +129,10 @@ describe('Admins Model', () => {
 
 	describe('has an update method', () => {
 		const newFirstName = 'new first',
-			newLastName = 'new last';
+			newLastName = 'new last',
+			specificId = random.guid(); //used in the checkUnique error tests below
+
+		before(() => random.admin({ id: specificId }));
 
 		it('should update the admin record if given a valid id and data, and return the updated object without password or username', async() => {
 			const createData = createNewData(),
@@ -184,6 +187,13 @@ describe('Admins Model', () => {
 
 		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
 			return checkErr.checkIdFormat(Admins, 'admin', 'update', {});
+		});
+
+		it('should raise an exception if the username isn\'t unique (unique field)', async() => {
+			return checkErr.checkUnique(Admins, 'admin', 'update', createNewData(), 'username', username, specificId);
+		});
+		it('should raise an exception if the email isn\'t unique (unique field)', async() => {
+			return checkErr.checkUnique(Admins, 'admin', 'update', createNewData(), 'email', email, specificId);
 		});
 	});
 

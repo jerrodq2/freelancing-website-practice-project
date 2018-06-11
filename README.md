@@ -29,6 +29,7 @@ The project is directory is broken down into a few key sub directories listed be
 * **.circleci** - Used by CircleCi
 * **.github** - Used by github, contains PR template
 * **bin** - Contains executable scripts, such as the scripts to create the database and initial admin
+* **info** - This is only used for information purposes. Gives a more detailed explanations about the db, tables, and npm modules used in this project, for understanding and a refresher incase I or anyone else needs it
 * **migrations** - The migrations files used by knex to structure the databases
 * **public** -This is the client facing directory, contains front end code, templates, static files, etc.
 * **randoms** - Contains my custom mixins for the Chance module
@@ -46,6 +47,8 @@ npm run test
 ```
 
 ## General Info
+You can see more detailed information about both the database, and npm modules I use in this project in the info folder.
+
 A note about the general syntax of the project. I prefer to add spaces throughout the project for readability and to make things clearer, just a preference. I also added comments throughout the project, both for the understanding of anyone who isn't familiar with the project and for myself when I inevitably come back to this code weeks later and don't remember what I wrote.
 
-Last updated: 5/22/18
+Last updated: 6/11/18

@@ -28,11 +28,11 @@ class MainModel {
 
 				// throw error if a foreign key constraint was violated
 				if (Errors.violatesForeignKey(err))
-					throw Errors.badForeignKey(toSingular(this.tableName), 'create', findColumn(err.constraint));
+					throw Errors.badForeignKey(toSingular(this.tableName), 'create', findColumn(err.constraint, this.tableName));
 
 				// throw error if a unique constraint was violated
 				if (Errors.violatesUnique(err))
-					throw Errors.badUnique(toSingular(this.tableName), 'create', findColumn(err.constraint));
+					throw Errors.badUnique(toSingular(this.tableName), 'create', findColumn(err.constraint, this.tableName));
 
 				// if the cause of the error wasn't found above, throw the given error
 				throw err;
@@ -59,10 +59,18 @@ class MainModel {
 	}
 
 
-	// TODO: Add errors for not found and bad id syntax
+	// TODO: Any errors for giving a bad freelancer_id? Or one not belonging to an actual freelancer in the db
 	// find the employment or education history for one freelancer
 	findHistory (id) {
-		return knex(this.tableName).where({ freelancer_id: id });
+		return knex(this.tableName).where({ freelancer_id: id })
+			.catch((err) => {
+				// throw error if the id wasn't given in proper uuid format
+				if (Errors.violatesIdSyntax(err))
+					throw Errors.badId(toSingular(this.tableName), 'find history for');
+
+				// if the cause of the error wasn't found above, throw the given error
+				throw err;
+			});
 	}
 
 
@@ -100,9 +108,16 @@ class MainModel {
 					throw Errors.badRequest(toSingular(this.tableName), 'update', err.column);
 
 				// throw error if the id wasn't given in proper uuid format
-				if (Errors.violatesIdSyntax(err)) {
+				if (Errors.violatesIdSyntax(err))
 					throw Errors.badId(toSingular(this.tableName), 'update');
-				}
+
+				// throw error if a foreign key constraint was violated
+				if (Errors.violatesForeignKey(err))
+					throw Errors.badForeignKey(toSingular(this.tableName), 'update', findColumn(err.constraint, this.tableName));
+
+				// throw error if a unique constraint was violated
+				if (Errors.violatesUnique(err))
+					throw Errors.badUnique(toSingular(this.tableName), 'update', findColumn(err.constraint, this.tableName));
 
 				// if the cause of the error wasn't found above, throw the given error
 				throw err;

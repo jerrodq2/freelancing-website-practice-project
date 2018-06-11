@@ -157,15 +157,15 @@ describe('Freelancers Model', () => {
 
 		// check that certain fields have to be unique to create
 		it('should raise an exception if the username isn\'t unique (unique field)', () => {
-			return checkErr.checkUnique(Freelancers, 'freelancer', createNewData(), 'username', username);
+			return checkErr.checkUnique(Freelancers, 'freelancer', 'create', createNewData(), 'username', username);
 		});
 		it('should raise an exception if the email isn\'t unique (unique field)', () => {
-			return checkErr.checkUnique(Freelancers, 'freelancer', createNewData(), 'email', email);
+			return checkErr.checkUnique(Freelancers, 'freelancer', 'create', createNewData(), 'email', email);
 		});
 
 		// check that the field_id must belong to an actual field in the db
 		it('should raise an exception if given an incorrect field_id (foreign key not found)', () => {
-			return checkErr.checkForeign(Freelancers, 'freelancer', createNewData(), 'field_id', random.guid());
+			return checkErr.checkForeign(Freelancers, 'freelancer', 'create', createNewData(), 'field_id', random.guid());
 		});
 
 		it('should have an \'available\' field that defaults to true if not given upon create', async() => {
@@ -242,11 +242,15 @@ describe('Freelancers Model', () => {
 			newCity = random.word(),
 			newZip = random.zip(),
 			newPhone = random.phone(),
-			newDob = random.date({ string: true });
+			newDob = random.date({ string: true }),
+			specificId = random.guid(); //used in the checkUnique error tests below
 
 		let updateData = { field_id: newFieldId, first_name: newFirstName, last_name: newLastName, job_title: newJobTitle, rate: newRate, experience_level: newExperienceLevel, available: newAvailability, gender: newGender, age: newAge, summary: newSummary, state: newState, city: newCity, zip: newZip, phone: newPhone, dob: newDob };
 
-		before(() => random.field({ id: newFieldId }));
+		before(async() => {
+			await random.field({ id: newFieldId });
+			return random.freelancer({ id: specificId, field_id });
+		});
 
 		it('should update the freelancer record if given a valid id and data, and return the updated object without password or username', async() => {
 			const createData = createNewData(),
@@ -317,6 +321,17 @@ describe('Freelancers Model', () => {
 
 		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
 			return checkErr.checkIdFormat(Freelancers, 'freelancer', 'update', {});
+		});
+
+		it('should raise an exception if the username isn\'t unique (unique field)', () => {
+			return checkErr.checkUnique(Freelancers, 'freelancer', 'update', createNewData(), 'username', username, specificId);
+		});
+		it('should raise an exception if the email isn\'t unique (unique field)', () => {
+			return checkErr.checkUnique(Freelancers, 'freelancer', 'update', createNewData(), 'email', email, specificId);
+		});
+
+		it('should raise an exception if given an incorrect field_id (foreign key not found)', () => {
+			return checkErr.checkForeign(Freelancers, 'freelancer', 'update', createNewData(), 'field_id', random.guid(), id);
 		});
 	});
 
