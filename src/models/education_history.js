@@ -6,8 +6,13 @@ const EducationHistory = new Model('education_history');
 
 
 module.exports = {
+	// TODO: Limit on number of records per freelancer? ex: can only have up to 10 employment_history records per freelancer
+	create (data) {
+		return EducationHistory.create(data);
+	},
+
 	// get all the education_history for one user
-	getAll (freelancer_id) {
+	findHistory (freelancer_id) {
 		return EducationHistory.findHistory(freelancer_id);
 	},
 
@@ -15,11 +20,7 @@ module.exports = {
 		return EducationHistory.findOne(id);
 	},
 
-	// TODO: Limit on number of records per freelancer?
-	create (data) {
-		return EducationHistory.create(data);
-	},
-
+	// TODO: No reason to update/change the freelancer_id, some check to stop that?
 	update (id, data) {
 		return EducationHistory.updateById(id, data);
 	},
