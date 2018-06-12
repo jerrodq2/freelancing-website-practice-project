@@ -207,6 +207,50 @@ describe.only('Education History Model', () => {
 
 
 	describe('has a delete method', () => {
+		it('should delete the record if given a correct id', async() => {
+			const specificId = random.guid();
+			await random.education_history({ id: specificId, freelancer_id });
 
+			const history = await EducationHistory.findOne(specificId);
+			expect(history).to.be.an.object();
+			expect(history.id).to.equal(specificId);
+
+			const afterDelete = await EducationHistory.delete(specificId);
+			expect(afterDelete).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(EducationHistory, 'education_history', 'find', specificId);
+		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(EducationHistory, 'education_history', 'delete', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(EducationHistory, 'education_history', 'delete', {});
+		});
+	});
+
+
+	describe('has a freelancer_id with \'cascade\' onDelete', () => {
+		it('should be deleted in the event of the freelancer it belongs to is deleted', async() => {
+			const createData = createNewData(),
+				specificId = createData.id,
+				specificFreelancer = random.guid();
+			createData.freelancer_id = specificFreelancer;
+
+			await random.freelancer({ id: specificFreelancer, field_id });
+			const history = await EducationHistory.create(createData);
+
+			expect(history).to.be.an.object();
+			expect(history.id).to.equal(specificId);
+			expect(history.freelancer_id).to.equal(specificFreelancer);
+
+			const result = await Freelancers.delete(specificFreelancer);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(EducationHistory, 'education_history', 'find', specificId);
+		});
 	});
 });
