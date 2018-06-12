@@ -10,7 +10,7 @@ const Freelancers = require(`${process.cwd()}/src/models/freelancers`);
 const { db, random, checkErr, _ } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe.only('Education History Model', () => {
+describe('Education History Model', () => {
 	const id = random.guid(),
 		degree = random.word(),
 		school = random.word(),
@@ -80,7 +80,7 @@ describe.only('Education History Model', () => {
 		it('should require a school to create', async() => {
 			return checkErr.checkNotNull(EducationHistory, 'education_history', createNewData(), 'school');
 		});
-		it('should require a school to area_of_study', async() => {
+		it('should require a area_of_study to create', async() => {
 			return checkErr.checkNotNull(EducationHistory, 'education_history', createNewData(), 'area_of_study');
 		});
 		it('should require a start_date to create', async() => {
@@ -96,7 +96,7 @@ describe.only('Education History Model', () => {
 		});
 
 		// checks default values
-		it('should default the \'present_job\' field to false if not given', async() => {
+		it('should default the \'currently_attending\' field to false if not given', async() => {
 			const data = createNewData(),
 				specificId = data.id,
 				createData = _.omit(data, 'currently_attending');
@@ -119,7 +119,7 @@ describe.only('Education History Model', () => {
 			await random.education_histories(5, { freelancer_id: secondFreelancerId, school: specificSchool });
 		});
 
-		it('should retrieve all of the education_history recordsfor a specific freelancer and return an array of objects', async() => {
+		it('should retrieve all of the education_history records for a specific freelancer and return an array of objects', async() => {
 			const arr = await EducationHistory.findHistory(secondFreelancerId);
 
 			expect(arr).to.be.an.array();
@@ -204,7 +204,7 @@ describe.only('Education History Model', () => {
 			expect(updatedHistory.updated_at).to.be.a.date();
 		});
 
-		it('should update the employment_history record with the given id if given valid data, even if only given one field', async() => {
+		it('should update the education_history record with the given id if given valid data, even if only given one field', async() => {
 			const createData = createNewData(),
 				specificId = createData.id;
 			updateData = { degree: new_degree };
