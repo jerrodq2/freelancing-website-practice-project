@@ -116,12 +116,93 @@ describe.only('Education History Model', () => {
 
 
 	describe('has a findOne method', () => {
+		it('should retrieve a specific education_history record with a given id and return the object', async() => {
+			const history = await EducationHistory.findOne(id);
+			// check the usual fields
+			checkFields(history, id);
+		});
 
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(EducationHistory, 'education_history', 'find', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(EducationHistory, 'education_history', 'find', {});
+		});
 	});
 
 
 	describe('has an update method', () => {
+		const new_degree = random.word(),
+			new_school = random.word(),
+			new_area_of_study = random.word(),
+			new_start_date = random.date({ string: true }),
+			new_end_date = random.date({ string: true }),
+			new_currently_attending = false,
+			new_description = random.paragraph();
+		let updateData = {
+			degree: new_degree,
+			school: new_school,
+			area_of_study: new_area_of_study,
+			start_date: new_start_date,
+			end_date: new_end_date,
+			currently_attending: new_currently_attending,
+			description: new_description
+		};
 
+		it('should update the education_history record if given a valid id and data, and return the updated object', async() => {
+			const createData = createNewData(),
+				specificId = createData.id;
+
+			const oldHistory = await EducationHistory.create(createData);
+			expect(oldHistory).to.be.an.object();
+			expect(oldHistory.id).to.equal(specificId);
+			expect(oldHistory.updated_at).to.equal(null);
+
+			const updatedHistory = await EducationHistory.update(specificId, updateData);
+
+			expect(updatedHistory).to.be.an.object();
+			expect(updatedHistory.id).to.equal(specificId);
+			expect(updatedHistory.degree).to.equal(new_degree);
+			expect(updatedHistory.school).to.equal(new_school);
+			expect(updatedHistory.area_of_study).to.equal(new_area_of_study);
+			expect(updatedHistory.start_date).to.equal(new Date(new_start_date));
+			expect(updatedHistory.end_date).to.equal(new Date(new_end_date));
+			expect(updatedHistory.currently_attending).to.equal(new_currently_attending);
+			expect(updatedHistory.description).to.equal(new_description);
+			expect(updatedHistory.updated_at).to.be.a.date();
+		});
+
+		it('should update the employment_history record with the given id if given valid data, even if only given one field', async() => {
+			const createData = createNewData(),
+				specificId = createData.id;
+			updateData = { degree: new_degree };
+
+			const oldHistory = await EducationHistory.create(createData);
+			expect(oldHistory).to.be.an.object();
+			expect(oldHistory.id).to.equal(specificId);
+			expect(oldHistory.degree).to.equal(degree);
+			expect(oldHistory.updated_at).to.equal(null);
+
+			const updatedHistory = await EducationHistory.update(specificId, updateData);
+
+			expect(updatedHistory).to.be.an.object();
+			expect(updatedHistory.id).to.equal(specificId);
+			expect(updatedHistory.degree).to.equal(new_degree);
+			expect(updatedHistory.updated_at).to.be.a.date();
+		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(EducationHistory, 'education_history', 'update', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(EducationHistory, 'education_history', 'update', {});
+		});
+
+		it('should raise an exception if given an incorrect freelancer_id (foreign key not found)', () => {
+			return checkErr.checkForeign(EducationHistory, 'education_history', 'update', updateData, 'freelancer_id', random.guid(), id);
+		});
 	});
 
 

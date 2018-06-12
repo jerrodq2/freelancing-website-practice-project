@@ -12,6 +12,7 @@ module.exports = (opts = {}) => EducationHistory.create({
 	area_of_study: opts.area_of_study || random.word(),
 	start_date: opts.start_date || random.date({ string: true }),
 	end_date: opts.end_date || random.date({ string: true }),
+	currently_attending: opts.currently_attending == undefined? random.bool() : opts.currently_attending,
 	description: opts.description || random.paragraph(),
 	freelancer_id: opts.freelancer_id,
 });
