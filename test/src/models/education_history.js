@@ -111,6 +111,37 @@ describe.only('Education History Model', () => {
 
 
 	describe('has a findHistory method', () => {
+		const secondFreelancerId = random.guid(),
+			specificSchool = random.word();
+
+		before(async() => {
+			await random.freelancer({ id: secondFreelancerId, field_id });
+			await random.education_histories(5, { freelancer_id: secondFreelancerId, school: specificSchool });
+		});
+
+		it('should retrieve all of the education_history recordsfor a specific freelancer and return an array of objects', async() => {
+			const arr = await EducationHistory.findHistory(secondFreelancerId);
+
+			expect(arr).to.be.an.array();
+			expect(arr.length).to.equal(5);
+			const history = arr[0];
+			expect(history).to.be.an.object();
+			expect(history.freelancer_id).to.equal(secondFreelancerId);
+			expect(history.school).to.equal(specificSchool);
+		});
+
+		it('should return an empty array if that freelancer has no education_history records', async() => {
+			const specificId = random.guid();
+			await random.freelancer({ id: specificId, field_id });
+
+			const arr = await EducationHistory.findHistory(specificId);
+			expect(arr).to.be.an.array();
+			expect(arr.length).to.equal(0);
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(EducationHistory, 'education_history', 'find history for', {});
+		});
 
 	});
 
