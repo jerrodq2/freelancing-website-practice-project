@@ -8,7 +8,8 @@ exports.up = (knex) => knex.schema.createTable('education_history', (table) => {
 	table.string('school').notNullable();
 	table.string('area_of_study').notNullable();
 	table.date('start_date').notNullable();
-	table.date('end_date').notNullable();
+	table.date('end_date').nullable();
+	table.boolean('currently_attending').notNullable().defaultTo(false);
 	table.text('description').nullable();
 	table.uuid('freelancer_id').notNullable().references('id').inTable('freelancers').onDelete('CASCADE');
 	table.timestamps();

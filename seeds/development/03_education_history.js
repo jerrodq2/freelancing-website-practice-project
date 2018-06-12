@@ -17,6 +17,7 @@ exports.seed = async (knex) => {
 			description: 'Good school',
 			start_date: format(new Date(2011, 8, 1), 'YYYY-MM-DD'),
 			end_date: format(new Date(2015, 3, 1), 'YYYY-MM-DD'),
+			currently_attending: false,
 			freelancer_id: freelancerIds.jerrod
 		}),
 
@@ -27,6 +28,7 @@ exports.seed = async (knex) => {
 			description: 'Coding Bootcamp that teaches 3 full stacks',
 			start_date: format(new Date(2016, 8, 1), 'YYYY-MM-DD'),
 			end_date: format(new Date(2016, 12, 24), 'YYYY-MM-DD'),
+			currently_attending: false,
 			freelancer_id: freelancerIds.jerrod
 		}),
 
@@ -37,6 +39,17 @@ exports.seed = async (knex) => {
 			description: 'Great campus',
 			start_date: format(new Date(2011, 8, 1), 'YYYY-MM-DD'),
 			end_date: format(new Date(2015, 3, 1), 'YYYY-MM-DD'),
+			currently_attending: false,
+			freelancer_id: freelancerIds.ryan
+		}),
+
+		EducationHistory.create({
+			degree: 'N/A',
+			school: 'Hack Reactor',
+			area_of_study: 'IT',
+			description: 'Amazing coding bootcamp',
+			start_date: format(new Date(2018, 1, 1), 'YYYY-MM-DD'),
+			currently_attending: true,
 			freelancer_id: freelancerIds.ryan
 		}),
 
@@ -47,6 +60,7 @@ exports.seed = async (knex) => {
 			description: 'Joined the honor society',
 			start_date: format(new Date(2011, 8, 1), 'YYYY-MM-DD'),
 			end_date: format(new Date(2015, 3, 1), 'YYYY-MM-DD'),
+			currently_attending: false,
 			freelancer_id: freelancerIds.jessica
 		}),
 
@@ -57,6 +71,7 @@ exports.seed = async (knex) => {
 			description: 'A pain but got my degree',
 			start_date: format(new Date(2011, 8, 1), 'YYYY-MM-DD'),
 			end_date: format(new Date(2015, 3, 1), 'YYYY-MM-DD'),
+			currently_attending: false,
 			freelancer_id: freelancerIds.naruto
 		}),
 
@@ -66,6 +81,7 @@ exports.seed = async (knex) => {
 			area_of_study: 'Computer Science and Programming',
 			start_date: format(new Date(2011, 8, 1), 'YYYY-MM-DD'),
 			end_date: format(new Date(2015, 3, 1), 'YYYY-MM-DD'),
+			currently_attending: false,
 			freelancer_id: freelancerIds.ichigo
 		}),
 
@@ -76,6 +92,7 @@ exports.seed = async (knex) => {
 			description: 'Taught me the essentails of the IT field, also where I chose the hero name deku',
 			start_date: format(new Date(2005, 8, 1), 'YYYY-MM-DD'),
 			end_date: format(new Date(2009, 3, 1), 'YYYY-MM-DD'),
+			currently_attending: false,
 			freelancer_id: freelancerIds.izuku
 		}),
 
@@ -86,6 +103,7 @@ exports.seed = async (knex) => {
 			description: '',
 			start_date: format(new Date(2002, 8, 1), 'YYYY-MM-DD'),
 			end_date: format(new Date(2006, 3, 1), 'YYYY-MM-DD'),
+			currently_attending: false,
 			freelancer_id: freelancerIds.leon
 		}),
 
@@ -96,6 +114,7 @@ exports.seed = async (knex) => {
 			description: 'Prestigous tech school',
 			start_date: format(new Date(2012, 5, 17), 'YYYY-MM-DD'),
 			end_date: format(new Date(2012, 9, 20), 'YYYY-MM-DD'),
+			currently_attending: false,
 			freelancer_id: freelancerIds.leon
 		}),
 	]);
