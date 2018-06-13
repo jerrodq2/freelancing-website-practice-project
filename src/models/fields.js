@@ -11,12 +11,12 @@ module.exports = {
 		// TODO: determine if this is necessary
 	},
 
-	findOne (id) {
-		return Fields.findOne(id);
-	},
-
 	create (data) {
 		return Fields.create(data);
+	},
+
+	findOne (id) {
+		return Fields.findOne(id);
 	},
 
 	update (id, data) {
