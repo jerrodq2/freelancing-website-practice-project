@@ -10,7 +10,6 @@ random.mixin(require('./mixins'));
 
 // methods that create multiple records, ex: 10 clients, 20 skills, etc.
 random.mixin({
-
 	clients: async(count = 10, opts = {}, dontHash = true) => {
 		if (!opts.field_id) {
 			opts.field_id = random.guid();
@@ -29,13 +28,8 @@ random.mixin({
 
 	education_histories: async(count = 10, opts = {}) => {
 		if (!opts.freelancer_id) {
-			// we need a field_id to create freelancers
-			if (!opts.field_id) {
-				opts.field_id = random.guid();
-				await random.field({ id: opts.field_id });
-			}
 			opts.freelancer_id = random.guid();
-			await random.freelancer({ id: opts.freelancer_id, field_id: opts.field_id });
+			await random.freelancer({ id: opts.freelancer_id });
 		}
 
 		const education_history = _.times(count, () => random.education_history(opts));
@@ -45,13 +39,8 @@ random.mixin({
 
 	employment_histories: async(count = 10, opts = {}) => {
 		if (!opts.freelancer_id) {
-			// we need a field_id to create freelancers
-			if (!opts.field_id) {
-				opts.field_id = random.guid();
-				await random.field({ id: opts.field_id });
-			}
 			opts.freelancer_id = random.guid();
-			await random.freelancer({ id: opts.freelancer_id, field_id: opts.field_id });
+			await random.freelancer({ id: opts.freelancer_id });
 		}
 
 		const employment_history = _.times(count, () => random.employment_history(opts));
@@ -78,6 +67,11 @@ random.mixin({
 
 		const freelancers = _.times(count, () => random.freelancer(opts));
 		return Promise.all(freelancers);
+	},
+
+
+	freelancer_reviews: () => {
+
 	},
 
 
