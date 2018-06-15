@@ -11,11 +11,11 @@ const { db, random, knex, checkErr } = require(`${process.cwd()}/test/src/helper
 
 describe('Admins Model', () => {
 	const id = random.guid(),
-		first_name = 'first',
-		last_name = 'last',
+		first_name = random.name(),
+		last_name = random.name(),
 		username = 'username',
-		email = 'email@email.com',
-		password = 'password',
+		email = 'admin@email.com',
+		password = random.word(),
 		data = { id, first_name, last_name, username, email, password };
 
 
@@ -128,8 +128,8 @@ describe('Admins Model', () => {
 
 
 	describe('has an update method', () => {
-		const newFirstName = 'new first',
-			newLastName = 'new last',
+		const newFirstName = random.name(),
+			newLastName = random.name(),
 			specificId = random.guid(); //used in the checkUnique error tests below
 
 		before(() => random.admin({ id: specificId }));
