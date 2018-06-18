@@ -62,6 +62,10 @@ describe.only('Freelancer Reviews Model', () => {
 
 			checkFields(review, specificId, specificJobId);
 		});
+
+		it('shouldn\'t be able to create a freelancer_review for a job that isn\'t completed/closed yet', async() => {
+
+		});
 	});
 
 
