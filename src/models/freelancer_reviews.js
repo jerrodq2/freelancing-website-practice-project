@@ -15,7 +15,7 @@ module.exports = {
 	async create (data) {
 		const { job_id } = data;
 		const job = await Jobs.findOne(job_id);
-
+		
 		if (job.closed === false) {
 			const message = 'You can\'t write a freelancer_review about this job, it hasn\'t been completed yet.';
 

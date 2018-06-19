@@ -6,7 +6,7 @@ const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 const { describe, it, before } = lab;
 const FreelancerReviews = require(`${process.cwd()}/src/models/freelancer_reviews`);
-const { db, random, knex, checkErr } = require(`${process.cwd()}/test/src/helpers`);
+const { db, random, knex, checkErr, _ } = require(`${process.cwd()}/test/src/helpers`);
 
 
 describe.only('Freelancer Reviews Model', () => {
@@ -72,6 +72,45 @@ describe.only('Freelancer Reviews Model', () => {
 				expect(err.message).to.be.a.string();
 				expect(err.message).to.include('freelancer_review');
 				expect(err.message).to.include('hasn\'t been completed');
+			}
+		});
+
+		it('should raise an exception if given an invalid id (not in uuid format', async() => {
+			const createData = await createNewData();
+			createData.id = 1;
+
+			return checkErr.checkIdFormat(FreelancerReviews, 'freelancer_review', 'create', createData);
+		});
+
+		it('should require the rating to create', async() => {
+			const createData = await createNewData();
+			return checkErr.checkNotNull(FreelancerReviews, 'freelancer_review', createData, 'rating');
+		});
+
+		it('should require the review to create', async() => {
+			const createData = await createNewData();
+			return checkErr.checkNotNull(FreelancerReviews, 'freelancer_review', createData, 'review');
+		});
+
+		it('should require the freelancer_id to create', async() => {
+			const createData = await createNewData();
+			return checkErr.checkNotNull(FreelancerReviews, 'freelancer_review', createData, 'freelancer_id');
+		});
+
+		it('should require the client_id to create', async() => {
+			const createData = await createNewData();
+			return checkErr.checkNotNull(FreelancerReviews, 'freelancer_review', createData, 'client_id');
+		});
+
+		it('should require the job_id to create', async() => {
+			const data = await createNewData(),
+				createData = _.omit(data, 'job_id');
+
+			// it gores through the Job model to first find the job, therefore gives a different error if we don't give it a job_id
+			try {
+				await FreelancerReviews.create(createData);
+			} catch (err) {
+				return checkErr.checkMessage(err, 'job', 'find', 'id', 'couldn\'t be completed', 'proper uuid format');
 			}
 		});
 	});
