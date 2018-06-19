@@ -23,22 +23,23 @@ describe.only('Freelancer Reviews Model', () => {
 		await random.field({ id: field_id });
 		await random.freelancer({ id: freelancer_id, field_id });
 		await random.client({ id: client_id, field_id });
-		await random.job({ id: job_id, field_id, client_id, freelancer_id, closed: true });
+		await random.job({ id: job_id, field_id, client_id, freelancer_id, closed: true, available: false });
 		await random.freelancer_review(data);
 	});
 
 	// a simple function used to create the necessary id, and new job to create a new freelancer_review record
-	const createNewData = async() => {
+	const createNewData = async(closedStatus = true) => {
 		const specificId = random.guid(),
 			specificJobId = random.guid(),
+			availableStatus = closedStatus? false : true,
 			obj = { id: specificId, job_id: specificJobId },
 			createData = Object.assign({}, data, obj);
 
-		await random.job({ id: specificJobId, field_id, client_id, freelancer_id, closed: true });
+		await random.job({ id: specificJobId, field_id, client_id, freelancer_id, closed: closedStatus, available: availableStatus });
 		return createData;
 	};
 
-	//
+	// checks the basic fields of a freelancer_review object
 	const checkFields = (obj, givenId, givenJobId, givenFreelancerId = freelancer_id, givenClientId = client_id) => {
 		expect(obj).to.be.an.object();
 		expect(obj.id).to.equal(givenId);
@@ -53,7 +54,6 @@ describe.only('Freelancer Reviews Model', () => {
 
 
 	describe('has a create method', () => {
-
 		it('should create a new freelancer_review record if given valid data, the job is complete, and a review hasn\'t already been written about this job. It should also create new created_at and updated_at fields, and return the new object', async() => {
 			const createData = await createNewData(),
 				specificId = createData.id,
@@ -64,7 +64,15 @@ describe.only('Freelancer Reviews Model', () => {
 		});
 
 		it('shouldn\'t be able to create a freelancer_review for a job that isn\'t completed/closed yet', async() => {
+			const createData = await createNewData(false);
 
+			try {
+				await FreelancerReviews.create(createData);
+			} catch (err) {
+				expect(err.message).to.be.a.string();
+				expect(err.message).to.include('freelancer_review');
+				expect(err.message).to.include('hasn\'t been completed');
+			}
 		});
 	});
 
