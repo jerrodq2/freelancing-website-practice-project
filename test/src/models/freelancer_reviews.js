@@ -113,6 +113,34 @@ describe.only('Freelancer Reviews Model', () => {
 				return checkErr.checkMessage(err, 'job', 'find', 'id', 'couldn\'t be completed', 'proper uuid format');
 			}
 		});
+
+		it('should raise an exception if given an incorrect freelancer_id (foreign key not found)', async() => {
+			const createData = await createNewData();
+			return checkErr.checkForeign(FreelancerReviews, 'freelancer_review', 'create', createData, 'freelancer_id', random.guid());
+		});
+
+		it('should raise an exception if given an incorrect client_id (foreign key not found)', async() => {
+			const createData = await createNewData();
+			return checkErr.checkForeign(FreelancerReviews, 'freelancer_review', 'create', createData, 'client_id', random.guid());
+		});
+
+		it('should raise an exception if given an incorrect job_id (foreign key not found)', async() => {
+			const createData = await createNewData();
+			createData.job_id = random.guid();
+
+			// it gores through the Job model to first find the job, therefore gives a different error if we give it a bad job_id
+			try {
+				await FreelancerReviews.create(createData);
+			} catch (err) {
+				return checkErr.checkMessage(err, 'job', 'find', 'id', 'does not exist', 'not found');
+			}
+		});
+
+		it('shouldn\'t allow more than one freelancer_review per job, or it should raise an exception if the job_id isn\'t unique (unique field)', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkUnique(FreelancerReviews, 'freelancer_review', 'create', createData, 'job_id', job_id);
+		});
 	});
 
 
