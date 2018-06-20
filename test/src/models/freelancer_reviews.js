@@ -6,10 +6,11 @@ const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 const { describe, it, before } = lab;
 const FreelancerReviews = require(`${process.cwd()}/src/models/freelancer_reviews`);
-const { db, random, knex, checkErr, _ } = require(`${process.cwd()}/test/src/helpers`);
+const { db, random, checkErr, _ } = require(`${process.cwd()}/test/src/helpers`);
 
 
 describe.only('Freelancer Reviews Model', () => {
+	// variables used to create the review
 	const id = random.guid(),
 		rating = random.integer({ min: 0, max: 5 }),
 		review = random.paragraph(),
@@ -19,11 +20,29 @@ describe.only('Freelancer Reviews Model', () => {
 		field_id = random.guid(),
 		data = { id, rating, review, freelancer_id, client_id, job_id };
 
+	// variables used to create the three needed records, client, freelancer, and job
+	const freelancer_first_name = random.name(),
+		freelancer_last_name = random.name(),
+		client_first_name = random.name(),
+		client_last_name = random.name(),
+		title = random.word(),
+		rate = 40,
+		rate_type = 'hourly',
+		description = random.paragraph(),
+		experience_level_requested = 'any',
+
+		freelancerData = { id: freelancer_id, first_name: freelancer_first_name, last_name: freelancer_last_name, field_id },
+
+		clientData = { id: client_id, first_name: client_first_name, last_name: client_last_name, field_id },
+
+		jobData = { id: job_id, field_id, client_id, freelancer_id, title, rate, rate_type, description, experience_level_requested, closed: true, available: false };
+
 	before(async() => {
+		await db.resetAll();
 		await random.field({ id: field_id });
-		await random.freelancer({ id: freelancer_id, field_id });
-		await random.client({ id: client_id, field_id });
-		await random.job({ id: job_id, field_id, client_id, freelancer_id, closed: true, available: false });
+		await random.freelancer(freelancerData);
+		await random.client(clientData);
+		await random.job(jobData);
 		await random.freelancer_review(data);
 	});
 
@@ -150,7 +169,30 @@ describe.only('Freelancer Reviews Model', () => {
 
 
 	describe('has a findOne method', () => {
+		it('should retrieve a specific freelancer_review with a given id, and return the object with relevant information about the client, freelancer, and job.', async() => {
+			const review = await FreelancerReviews.findOne(id);
 
+			// check the job fields first
+			checkFields(review, id, job_id);
+			// check the revelvant information about the three related records
+			expect(review.freelancer_first_name).to.equal(freelancer_first_name);
+			expect(review.freelancer_last_name).to.equal(freelancer_last_name);
+			expect(review.client_first_name).to.equal(client_first_name);
+			expect(review.client_last_name).to.equal(client_last_name);
+			expect(review.job_title).to.equal(title);
+			expect(review.job_rate).to.equal(rate);
+			expect(review.job_rate_type).to.equal(rate_type);
+			expect(review.job_description).to.equal(description);
+			expect(review.job_experience_level_requested).to.equal(experience_level_requested);
+		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(FreelancerReviews, 'freelancer_review', 'find', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(FreelancerReviews, 'freelancer_review', 'find', {});
+		});
 	});
 
 
