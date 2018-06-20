@@ -204,4 +204,9 @@ describe.only('Freelancer Reviews Model', () => {
 	describe('has a delete method', () => {
 
 	});
+
+
+	describe('cascading delete', () => {
+
+	});
 });

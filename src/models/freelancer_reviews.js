@@ -33,6 +33,7 @@ module.exports = {
 		return FreelancerReviews.findReview(id);
 	},
 
+	// TODO: Should you be able to update the job, client, or freelancer? Currently not testing for it, maybe just restrict the object keys during the route with joy?
 	update (id, data) {
 		return FreelancerReviews.updateById(id, data);
 	},
