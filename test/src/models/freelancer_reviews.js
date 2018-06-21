@@ -53,8 +53,10 @@ describe.only('Freelancer Reviews Model', () => {
 	const createNewData = async(closedStatus = true) => {
 		const specificId = random.guid(),
 			specificJobId = random.guid(),
+			// sets available to be the opposite of closed, meaning false if closed is true and vice versa
 			availableStatus = closedStatus? false : true,
 			obj = { id: specificId, job_id: specificJobId },
+
 			createData = Object.assign({}, data, obj);
 
 		await random.job({ id: specificJobId, field_id, client_id, freelancer_id, closed: closedStatus, available: availableStatus });
@@ -62,14 +64,14 @@ describe.only('Freelancer Reviews Model', () => {
 	};
 
 	// checks the basic fields of a freelancer_review object
-	const checkFields = (obj, givenId, givenJobId, givenFreelancerId = freelancer_id, givenClientId = client_id) => {
+	const checkFields = (obj, givenId, givenJobId) => {
 		expect(obj).to.be.an.object();
 		expect(obj.id).to.equal(givenId);
 		expect(obj.rating).to.equal(rating);
 		expect(obj.review).to.equal(review);
 		expect(obj.job_id).to.equal(givenJobId);
-		expect(obj.freelancer_id).to.equal(givenFreelancerId);
-		expect(obj.client_id).to.equal(givenClientId);
+		expect(obj.freelancer_id).to.equal(freelancer_id);
+		expect(obj.client_id).to.equal(client_id);
 		expect(obj.created_at).to.be.a.date();
 		expect(obj.updated_at).to.equal(null);
 	};
@@ -128,7 +130,7 @@ describe.only('Freelancer Reviews Model', () => {
 			const data = await createNewData(),
 				createData = _.omit(data, 'job_id');
 
-			// it gores through the Job model to first find the job, therefore gives a different error if we don't give it a job_id
+			// it goes through the Job model to first find the job, therefore gives a different error if we don't give it a job_id
 			try {
 				await FreelancerReviews.create(createData);
 			} catch (err) {
@@ -150,7 +152,7 @@ describe.only('Freelancer Reviews Model', () => {
 			const createData = await createNewData();
 			createData.job_id = random.guid();
 
-			// it gores through the Job model to first find the job, therefore gives a different error if we give it a bad job_id
+			// it goes through the Job model to first find the job, therefore gives a different error if we give it a bad job_id
 			try {
 				await FreelancerReviews.create(createData);
 			} catch (err) {
@@ -206,13 +208,11 @@ describe.only('Freelancer Reviews Model', () => {
 
 		it('should update the freelancer_review record if given a valid id and data, update the \'updated_at\' field, and return the updated object', async() => {
 			const createData = await createNewData(),
-				specificId = createData.id,
-				specificJobId = createData.job_id;
+				specificId = createData.id;
 
 			const oldReview = await FreelancerReviews.create(createData);
 			expect(oldReview).to.be.an.object();
 			expect(oldReview.id).to.equal(specificId);
-			expect(oldReview.job_id).to.equal(specificJobId);
 			expect(oldReview.updated_at).to.equal(null);
 
 			const updatedReview = await FreelancerReviews.update(specificId, updateData);
@@ -226,13 +226,11 @@ describe.only('Freelancer Reviews Model', () => {
 
 		it('should update the freelancer_review record if given a valid id and data, even if only given one field', async() => {
 			const createData = await createNewData(),
-				specificId = createData.id,
-				specificJobId = createData.job_id;
+				specificId = createData.id;
 
 			const oldReview = await FreelancerReviews.create(createData);
 			expect(oldReview).to.be.an.object();
 			expect(oldReview.id).to.equal(specificId);
-			expect(oldReview.job_id).to.equal(specificJobId);
 			expect(oldReview.rating).to.equal(rating);
 			expect(oldReview.updated_at).to.equal(null);
 
