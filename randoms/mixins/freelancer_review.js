@@ -33,7 +33,7 @@ module.exports = async(opts = {}) => {
 
 	return FreelancerReviews.create({
 		id: opts.id || random.guid(),
-		rating: opts.rating || random.integer({ min: 1, max: 20 }),
+		rating: opts.rating || random.integer({ min: 1, max: 5 }),
 		review: opts.review || random.paragraph(),
 		freelancer_id: opts.freelancer_id,
 		client_id: opts.client_id,
