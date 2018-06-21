@@ -8,10 +8,6 @@ const FreelancerReviews = new Model('freelancer_reviews');
 
 
 module.exports = {
-	// TODO: Should we have more specific methods? like finding all reviews that have been written by a client or about a freelancer?
-
-	// TODO: ensure that there can only be one review per client-job-freelancer. Meaning a client can only write a review for a freelancer once per relevant job. They can only write a second review about that freelancer if they take another job with that freelancer.
-
 	async create (data) {
 		const { job_id } = data;
 		const job = await Jobs.findOne(job_id);
@@ -25,18 +21,29 @@ module.exports = {
 		return FreelancerReviews.create(data);
 	},
 
-	getAll () {
-		// TODO: need to determine what I will pull from get all, client/freelancer names? Anything? Or just the review/rating?
+
+	// get all of the reviews written about a specific freelancer
+	getAllReviews () {
+		// TODO: setup later with pagination, add to tests after
 	},
+
+
+	// get all of the reviews written by a specific client
+	getAll () {
+		// TODO: setup later with pagination, add to tests after
+	},
+
 
 	findOne (id) {
 		return FreelancerReviews.findReview(id);
 	},
 
+
 	// TODO: Should you be able to update the job, client, or freelancer? Currently not testing for it, maybe just restrict the object keys during the route with joy?
 	update (id, data) {
 		return FreelancerReviews.updateById(id, data);
 	},
+
 
 	delete (id) {
 		return FreelancerReviews.delete(id);

@@ -12,7 +12,7 @@ const Freelancers = require(`${process.cwd()}/src/models/freelancers`);
 const { db, random, checkErr, _ } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe.only('Freelancer Reviews Model', () => {
+describe('Freelancer Reviews Model', () => {
 	// variables used to create the review
 	const id = random.guid(),
 		rating = random.integer({ min: 1, max: 5 }),
@@ -165,11 +165,6 @@ describe.only('Freelancer Reviews Model', () => {
 
 			return checkErr.checkUnique(FreelancerReviews, 'freelancer_review', 'create', createData, 'job_id', job_id);
 		});
-	});
-
-
-	describe('has a getAll method', () => {
-
 	});
 
 
