@@ -6,6 +6,9 @@ const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 const { describe, it, before } = lab;
 const FreelancerReviews = require(`${process.cwd()}/src/models/freelancer_reviews`);
+const Jobs = require(`${process.cwd()}/src/models/jobs`);
+const Clients = require(`${process.cwd()}/src/models/clients`);
+const Freelancers = require(`${process.cwd()}/src/models/freelancers`);
 const { db, random, checkErr, _ } = require(`${process.cwd()}/test/src/helpers`);
 
 
@@ -279,7 +282,65 @@ describe.only('Freelancer Reviews Model', () => {
 	});
 
 
-	describe('cascading delete', () => {
+	describe('has cascading delete on job_id, client_id, and freelancer_id', () => {
+		it('should be deleted in the event of the client who it is associated with is deleted', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificClientId = random.guid();
+			createData.client_id = specificClientId;
 
+			await random.client({ id: specificClientId, field_id });
+			const review = await FreelancerReviews.create(createData);
+
+			expect(review).to.be.an.object();
+			expect(review.id).to.equal(specificId);
+			expect(review.client_id).to.equal(specificClientId);
+
+			const result = await Clients.delete(specificClientId);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(FreelancerReviews, 'freelancer_review', 'find', specificId);
+		});
+
+		it('should be deleted in the event of the freelancer who it is associated with is deleted', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificFreelancerId = random.guid();
+			createData.freelancer_id = specificFreelancerId;
+
+			await random.freelancer({ id: specificFreelancerId, field_id });
+			const review = await FreelancerReviews.create(createData);
+
+			expect(review).to.be.an.object();
+			expect(review.id).to.equal(specificId);
+			expect(review.freelancer_id).to.equal(specificFreelancerId);
+
+			const result = await Freelancers.delete(specificFreelancerId);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(FreelancerReviews, 'freelancer_review', 'find', specificId);
+		});
+
+		it('should be deleted in the event of the job who it is associated with is deleted', async() => {
+			const specificId = random.guid(),
+				specificJobId = random.guid(),
+				obj = { id: specificId, job_id: specificJobId },
+				createData = Object.assign({}, data, obj);
+
+			await random.job({ id: specificJobId, field_id, client_id, freelancer_id, closed: true, available: false });
+			const review = await FreelancerReviews.create(createData);
+
+			expect(review).to.be.an.object();
+			expect(review.id).to.equal(specificId);
+			expect(review.job_id).to.equal(specificJobId);
+
+			const result = await Jobs.delete(specificJobId);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(FreelancerReviews, 'freelancer_review', 'find', specificId);
+		});
 	});
 });
