@@ -12,7 +12,7 @@ const Freelancers = require(`${process.cwd()}/src/models/freelancers`);
 const { db, random, checkErr, _ } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe('Freelancer Reviews Model', () => {
+describe.only('Freelancer Reviews Model', () => {
 	// variables used to create the review
 	const id = random.guid(),
 		rating = random.integer({ min: 1, max: 5 }),
@@ -47,6 +47,7 @@ describe('Freelancer Reviews Model', () => {
 		await random.client(clientData);
 		await random.job(jobData);
 		await random.freelancer_review(data);
+		await random.freelancer_reviews();
 	});
 
 	// a simple function used to create the necessary id, and new job to create a new freelancer_review record
