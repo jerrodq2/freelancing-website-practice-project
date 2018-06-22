@@ -4,7 +4,7 @@
 const random = new (require('chance'));
 const EducationHistory = require(`${process.cwd()}/src/models/education_history`);
 
-// used to create a random education_history. If given no parameters, randomizes all fields. A freelancer_id is required, for simplicity we don't create it here
+// used to create a random education_history. If given no parameters, randomizes all fields
 module.exports = async(opts = {}) => {
 	// if the needed foreign keys aren't given, we create them here
 	if (!opts.freelancer_id) {

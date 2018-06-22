@@ -5,8 +5,7 @@ const random = new (require('chance'));
 const Clients = require(`${process.cwd()}/src/models/clients`);
 const { hashPassword } = require(`${process.cwd()}/src/lib/helper_functions`);
 
-// used to create a random client. If given no parameters, randomizes all fields.
-// A field_id is required, for simplicity we don't create a new field here
+// used to create a random client. If given no parameters, randomizes all fields
 module.exports = async(opts = {}) => {
 	let password;
 

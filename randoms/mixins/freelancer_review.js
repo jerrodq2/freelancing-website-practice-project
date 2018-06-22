@@ -4,7 +4,7 @@
 const random = new (require('chance'));
 const FreelancerReviews = require(`${process.cwd()}/src/models/freelancer_reviews`);
 
-// used to create a random freelancer_review. If given no parameters, randomizes all fields. It requires the freelancer_id, client_id, and job_id to be given, for simplicity they're not created here.
+// used to create a random freelancer_review. If given no parameters, randomizes all fields
 module.exports = async(opts = {}) => {
 	// incase we need a field_id for the three below conditionals, we only have to create a field once
 	let field_id;
