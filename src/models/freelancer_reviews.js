@@ -39,7 +39,7 @@ module.exports = {
 	},
 
 
-	// TODO: Should you be able to update the job, client, or freelancer? Currently not testing for it, maybe just restrict the object keys during the route with joy?
+	// TODO: Should you be able to update the job, client, or freelancer? Currently not testing for it, maybe just restrict the object keys during the route with joy to ensure you can't update those three fields?
 	update (id, data) {
 		return FreelancerReviews.updateById(id, data);
 	},
