@@ -59,7 +59,7 @@ class MainModel {
 	}
 
 
-	// TODO: Any errors for giving a bad freelancer_id? Or one not belonging to an actual freelancer in the db
+	// TODO: Any errors for giving a bad freelancer_id? Or one not belonging to an actual freelancer in the db? currently gives no error since it is just part of a where statement as opposed to a findOne on freelancers
 	// find the employment or education history for one freelancer
 	findHistory (id) {
 		return knex(this.tableName).where({ freelancer_id: id })
@@ -74,11 +74,10 @@ class MainModel {
 	}
 
 
-	// TODO: Add errors for not found and bad id syntax
 	// find a single client or freelancer review
 	findReview (id) {
 		const mainColumns = [`${this.tableName}.*`];
-		const clientColumns = ['c.id as client_id', 'c.first_name as client_first_name', 'c.last_name as clients_last_name'];
+		const clientColumns = ['c.id as client_id', 'c.first_name as client_first_name', 'c.last_name as client_last_name'];
 		const freelancerColumns = ['f.id as freelancer_id', 'f.first_name as freelancer_first_name', 'f.last_name as freelancer_last_name'];
 		const jobColumns = ['j.id as job_id', 'j.title as job_title', 'j.rate as job_rate', 'j.rate_type as job_rate_type', 'j.description as job_description', 'j.experience_level_requested as job_experience_level_requested'];
 
@@ -89,7 +88,20 @@ class MainModel {
 			.innerJoin('clients as c', `${this.tableName}.client_id`, 'c.id')
 			.innerJoin('freelancers as f', `${this.tableName}.freelancer_id`, 'f.id')
 			.innerJoin('jobs as j', `${this.tableName}.job_id`, 'j.id')
-			.then((result) => result[0]);
+			.then((result) => {
+				// throw error if the record with the given id couldn't be found
+				if (!result[0]) throw Errors.notFound(toSingular(this.tableName), 'find');
+
+				return result[0];
+			})
+			.catch((err) => {
+				// throw error if the id wasn't given in proper uuid format
+				if (Errors.violatesIdSyntax(err))
+					throw Errors.badId(toSingular(this.tableName), 'find');
+
+				// if the cause of the error wasn't found above, throw the given error
+				throw err;
+			});
 	}
 
 

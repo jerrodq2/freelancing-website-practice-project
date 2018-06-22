@@ -5,9 +5,8 @@ const random = new (require('chance'));
 const Freelancers = require(`${process.cwd()}/src/models/freelancers`);
 const { hashPassword } = require(`${process.cwd()}/src/lib/helper_functions`);
 
-// used to create a random freelancer. If given no parameters, randomizes all fields.
-// A field_id is required, for simplicity we don't create a new field here
-module.exports = (opts = {}) => {
+// used to create a random freelancer. If given no parameters, randomizes all fields
+module.exports = async(opts = {}) => {
 	let password;
 
 	// When going through the freelancers mixin to create multiple freelancer records (ex: 50), we don't hash every password, far too time consuming. So if the 'dontHash' variable in opts is true, it's telling this mixin to not hash it. We instead hash it in the freelancers mixin and pass it to this mixin. if 'dontHash' is false, then we hash either the given plain password or a random word like normal below
@@ -17,6 +16,12 @@ module.exports = (opts = {}) => {
 		const beforeHash = opts.password || random.word();
 		password = hashPassword(beforeHash);
 	}
+	// if the needed foreign keys aren't given, we create them here
+	if (!opts.field_id) {
+		opts.field_id = random.guid();
+		await random.field({ id: opts.field_id });
+	}
+
 
 	return Freelancers.createWithoutHash({
 		id: opts.id || random.guid(),

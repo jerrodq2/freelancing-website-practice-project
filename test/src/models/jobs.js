@@ -119,7 +119,10 @@ describe('Jobs Model', () => {
 		});
 
 		it('should raise an exception if given an invalid id (not in uuid format', async() => {
-			return checkErr.checkIdFormat(Jobs, 'job', 'create', createNewData());
+			const createData = createNewData();
+			createData.id = 1;
+
+			return checkErr.checkIdFormat(Jobs, 'job', 'create', createData);
 		});
 
 

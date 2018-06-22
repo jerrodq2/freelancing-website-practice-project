@@ -8,6 +8,7 @@ module.exports = {
 	employment_history: require('./employment_history'),
 	field: require('./field'),
 	freelancer: require('./freelancer'),
+	freelancer_review: require('./freelancer_review'),
 	job: require('./job'),
 	skill: require('./skill'),
 };
