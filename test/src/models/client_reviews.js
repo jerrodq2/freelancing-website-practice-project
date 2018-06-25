@@ -197,7 +197,53 @@ describe.only('Client Reviews Model', () => {
 
 
 	describe('has an update method', () => {
+		const new_rating = random.integer({ min: 0, max: 5 }),
+			new_review = random.paragraph(),
+			updateData = { rating: new_rating, review: new_review };
 
+		it('should update the client_review record if given a valid id and data, update the \'updated_at\' field, and return the updated object', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id;
+
+			const oldReview = await ClientReviews.create(createData);
+			expect(oldReview).to.be.an.object();
+			expect(oldReview.id).to.equal(specificId);
+			expect(oldReview.updated_at).to.equal(null);
+
+			const updatedReview = await ClientReviews.update(specificId, updateData);
+
+			expect(updatedReview).to.be.an.object();
+			expect(updatedReview.id).to.equal(specificId);
+			expect(updatedReview.rating).to.equal(new_rating);
+			expect(updatedReview.review).to.equal(new_review);
+			expect(updatedReview.updated_at).to.be.a.date();
+		});
+
+		it('should update the client_review record if given a valid id and data, even if only given one field', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id;
+
+			const oldReview = await ClientReviews.create(createData);
+			expect(oldReview).to.be.an.object();
+			expect(oldReview.id).to.equal(specificId);
+			expect(oldReview.rating).to.equal(rating);
+			expect(oldReview.updated_at).to.equal(null);
+
+			const updatedReview = await ClientReviews.update(specificId, { rating: new_rating });
+
+			expect(updatedReview).to.be.an.object();
+			expect(updatedReview.id).to.equal(specificId);
+			expect(updatedReview.rating).to.equal(new_rating);
+			expect(updatedReview.updated_at).to.be.a.date();
+		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(ClientReviews, 'client_review', 'update', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(ClientReviews, 'client_review', 'update', {});
+		});
 	});
 
 
