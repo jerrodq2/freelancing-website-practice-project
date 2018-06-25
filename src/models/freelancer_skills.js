@@ -8,17 +8,6 @@ const FreelancerSkills = new Model('freelancer_skills');
 
 
 module.exports = {
-
-	getAll () {
-		// TODO: determine if this is necessary, perhaps a getAll by freelancer id? Or another getAll method by skill id?
-	},
-
-
-	findOne (id) {
-		return FreelancerSkills.findOne(id);
-	},
-
-
 	async create (data) {
 		let skill, newSkill, skillId, wasSkillCreated = false;
 		// first we check to see if this skill already exists in the db, if not, we create it
@@ -36,7 +25,7 @@ module.exports = {
 		}
 
 		const finalData = { freelancer_id: data.freelancer_id, skill_id: skillId };
-		
+
 		// If we just created the given skill, then the freelancer can't already have the skill so the below check is meaningless and we skip
 		if (!wasSkillCreated) {
 			// now that we have the skillId, we make sure that the freelancer doesn't already have this skill
@@ -46,6 +35,16 @@ module.exports = {
 		}
 		finalData.skill_alias = data.skill;
 		return FreelancerSkills.create(finalData);
+	},
+
+
+	getAll () {
+		// TODO: determine if this is necessary, perhaps a getAll by freelancer id? Or another getAll method by skill id?
+	},
+
+
+	findOne (id) {
+		return FreelancerSkills.findOne(id);
 	},
 
 
