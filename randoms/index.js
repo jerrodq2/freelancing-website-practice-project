@@ -26,6 +26,31 @@ random.mixin({
 	},
 
 
+	client_reviews: async(count = 10, opts = {}) => {
+		// create a field if not given
+		if (!opts.field_id) {
+			opts.field_id = random.guid();
+			await random.field({ id: opts.field_id });
+		}
+		// create a client if not given
+		if (!opts.client_id) {
+			opts.client_id = random.guid();
+			await random.client({ id: opts.client_id, field_id: opts.field_id });
+		}
+		// create a freelancer if not given
+		if (!opts.freelancer_id) {
+			opts.freelancer_id = random.guid();
+			await random.freelancer({ id: opts.freelancer_id, field_id: opts.field_id });
+		}
+
+		const reviews = _.times(count, () => {
+			opts = _.omit(opts, 'job_id'); // needs a unique job_id for every record
+			return random.client_review(opts);
+		});
+		return Promise.all(reviews);
+	},
+
+
 	education_histories: async(count = 10, opts = {}) => {
 		if (!opts.freelancer_id) {
 			opts.freelancer_id = random.guid();
