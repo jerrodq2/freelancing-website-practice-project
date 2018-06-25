@@ -160,7 +160,7 @@ describe.only('Client Reviews Model', () => {
 			}
 		});
 
-		it('shouldn\'t allow more than one freelancer_review per job, or it should raise an exception if the job_id isn\'t unique (unique field)', async() => {
+		it('shouldn\'t allow more than one client_review per job, or it should raise an exception if the job_id isn\'t unique (unique field)', async() => {
 			const createData = await createNewData();
 
 			return checkErr.checkUnique(ClientReviews, 'client_review', 'create', createData, 'job_id', job_id);
@@ -169,7 +169,30 @@ describe.only('Client Reviews Model', () => {
 
 
 	describe('has a findOne method', () => {
+		it('should retrieve a specific client_review with a given id, and return the object with relevant information about the client, freelancer, and job.', async() => {
+			const review = await ClientReviews.findOne(id);
 
+			// check the job fields first
+			checkFields(review, id, job_id);
+			// check the revelvant information about the three related records
+			expect(review.freelancer_first_name).to.equal(freelancer_first_name);
+			expect(review.freelancer_last_name).to.equal(freelancer_last_name);
+			expect(review.client_first_name).to.equal(client_first_name);
+			expect(review.client_last_name).to.equal(client_last_name);
+			expect(review.job_title).to.equal(title);
+			expect(review.job_rate).to.equal(rate);
+			expect(review.job_rate_type).to.equal(rate_type);
+			expect(review.job_description).to.equal(description);
+			expect(review.job_experience_level_requested).to.equal(experience_level_requested);
+		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(ClientReviews, 'client_review', 'find', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(ClientReviews, 'client_review', 'find', {});
+		});
 	});
 
 
