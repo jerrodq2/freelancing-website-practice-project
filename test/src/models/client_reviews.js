@@ -248,11 +248,34 @@ describe.only('Client Reviews Model', () => {
 
 
 	describe('has a delete method', () => {
+		it('should delete the record if given a correct id and return true if successful', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id;
+			createData.id = specificId;
+			await random.client_review(createData);
 
+			const review = await ClientReviews.findOne(specificId);
+			expect(review).to.be.an.object();
+			expect(review.id).to.equal(specificId);
+
+			const result = await ClientReviews.delete(specificId);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(ClientReviews, 'client_review', 'find', specificId);
+		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(ClientReviews, 'client_review', 'delete', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(ClientReviews, 'client_review', 'delete', {});
+		});
 	});
 
 
 	describe('has cascading delete on job_id, client_id, and freelancer_id', () => {
-
+		
 	});
 });
