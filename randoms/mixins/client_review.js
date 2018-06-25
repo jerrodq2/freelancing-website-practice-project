@@ -27,7 +27,8 @@ module.exports = async(opts = {}) => {
 	if (!opts.job_id) {
 		if (!field_id) await createFieldId();
 		opts.job_id = random.guid();
-		await random.job({ id: opts.job_id, field_id, client_id: opts.client_id });
+		// the job needs to be closed to write a review about it
+		await random.job({ id: opts.job_id, field_id, client_id: opts.client_id, freelancer_id: opts.freelancer_id,  closed: true, available: false });
 	}
 
 
