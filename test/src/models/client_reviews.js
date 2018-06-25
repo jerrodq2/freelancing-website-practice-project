@@ -12,7 +12,7 @@ const Freelancers = require(`${process.cwd()}/src/models/freelancers`);
 const { db, random, checkErr, _ } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe('Client Reviews Model', () => {
+describe.only('Client Reviews Model', () => {
 	// variables used to create the review
 	const id = random.guid(),
 		rating = random.integer({ min: 1, max: 5 }),
@@ -47,7 +47,6 @@ describe('Client Reviews Model', () => {
 		await random.client(clientData);
 		await random.job(jobData);
 		await random.client_review(data);
-		await random.client_reviews();
 	});
 
 	// a simple function used to create the necessary id, and new job to create a new client_review record
@@ -86,6 +85,85 @@ describe('Client Reviews Model', () => {
 				review = await ClientReviews.create(createData);
 
 			checkFields(review, specificId, specificJobId);
+		});
+
+		it('shouldn\'t be able to create a client_review for a job that isn\'t completed/closed yet', async() => {
+			const createData = await createNewData(false);
+
+			try {
+				await ClientReviews.create(createData);
+			} catch (err) {
+				expect(err.message).to.be.a.string();
+				expect(err.message).to.include('client_review');
+				expect(err.message).to.include('hasn\'t been completed');
+			}
+		});
+
+		it('should raise an exception if given an invalid id (not in uuid format', async() => {
+			const createData = await createNewData();
+			createData.id = 1;
+
+			return checkErr.checkIdFormat(ClientReviews, 'client_review', 'create', createData);
+		});
+
+		it('should require the rating to create', async() => {
+			const createData = await createNewData();
+			return checkErr.checkNotNull(ClientReviews, 'client_review', createData, 'rating');
+		});
+
+		it('should require the review to create', async() => {
+			const createData = await createNewData();
+			return checkErr.checkNotNull(ClientReviews, 'client_review', createData, 'review');
+		});
+
+		it('should require the freelancer_id to create', async() => {
+			const createData = await createNewData();
+			return checkErr.checkNotNull(ClientReviews, 'client_review', createData, 'freelancer_id');
+		});
+
+		it('should require the client_id to create', async() => {
+			const createData = await createNewData();
+			return checkErr.checkNotNull(ClientReviews, 'client_review', createData, 'client_id');
+		});
+
+		it('should require the job_id to create', async() => {
+			const data = await createNewData(),
+				createData = _.omit(data, 'job_id');
+
+			// it goes through the Job model to first find the job, therefore gives a different error if we don't give it a job_id
+			try {
+				await ClientReviews.create(createData);
+			} catch (err) {
+				return checkErr.checkMessage(err, 'job', 'find', 'id', 'couldn\'t be completed', 'proper uuid format');
+			}
+		});
+
+		it('should raise an exception if given an incorrect freelancer_id (foreign key not found)', async() => {
+			const createData = await createNewData();
+			return checkErr.checkForeign(ClientReviews, 'client_review', 'create', createData, 'freelancer_id', random.guid());
+		});
+
+		it('should raise an exception if given an incorrect client_id (foreign key not found)', async() => {
+			const createData = await createNewData();
+			return checkErr.checkForeign(ClientReviews, 'client_review', 'create', createData, 'client_id', random.guid());
+		});
+
+		it('should raise an exception if given an incorrect job_id (foreign key not found)', async() => {
+			const createData = await createNewData();
+			createData.job_id = random.guid();
+
+			// it goes through the Job model to first find the job, therefore gives a different error if we give it a bad job_id
+			try {
+				await ClientReviews.create(createData);
+			} catch (err) {
+				return checkErr.checkMessage(err, 'job', 'find', 'id', 'does not exist', 'not found');
+			}
+		});
+
+		it('shouldn\'t allow more than one freelancer_review per job, or it should raise an exception if the job_id isn\'t unique (unique field)', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkUnique(ClientReviews, 'client_review', 'create', createData, 'job_id', job_id);
 		});
 	});
 
