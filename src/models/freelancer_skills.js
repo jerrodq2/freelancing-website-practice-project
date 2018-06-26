@@ -24,7 +24,7 @@ module.exports = {
 			skillId = newSkill.id;
 		}
 
-		const finalData = { freelancer_id: data.freelancer_id, skill_id: skillId };
+		const finalData = { id: data.id, freelancer_id: data.freelancer_id, skill_id: skillId };
 
 		// If we just created the given skill, then the freelancer can't already have the skill so the below check is meaningless and we skip
 		if (!wasSkillCreated) {
