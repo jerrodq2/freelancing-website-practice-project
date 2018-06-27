@@ -6,6 +6,7 @@ const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 const { describe, it, before } = lab;
 const FreelancerSkills = require(`${process.cwd()}/src/models/freelancer_skills`);
+const Freelancers = require(`${process.cwd()}/src/models/freelancers`);
 const Skills = require(`${process.cwd()}/src/models/skills`);
 const { db, random, checkErr } = require(`${process.cwd()}/test/src/helpers`);
 
@@ -188,6 +189,43 @@ describe.only('Freelancer Skills Model', () => {
 
 
 	describe('has cascading delete on freelancer_id and skill_id', () => {
+		it('should be deleted in the event of the freelancer who it is associated with is deleted', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificFreelancerId = random.guid();
+			createData.freelancer_id = specificFreelancerId;
 
+			await random.freelancer({ id: specificFreelancerId });
+			const freelancerSkill = await FreelancerSkills.create(createData);
+
+			expect(freelancerSkill).to.be.an.object();
+			expect(freelancerSkill.id).to.equal(specificId);
+			expect(freelancerSkill.freelancer_id).to.equal(specificFreelancerId);
+
+			const result = await Freelancers.delete(specificFreelancerId);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(FreelancerSkills, 'freelancer_skill', 'find', specificId);
+		});
+
+
+		it('should be deleted in the event of the skill who it is associated with is deleted', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificSkillId = createData.skill_id;
+
+			const freelancerSkill = await FreelancerSkills.create(createData);
+
+			expect(freelancerSkill).to.be.an.object();
+			expect(freelancerSkill.id).to.equal(specificId);
+			expect(freelancerSkill.skill_id).to.equal(specificSkillId);
+
+			const result = await Skills.delete(specificSkillId);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(FreelancerSkills, 'freelancer_skill', 'find', specificId);
+		});
 	});
 });
