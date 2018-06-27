@@ -85,11 +85,12 @@ describe.only('Freelancer Skills Model', () => {
 			const skill = await Skills.findByName('HTML');
 			expect(skill).to.be.an.object();
 			expect(skill.skill).to.equal('html');
+
 			expect(freelancerSkill.skill_id).to.equal(skill.id);
 		});
 
 
-		it('shouldn\'t allow a freelancer to have the same skill twice, it should raise an execption upo trying to create a freelnacer_skill with duplicate freelancer_id and skill_id values', async() => {
+		it('shouldn\'t allow a freelancer to have the same skill twice, it should raise an execption upo trying to create a freelancer_skill with duplicate freelancer_id and skill_id values', async() => {
 			const createData = await createNewData(),
 				specificId = createData.id,
 				specificSkill = createData.skill,
@@ -110,6 +111,31 @@ describe.only('Freelancer Skills Model', () => {
 				expect(message).to.include('already has the skill');
 				expect(message).to.include(specificSkill);
 			}
+		});
+
+		it('should raise an exception if given an invalid id (not in uuid format', async() => {
+			const createData = await createNewData();
+			createData.id = 1;
+
+			return checkErr.checkIdFormat(FreelancerSkills, 'freelancer_skill', 'create', createData);
+		});
+
+
+		it('should require the freelancer_id to create', async() => {
+			const createData = await createNewData();
+			return checkErr.checkNotNull(FreelancerSkills, 'freelancer_skill', createData, 'freelancer_id');
+		});
+
+		it('should require the skill_alias to create', async() => {
+			const createData = await createNewData();
+			// passed to the create method as 'skill'
+			return checkErr.checkNotNull(FreelancerSkills, 'freelancer_skill', createData, 'skill');
+		});
+
+
+		it('should raise an exception if given an incorrect freelancer_id (foreign key not found)', async() => {
+			const createData = await createNewData();
+			return checkErr.checkForeign(FreelancerSkills, 'freelancer_skill', 'create', createData, 'freelancer_id', random.guid());
 		});
 	});
 
