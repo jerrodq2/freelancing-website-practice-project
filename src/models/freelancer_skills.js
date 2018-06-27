@@ -9,6 +9,7 @@ const Errors = require(`${process.cwd()}/src/lib/errors`);
 const { toSingular } = require(`${process.cwd()}/src/lib/helper_functions`);
 
 
+// there is no update on this model due to the confusion that could happen between updating a skill_alias but not the skill it is linked to or vice versa
 module.exports = {
 	async create (data) {
 		let skill, newSkill, skillId, wasSkillCreated = false;
@@ -61,11 +62,6 @@ module.exports = {
 
 	findOne (id) {
 		return FreelancerSkills.findOne(id);
-	},
-
-
-	update (id, data) {
-		return FreelancerSkills.updateById(id, data);
 	},
 
 
