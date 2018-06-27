@@ -141,7 +141,18 @@ describe.only('Freelancer Skills Model', () => {
 
 
 	describe('has a findOne method', () => {
+		it('should retrieve a specific freelancer_skill with a given id, and return the object', async() => {
+			const freelancerSkill = await FreelancerSkills.findOne(id);
+			checkFields(freelancerSkill, id, skill);
+		});
 
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(FreelancerSkills, 'freelancer_skill', 'find', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(FreelancerSkills, 'freelancer_skill', 'find', {});
+		});
 	});
 
 
