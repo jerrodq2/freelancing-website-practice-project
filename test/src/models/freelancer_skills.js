@@ -6,6 +6,7 @@ const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 const { describe, it, before } = lab;
 const FreelancerSkills = require(`${process.cwd()}/src/models/freelancer_skills`);
+const Skills = require(`${process.cwd()}/src/models/skills`);
 const { db, random, checkErr } = require(`${process.cwd()}/test/src/helpers`);
 
 
@@ -17,6 +18,7 @@ describe.only('Freelancer Skills Model', () => {
 		data = { id, freelancer_id, skill };
 
 	before(async() => {
+		await db.resetTable('skills');
 		await db.resetTable('freelancer_skills');
 		await random.freelancer({ id: freelancer_id });
 		await random.skill({ id: skill_id, skill });
@@ -28,7 +30,7 @@ describe.only('Freelancer Skills Model', () => {
 	const createNewData = async() => {
 		const specificId = random.guid(),
 			specificSkill = random.word(),
-			skill_id = random.guid(),
+			skill_id = random.guid(), //not used to create the freelancer_skill, only used in the expect statements
 			obj = { id: specificId, skill: specificSkill, skill_id },
 			createData = Object.assign({}, data, obj);
 
@@ -51,7 +53,7 @@ describe.only('Freelancer Skills Model', () => {
 
 
 	describe('has a create method', () => {
-		it('should create a new freelancer_skill record if given valid data, create new created_at and updated_at fields, and return the admin object without the username or password', async() => {
+		it('should create a new freelancer_skill record if given valid data, create new created_at and updated_at fields, and return the freelancer_skill object', async() => {
 			const createData = await createNewData(),
 				specificId = createData.id,
 				specificSkill = createData.skill,
@@ -59,6 +61,55 @@ describe.only('Freelancer Skills Model', () => {
 				freelancerSkill = await FreelancerSkills.create(createData);
 
 			checkFields(freelancerSkill, specificId, specificSkill, skillId);
+		});
+
+
+		it('should create the skill upon the freelnacer_skill create if the skill didn\'t already exist. It should also, save the skill as lowercase in the skill table, but save the original word format in the \'skill_alias\' field in the freelancer_skills table', async() => {
+			const specificId = random.guid(),
+				specificSkill = 'HTML',
+				obj = { id: specificId, skill: specificSkill },
+				createData = Object.assign({}, data, obj);
+
+			// ensure that the skill doesn't yet exist
+			try {
+				await Skills.findByName('HTML');
+			} catch (err) {
+				checkErr.checkMessage(err, 'skill', 'findByName', 'skill name', 'does not exist', 'not found');
+			}
+
+			const freelancerSkill = await FreelancerSkills.create(createData);
+			expect(freelancerSkill).to.be.an.object();
+			expect(freelancerSkill.id).to.equal(specificId);
+			expect(freelancerSkill.skill_alias).to.equal('HTML');
+
+			const skill = await Skills.findByName('HTML');
+			expect(skill).to.be.an.object();
+			expect(skill.skill).to.equal('html');
+			expect(freelancerSkill.skill_id).to.equal(skill.id);
+		});
+
+
+		it('shouldn\'t allow a freelancer to have the same skill twice, it should raise an execption upo trying to create a freelnacer_skill with duplicate freelancer_id and skill_id values', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificSkill = createData.skill,
+				skillId = createData.skill_id,
+				freelancerSkill = await FreelancerSkills.create(createData);
+
+			checkFields(freelancerSkill, specificId, specificSkill, skillId);
+
+			try {
+				await FreelancerSkills.create(createData);
+			} catch (err) {
+				expect(err).to.be.an.object();
+				const { message } = err;
+
+				expect(message).to.be.a.string();
+				expect(message).to.include('freelancer_skill');
+				expect(message).to.include('trying to create can\'t be completed');
+				expect(message).to.include('already has the skill');
+				expect(message).to.include(specificSkill);
+			}
 		});
 	});
 

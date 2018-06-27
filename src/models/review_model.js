@@ -4,7 +4,6 @@
 const MainModel = require('./main_model');
 const Jobs = require('./jobs');
 const knex = require('../config/knex');
-const { Boom } = require(`${process.cwd()}/src/lib/errors`);
 const Errors = require(`${process.cwd()}/src/lib/errors`);
 const { toSingular } = require(`${process.cwd()}/src/lib/helper_functions`);
 
@@ -25,7 +24,7 @@ class ReviewModel extends MainModel {
 		if (!job.closed) {
 			const message = `You can't write a ${this.tableName} about this job, it hasn't been completed yet.`;
 
-			throw Boom.badRequest(message);
+			throw Errors.Boom.badRequest(message);
 		}
 
 		return this.create(data);
