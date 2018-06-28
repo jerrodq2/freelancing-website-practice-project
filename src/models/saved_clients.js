@@ -5,16 +5,20 @@ const knex = require('../config/knex');
 const Model = require('./main_model');
 const SavedClients = new Model('saved_clients');
 const Errors = require(`${process.cwd()}/src/lib/errors`);
-const { toSingular } = require(`${process.cwd()}/src/lib/helper_functions`);
 
 
 module.exports = {
 	async create (data) {
-		const { freelancer_id, client_id } = data,
-			queryData = { freelancer_id, client_id };
+		const { id, freelancer_id, client_id } = data,
+			queryData = { id, freelancer_id, client_id };
 
 		// first we check to see if this freelancer has already saved this client
-		const check = await knex('saved_clients').where(queryData);
+		const check = await knex('saved_clients').where(queryData)
+			.catch((err) => {
+				// throw error if the id wasn't given in proper uuid format
+				if (Errors.violatesIdSyntax(err))
+					throw Errors.badId('saved_client', 'create');
+			});
 
 		if (check[0]) {
 			// if so, then we raise an exception, they can only save a client once

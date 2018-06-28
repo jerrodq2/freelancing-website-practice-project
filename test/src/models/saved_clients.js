@@ -84,6 +84,18 @@ describe.only('Saved Clients Model', () => {
 				expect(message).to.include(specificClientId);
 			}
 		});
+
+		it('should raise an exception if given an invalid id (not in uuid format', async() => {
+			const createData = await createNewData();
+			createData.id = 1;
+
+			return checkErr.checkIdFormat(SavedClients, 'saved_client', 'create', createData);
+		});
+
+
+		it('should require the freelancer_id to create', () => {
+			return checkErr.checkNotNull(SavedClients, 'saved_client', createNewData(), 'freelancer_id');
+		});
 	});
 
 
