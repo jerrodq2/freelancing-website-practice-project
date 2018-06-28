@@ -9,10 +9,27 @@ const SavedClients = require(`${process.cwd()}/src/models/saved_clients`);
 const { db, random, checkErr } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe('Saved Clients Model', () => {
+describe.only('Saved Clients Model', () => {
+	const id = random.guid(),
+		freelancer_id = random.guid(),
+		client_id = random.guid(),
+		field_id = random.guid(),
+		data = { id, freelancer_id, client_id };
 
+	before(async() => {
+		// clearing these two tables will clear saved_clients via cascading delete
+		await db.resetTable('clients');
+		await db.resetTable('freelancers');
+
+		await random.field({ id: field_id });
+		await random.freelancer({ id: freelancer_id, field_id });
+		await random.client({ id: client_id, field_id });
+		await random.saved_client(data);
+	});
 	describe('has a create method', () => {
+		it('text', async() => {
 
+		});
 	});
 
 
