@@ -60,6 +60,30 @@ describe.only('Saved Clients Model', () => {
 
 			checkFields(saved_client, specificId, specificClientId);
 		});
+
+		it('should only allow a freelancer to save a client once, and raise an exception on the second attempt', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificClientId = createData.client_id,
+				secondId = random.guid(),
+				saved_client = await SavedClients.create(createData);
+
+			checkFields(saved_client, specificId, specificClientId);
+
+			createData.id = secondId;
+			try {
+				await SavedClients.create(createData);
+			} catch (err) {
+				expect(err).to.be.an.object();
+				const { message } = err;
+
+				expect(message).to.be.a.string();
+				expect(message).to.include('saved_client');
+				expect(message).to.include('trying to create can\'t be completed');
+				expect(message).to.include('already saved the client');
+				expect(message).to.include(specificClientId);
+			}
+		});
 	});
 
 

@@ -4,14 +4,33 @@
 const knex = require('../config/knex');
 const Model = require('./main_model');
 const SavedClients = new Model('saved_clients');
+const Errors = require(`${process.cwd()}/src/lib/errors`);
+const { toSingular } = require(`${process.cwd()}/src/lib/helper_functions`);
 
 
 module.exports = {
+	async create (data) {
+		const { freelancer_id, client_id } = data,
+			queryData = { freelancer_id, client_id };
+
+		// first we check to see if this freelancer has already saved this client
+		const check = await knex('saved_clients').where(queryData);
+
+		if (check[0]) {
+			// if so, then we raise an exception, they can only save a client once
+			const message = `The saved_client you are trying to create can't be completed. This freelancer has already saved the client: ${client_id}`;
+
+			throw Errors.Boom.badRequest(message);
+		}
+
+		return SavedClients.create(data);
+	},
 
 
 	getAll () {
 		// TODO: to be setup with pagination later
 	},
+
 
 	findOne (id) {
 		const savedClientsColumns = ['saved_clients.*'];
@@ -26,17 +45,13 @@ module.exports = {
 			.then((result) => result[0]);
 	},
 
-	// ensure that a freelancer can't save the same client twice
-	create (data) {
-		return SavedClients.create(data);
-	},
 
 	update (id, data) {
 		return SavedClients.updateById(id, data);
 	},
 
+
 	delete (id) {
 		return SavedClients.delete(id);
 	}
-
 };
