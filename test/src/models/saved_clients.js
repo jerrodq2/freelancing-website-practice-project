@@ -26,9 +26,39 @@ describe.only('Saved Clients Model', () => {
 		await random.client({ id: client_id, field_id });
 		await random.saved_client(data);
 	});
-	describe('has a create method', () => {
-		it('text', async() => {
 
+
+	// creates the necessary fields to create a new saved_client record. Needs a new client for each record
+	const createNewData = async() => {
+		const specificId = random.guid(),
+			specificClientId = random.guid(),
+			obj = { id: specificId, client_id: specificClientId };
+
+		await random.client({ id: specificClientId, field_id });
+
+		const createData = Object.assign({}, data, obj);
+		return createData;
+	};
+
+	// checks all fields in a given saved_clients record
+	const checkFields = (obj, givenId, givenClientId = client_id) => {
+		expect(obj).to.be.an.object();
+		expect(obj.id).to.equal(givenId);
+		expect(obj.freelancer_id).to.equal(freelancer_id);
+		expect(obj.client_id).to.equal(givenClientId);
+		expect(obj.created_at).to.be.a.date();
+		expect(obj.updated_at).to.equal(null);
+	};
+
+
+	describe('has a create method', () => {
+		it('should create a new saved_client record if given valid data, create new updated_at and updated_at fields, and return the new object', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificClientId = createData.client_id,
+				saved_client = await SavedClients.create(createData);
+
+			checkFields(saved_client, specificId, specificClientId);
 		});
 	});
 
