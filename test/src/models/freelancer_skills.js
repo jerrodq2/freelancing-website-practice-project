@@ -11,7 +11,7 @@ const Skills = require(`${process.cwd()}/src/models/skills`);
 const { db, random, checkErr } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe.only('Freelancer Skills Model', () => {
+describe('Freelancer Skills Model', () => {
 	const id = random.guid(),
 		freelancer_id = random.guid(),
 		skill_id = random.guid(),
@@ -158,7 +158,33 @@ describe.only('Freelancer Skills Model', () => {
 
 
 	describe('has a getAll method', () => {
+		const specificFreelancerId = random.guid(),
+			specificSkill = random.word();
 
+		before(async() => {
+			await random.freelancer({ id: specificFreelancerId });
+			await random.freelancer_skill({ skill: specificSkill, freelancer_id: specificFreelancerId }); // so we can test at least the first skill
+			await random.freelancer_skills(10, { freelancer_id: specificFreelancerId });
+		});
+
+		it('should find all of the freelancer_skills belonging to a single freelancer and return an array of objects', async() => {
+			const skills = await FreelancerSkills.getAll(specificFreelancerId);
+
+			expect(skills).to.be.an.array();
+			expect(skills.length).to.equal(11);
+			expect(skills[0]).to.be.an.object();
+			expect(skills[0].freelancer_id).to.equal(specificFreelancerId);
+			expect(skills[0].skill_alias).to.equal(specificSkill);
+		});
+
+		it('should return an empty array if there are not skills for that freelancer', async() => {
+			const secondId = random.guid();
+			await random.freelancer({ id: secondId });
+
+			const skills = await FreelancerSkills.getAll(secondId);
+			expect(skills).to.be.an.array();
+			expect(skills.length).to.equal(0);
+		});
 	});
 
 

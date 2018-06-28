@@ -55,8 +55,10 @@ module.exports = {
 	},
 
 
-	getAll () {
-		// TODO: determine if this is necessary, perhaps a getAll by freelancer id? Or another getAll method by skill id?
+	// TODO: return anything if there are no skills? To be determined when used by the view through a route, will have a better idea by then
+	// get all freelancer_skills for a single freelancer. A freelancer can only have a max of 20, so pagination isn't needed. Get's passed a freelancer_id
+	getAll (id) {
+		return knex('freelancer_skills').where({ freelancer_id: id });
 	},
 
 
