@@ -10,22 +10,6 @@ random.mixin(require('./mixins'));
 
 // methods that create multiple records, ex: 10 clients, 20 skills, etc.
 random.mixin({
-	clients: async(count = 10, opts = {}, dontHash = true) => {
-		if (!opts.field_id) {
-			opts.field_id = random.guid();
-			await random.field({ id: opts.field_id });
-		}
-		// When creating several clients (ex: 50), we want to skip hashing the password 50 times in the client mixin or model, which is by far the most time consuming part of it. So we hash one password and give all 50 clients that same password, speeds up the 50 inserts by roughly 9 times. Or, we can pass in 'dontHash' = false, to make it hash the given plain password or hash a random word in the mixin like normal. We tell the client mixin not to hash via the 'dontHash' variable below
-		if (dontHash) {
-			opts.password = hashPassword('password');
-			opts.dontHash = true;
-		}
-
-		const clients = _.times(count, () => random.client(opts));
-		return Promise.all(clients);
-	},
-
-
 	client_reviews: async(count = 10, opts = {}) => {
 		// create a field if not given
 		if (!opts.field_id) {
@@ -48,6 +32,22 @@ random.mixin({
 			return random.client_review(opts);
 		});
 		return Promise.all(reviews);
+	},
+
+
+	clients: async(count = 10, opts = {}, dontHash = true) => {
+		if (!opts.field_id) {
+			opts.field_id = random.guid();
+			await random.field({ id: opts.field_id });
+		}
+		// When creating several clients (ex: 50), we want to skip hashing the password 50 times in the client mixin or model, which is by far the most time consuming part of it. So we hash one password and give all 50 clients that same password, speeds up the 50 inserts by roughly 9 times. Or, we can pass in 'dontHash' = false, to make it hash the given plain password or hash a random word in the mixin like normal. We tell the client mixin not to hash via the 'dontHash' variable below
+		if (dontHash) {
+			opts.password = hashPassword('password');
+			opts.dontHash = true;
+		}
+
+		const clients = _.times(count, () => random.client(opts));
+		return Promise.all(clients);
 	},
 
 
@@ -79,22 +79,6 @@ random.mixin({
 	},
 
 
-	freelancers: async(count = 10, opts = {}, dontHash = true) => {
-		if (!opts.field_id) {
-			opts.field_id = random.guid();
-			await random.field({ id: opts.field_id });
-		}
-		// see above explanation in the clients mixin as to why this step is here.
-		if (dontHash) {
-			opts.password = hashPassword('password');
-			opts.dontHash = true;
-		}
-
-		const freelancers = _.times(count, () => random.freelancer(opts));
-		return Promise.all(freelancers);
-	},
-
-
 	freelancer_reviews: async(count = 10, opts = {}) => {
 		// create a field if not given
 		if (!opts.field_id) {
@@ -117,6 +101,37 @@ random.mixin({
 			return random.freelancer_review(opts);
 		});
 		return Promise.all(reviews);
+	},
+
+
+	freelancer_skills: async(count = 10, opts = {}) => {
+		// create a freelancer if not given
+		if (!opts.freelancer_id) {
+			opts.freelancer_id = random.guid();
+			await random.freelancer({ id: opts.freelancer_id, field_id: opts.field_id });
+		}
+
+		const freelancer_skills = _.times(count, () => {
+			opts = _.omit(opts, 'skill'); // needs a unique skill for every record
+			return random.freelancer_skill(opts);
+		});
+		return Promise.all(freelancer_skills);
+	},
+
+
+	freelancers: async(count = 10, opts = {}, dontHash = true) => {
+		if (!opts.field_id) {
+			opts.field_id = random.guid();
+			await random.field({ id: opts.field_id });
+		}
+		// see above explanation in the clients mixin as to why this step is here.
+		if (dontHash) {
+			opts.password = hashPassword('password');
+			opts.dontHash = true;
+		}
+
+		const freelancers = _.times(count, () => random.freelancer(opts));
+		return Promise.all(freelancers);
 	},
 
 

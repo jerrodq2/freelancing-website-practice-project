@@ -18,7 +18,8 @@ module.exports = {
 	},
 
 	findByName (name) {
-		return knex('skills').where({ skill: name })
+		const lowerCaseName = name.toLowerCase();
+		return knex('skills').where({ skill: lowerCaseName })
 			.then((result) => {
 				// throw error if the record with the given id couldn't be found
 				if (!result[0]) throw Errors.notFound('skill', 'findByName', 'skill name');
