@@ -26,6 +26,7 @@ module.exports = {
 			.then((result) => result[0]);
 	},
 
+	// ensure that a freelancer can't save the same client twice
 	create (data) {
 		return SavedClients.create(data);
 	},

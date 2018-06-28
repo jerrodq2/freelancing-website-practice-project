@@ -15,15 +15,15 @@ module.exports = async(opts = {}) => {
 
 	// if the needed foreign keys aren't given, we create them here
 	if (!opts.freelancer_id) {
-		if (!field_id) await createFieldId();
+		if (!opts.field_id) await createFieldId();
 		opts.freelancer_id = random.guid();
-		await random.freelancer({ id: opts.freelancer_id, field_id });
+		await random.freelancer({ id: opts.freelancer_id, field_id: opts.field_id });
 	}
 
 	if (!opts.client_id) {
-		if (!field_id) await createFieldId();
+		if (!opts.field_id) await createFieldId();
 		opts.client_id = random.guid();
-		await random.client({ id: opts.client_id, field_id });
+		await random.client({ id: opts.client_id, field_id: opts.field_id });
 	}
 
 
