@@ -18,6 +18,17 @@ module.exports = {
 				// throw error if the id wasn't given in proper uuid format
 				if (Errors.violatesIdSyntax(err))
 					throw Errors.badId('saved_client', 'create');
+
+				// the cause of the error is most likely a missing freelancer_id if this passes
+				if (!freelancer_id)
+					throw Errors.badNull('saved_clients', 'create', 'freelancer_id');
+
+				// the cause of the error is most likely a missing client_id if this passes
+				if (!client_id)
+					throw Errors.badNull('saved_clients', 'create', 'client_id');
+
+				// if the cause of the error wasn't found above, throw the given error
+				throw err;
 			});
 
 		if (check[0]) {

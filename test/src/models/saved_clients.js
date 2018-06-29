@@ -93,8 +93,29 @@ describe.only('Saved Clients Model', () => {
 		});
 
 
-		it('should require the freelancer_id to create', () => {
-			return checkErr.checkNotNull(SavedClients, 'saved_client', createNewData(), 'freelancer_id');
+		it('should require the freelancer_id to create', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkNotNull(SavedClients, 'saved_client', createData, 'freelancer_id');
+		});
+
+		it('should require the client_id to create', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkNotNull(SavedClients, 'saved_client', createData, 'client_id');
+		});
+
+
+		it('should raise an exception if given an incorrect freelancer_id (foreign key not found)', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkForeign(SavedClients, 'saved_client', 'create', createData, 'freelancer_id', random.guid());
+		});
+
+		it('should raise an exception if given an incorrect client_id (foreign key not found)', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkForeign(SavedClients, 'saved_client', 'create', createData, 'client_id', random.guid());
 		});
 	});
 
