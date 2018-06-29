@@ -7,6 +7,7 @@ const SavedClients = new Model('saved_clients');
 const Errors = require(`${process.cwd()}/src/lib/errors`);
 
 
+// this model doesn't have an update method, seems more logical to simply allow them to delete and save another client than have to worry about updating anything
 module.exports = {
 	async create (data) {
 		const { id, freelancer_id, client_id } = data,
@@ -18,15 +19,12 @@ module.exports = {
 				// throw error if the id wasn't given in proper uuid format
 				if (Errors.violatesIdSyntax(err))
 					throw Errors.badId('saved_client', 'create');
-
 				// the cause of the error is most likely a missing freelancer_id if this passes
 				if (!freelancer_id)
 					throw Errors.badNull('saved_clients', 'create', 'freelancer_id');
-
 				// the cause of the error is most likely a missing client_id if this passes
 				if (!client_id)
 					throw Errors.badNull('saved_clients', 'create', 'client_id');
-
 				// if the cause of the error wasn't found above, throw the given error
 				throw err;
 			});
@@ -43,7 +41,7 @@ module.exports = {
 
 
 	getAll () {
-		// TODO: to be setup with pagination later
+		// TODO: grab all of the saved_clients for a freelancer, to be setup with pagination later
 	},
 
 
