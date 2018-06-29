@@ -1,74 +1,24 @@
 'use strict';
 
 
-const knex = require('../config/knex');
-const Model = require('./main_model');
+const Model = require('./saved_user_model');
 const SavedClients = new Model('saved_clients');
-const Errors = require(`${process.cwd()}/src/lib/errors`);
 
 
 // this model doesn't have an update method, seems more logical to simply allow them to delete and save another client than have to worry about updating anything
 module.exports = {
-	async create (data) {
-		const { id, freelancer_id, client_id } = data,
-			queryData = { id, freelancer_id, client_id };
-
-		// first we check to see if this freelancer has already saved this client
-		const check = await knex('saved_clients').where(queryData)
-			.catch((err) => {
-				// throw error if the id wasn't given in proper uuid format
-				if (Errors.violatesIdSyntax(err))
-					throw Errors.badId('saved_client', 'create');
-				// the cause of the error is most likely a missing freelancer_id if this passes
-				if (!freelancer_id)
-					throw Errors.badNull('saved_clients', 'create', 'freelancer_id');
-				// the cause of the error is most likely a missing client_id if this passes
-				if (!client_id)
-					throw Errors.badNull('saved_clients', 'create', 'client_id');
-				// if the cause of the error wasn't found above, throw the given error
-				throw err;
-			});
-
-		if (check[0]) {
-			// if so, then we raise an exception, they can only save a client once
-			const message = `The saved_client you are trying to create can't be completed. This freelancer has already saved the client: ${client_id}`;
-
-			throw Errors.Boom.badRequest(message);
-		}
-
-		return SavedClients.create(data);
+	create (data) {
+		return SavedClients.saveUser(data);
 	},
 
 
 	getAll () {
-		// TODO: grab all of the saved_clients for a freelancer, to be setup with pagination later
+		// TODO: grab all of the saved_clients for a freelancer, to be setup with pagination later through the saved_user_model
 	},
 
 
 	findOne (id) {
-		const savedClientsColumns = ['saved_clients.*'];
-		const freelancerColumns = ['f.id as freelancer_id', 'f.first_name as freelancer_first_name', 'f.last_name as freelancer_last_name'];
-		const clientColumns = ['c.id as client_id', 'c.first_name as client_first_name', 'c.last_name as client_last_name'];
-		const selectedColumns = savedClientsColumns.concat(freelancerColumns, clientColumns);
-		return knex('saved_clients')
-			.select(selectedColumns)
-			.where(knex.raw(`saved_clients.id = '${id}'`))
-			.innerJoin('freelancers as f', 'saved_clients.freelancer_id', 'f.id')
-			.innerJoin('clients as c', 'saved_clients.client_id', 'c.id')
-			.then((result) => {
-				// throw error if the record with the given id couldn't be found
-				if (!result[0]) throw Errors.notFound('saved_client', 'find');
-
-				return result[0];
-			})
-			.catch((err) => {
-				// throw error if the id wasn't given in proper uuid format
-				if (Errors.violatesIdSyntax(err))
-					throw Errors.badId('saved_client', 'find');
-
-				// if the cause of the error wasn't found above, throw the given error
-				throw err;
-			});
+		return SavedClients.findSavedUser(id);
 	},
 
 
