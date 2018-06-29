@@ -16,11 +16,23 @@ class SavedUserModel extends MainModel {
 
 
 	async saveUser (data) {
-		const { id, freelancer_id, client_id } = data,
-			queryData = { id, freelancer_id, client_id };
+		let id, nameOne, nameTwo;
+		const { freelancer_id, client_id } = data,
+			queryData = { freelancer_id, client_id };
+
+		// we create a string based on which table is trying to create, used in the if(check[0]) statement below
+		if (this.tableName === 'saved_freelancers') {
+			nameOne = 'client'; // user that is trying to save
+			nameTwo = 'freelancer'; // record/user that is being saved
+			id = freelancer_id;
+		} else if (this.tableName === 'saved_clients') {
+			nameOne = 'freelancer'; // user that is trying to save
+			nameTwo = 'client'; // record/user that is being saved
+			id = client_id;
+		}
 
 		// first we check to see if this freelancer has already saved this client
-		const check = await knex(`${this.tableName}`).where(queryData)
+		const check = await knex(this.tableName).where(queryData)
 			.catch((err) => {
 				// throw error if the id wasn't given in proper uuid format
 				if (Errors.violatesIdSyntax(err))
@@ -37,7 +49,7 @@ class SavedUserModel extends MainModel {
 
 		if (check[0]) {
 			// if so, then we raise an exception, they can only save a client once
-			const message = `The ${toSingular(this.tableName)} you are trying to create can't be completed. This freelancer has already saved the client: ${client_id}`;
+			const message = `The ${toSingular(this.tableName)} you are trying to create can't be completed. This ${nameOne} has already saved the ${nameTwo}: ${id}`;
 
 			throw Errors.Boom.badRequest(message);
 		}
