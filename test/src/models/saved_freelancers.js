@@ -37,7 +37,7 @@ describe.only('Saved Freelancers Model', () => {
 		await random.field({ id: field_id });
 		await random.freelancer(freelancerData);
 		await random.client(clientData);
-		// await random.saved_freelancer(data);
+		await random.saved_freelancer(data);
 	});
 
 
@@ -134,7 +134,25 @@ describe.only('Saved Freelancers Model', () => {
 
 
 	describe('has a findOne method', () => {
+		it('should retrieve a specific saved_freelancer with a given id, and return the object with relevant information about the client and freelancer', async() => {
+			const saved_freelancer = await SavedFreelancers.findOne(id);
 
+			// first check the fields that belong to the saved_client record
+			checkFields(saved_freelancer, id);
+
+			expect(saved_freelancer.client_first_name).to.equal(client_first_name);
+			expect(saved_freelancer.client_last_name).to.equal(client_last_name);
+			expect(saved_freelancer.freelancer_first_name).to.equal(freelancer_first_name);
+			expect(saved_freelancer.freelancer_last_name).to.equal(freelancer_last_name);
+		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(SavedFreelancers, 'saved_freelancer', 'find', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(SavedFreelancers, 'saved_freelancer', 'find', {});
+		});
 	});
 
 
