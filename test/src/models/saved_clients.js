@@ -10,11 +10,22 @@ const { db, random, checkErr } = require(`${process.cwd()}/test/src/helpers`);
 
 
 describe.only('Saved Clients Model', () => {
+	// data used to create the saved_client
 	const id = random.guid(),
 		freelancer_id = random.guid(),
 		client_id = random.guid(),
-		field_id = random.guid(),
 		data = { id, freelancer_id, client_id };
+
+	// data used to create the freelancer and client, used in tests below
+	const field_id = random.guid(),
+		client_first_name = random.name(),
+		client_last_name = random.name(),
+		freelancer_first_name = random.name(),
+		freelancer_last_name = random.name(),
+
+		clientData = { id: client_id, field_id, first_name: client_first_name, last_name: client_last_name },
+
+		freelancerData = { id: freelancer_id, field_id, first_name: freelancer_first_name, last_name: freelancer_last_name };
 
 	before(async() => {
 		// clearing these two tables will clear saved_clients via cascading delete
@@ -22,8 +33,8 @@ describe.only('Saved Clients Model', () => {
 		await db.resetTable('freelancers');
 
 		await random.field({ id: field_id });
-		await random.freelancer({ id: freelancer_id, field_id });
-		await random.client({ id: client_id, field_id });
+		await random.freelancer(freelancerData);
+		await random.client(clientData);
 		await random.saved_client(data);
 	});
 
@@ -121,7 +132,25 @@ describe.only('Saved Clients Model', () => {
 
 
 	describe('has a findOne method', () => {
+		it('should retrieve a specific saved_client with a given id, and return the object with relevant information about the client and freelancer', async() => {
+			const saved_client = await SavedClients.findOne(id);
 
+			// first check the fields that belong to the job record
+			checkFields(saved_client, id);
+
+			expect(saved_client.client_first_name).to.equal(client_first_name);
+			expect(saved_client.client_last_name).to.equal(client_last_name);
+			expect(saved_client.freelancer_first_name).to.equal(freelancer_first_name);
+			expect(saved_client.freelancer_last_name).to.equal(freelancer_last_name);
+		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(SavedClients, 'saved_client', 'find', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(SavedClients, 'saved_client', 'find', {});
+		});
 	});
 
 
