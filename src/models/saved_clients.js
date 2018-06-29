@@ -56,12 +56,20 @@ module.exports = {
 			.select(selectedColumns)
 			.where(knex.raw(`saved_clients.id = '${id}'`))
 			.innerJoin('freelancers as f', 'saved_clients.freelancer_id', 'f.id')
-			.innerJoin('client as c', 'saved_clients.client_id', 'c.id')
+			.innerJoin('clients as c', 'saved_clients.client_id', 'c.id')
 			.then((result) => {
 				// throw error if the record with the given id couldn't be found
 				if (!result[0]) throw Errors.notFound('saved_client', 'find');
 
 				return result[0];
+			})
+			.catch((err) => {
+				// throw error if the id wasn't given in proper uuid format
+				if (Errors.violatesIdSyntax(err))
+					throw Errors.badId('saved_client', 'find');
+
+				// if the cause of the error wasn't found above, throw the given error
+				throw err;
 			});
 	},
 

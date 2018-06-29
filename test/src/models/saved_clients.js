@@ -145,6 +145,14 @@ describe.only('Saved Clients Model', () => {
 			// check that trying to find the record now returns a not found error
 			return checkErr.checkNotFound(SavedClients, 'saved_client', 'find', specificId);
 		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(SavedClients, 'saved_client', 'delete', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(SavedClients, 'saved_client', 'delete', {});
+		});
 	});
 
 
