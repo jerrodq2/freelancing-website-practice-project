@@ -12,5 +12,6 @@ module.exports = {
 	freelancer_skill: require('./freelancer_skill'),
 	freelancer: require('./freelancer'),
 	job: require('./job'),
+	saved_client: require('./saved_client'),
 	skill: require('./skill'),
 };
