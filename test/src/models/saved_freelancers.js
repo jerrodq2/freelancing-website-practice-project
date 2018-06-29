@@ -11,7 +11,7 @@ const Freelancers = require(`${process.cwd()}/src/models/freelancers`);
 const { db, random, checkErr } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe.only('Saved Freelancers Model', () => {
+describe('Saved Freelancers Model', () => {
 	// data used to create the saved_freelancer
 	const id = random.guid(),
 		freelancer_id = random.guid(),
@@ -41,7 +41,7 @@ describe.only('Saved Freelancers Model', () => {
 	});
 
 
-	// creates the necessary fields to create a new saved_freelancer record. Needs a new client for each record
+	// creates the necessary fields to create a new saved_freelancer record. Needs a new freelancer for each record
 	const createNewData = async() => {
 		const specificId = random.guid(),
 			specificFreelancerId = random.guid(),
