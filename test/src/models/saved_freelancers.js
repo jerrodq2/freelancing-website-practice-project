@@ -183,6 +183,42 @@ describe.only('Saved Freelancers Model', () => {
 
 
 	describe('has cascading delete on freelancer_id and client_id', () => {
+		it('should be deleted in the event of the client who created it is deleted.', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificFreelancerId = createData.freelancer_id;
 
+			const saved_freelancer = await SavedFreelancers.create(createData);
+
+			expect(saved_freelancer).to.be.an.object();
+			expect(saved_freelancer.id).to.equal(specificId);
+			expect(saved_freelancer.freelancer_id).to.equal(specificFreelancerId);
+
+			const result = await Freelancers.delete(specificFreelancerId);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(SavedFreelancers, 'saved_freelancer', 'find', specificId);
+		});
+
+		it('should be deleted in the event of the client who created it is deleted.', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificClientId = random.guid();
+			createData.client_id = specificClientId;
+
+			await random.client({ id: specificClientId, field_id });
+			const saved_freelancer = await SavedFreelancers.create(createData);
+
+			expect(saved_freelancer).to.be.an.object();
+			expect(saved_freelancer.id).to.equal(specificId);
+			expect(saved_freelancer.client_id).to.equal(specificClientId);
+
+			const result = await Clients.delete(specificClientId);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(SavedFreelancers, 'saved_freelancer', 'find', specificId);
+		});
 	});
 });
