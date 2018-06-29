@@ -11,7 +11,7 @@ const Freelancers = require(`${process.cwd()}/src/models/freelancers`);
 const { db, random, checkErr } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe.only('Saved Clients Model', () => {
+describe('Saved Clients Model', () => {
 	// data used to create the saved_client
 	const id = random.guid(),
 		freelancer_id = random.guid(),
@@ -137,7 +137,7 @@ describe.only('Saved Clients Model', () => {
 		it('should retrieve a specific saved_client with a given id, and return the object with relevant information about the client and freelancer', async() => {
 			const saved_client = await SavedClients.findOne(id);
 
-			// first check the fields that belong to the job record
+			// first check the fields that belong to the saved_client record
 			checkFields(saved_client, id);
 
 			expect(saved_client.client_first_name).to.equal(client_first_name);
