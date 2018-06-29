@@ -131,7 +131,20 @@ describe.only('Saved Clients Model', () => {
 
 
 	describe('has a delete method', () => {
+		it('should delete the record if given a correct id and return true if successful', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id;
 
+			const saved_client = await random.saved_client(createData);
+			expect(saved_client).to.be.an.object();
+			expect(saved_client.id).to.equal(specificId);
+
+			const result = await SavedClients.delete(specificId);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(SavedClients, 'saved_client', 'find', specificId);
+		});
 	});
 
 

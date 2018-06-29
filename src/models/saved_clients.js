@@ -57,7 +57,12 @@ module.exports = {
 			.where(knex.raw(`saved_clients.id = '${id}'`))
 			.innerJoin('freelancers as f', 'saved_clients.freelancer_id', 'f.id')
 			.innerJoin('client as c', 'saved_clients.client_id', 'c.id')
-			.then((result) => result[0]);
+			.then((result) => {
+				// throw error if the record with the given id couldn't be found
+				if (!result[0]) throw Errors.notFound('saved_client', 'find');
+
+				return result[0];
+			});
 	},
 
 
