@@ -1,38 +1,26 @@
 'use strict';
 
 
-const knex = require('../config/knex');
-const Model = require('./main_model');
+const Model = require('./saved_user_model');
 const SavedFreelancers = new Model('saved_freelancers');
 
 
+// this model doesn't have an update method, seems more logical to simply allow them to delete and save another freelancer than have to worry about updating anything
 module.exports = {
+	create (data) {
+		return SavedFreelancers.saveUser(data);
+	},
 
 
 	getAll () {
-		// TODO: to be setup with pagination later
+		// TODO: grab all of the saved_freelancers for a client, to be setup with pagination later through the saved_user_model
 	},
+
 
 	findOne (id) {
-		const savedFreelancerColumns = ['saved_freelancers.*'];
-		const freelancerColumns = ['f.id as freelancer_id', 'f.first_name as freelancer_first_name', 'f.last_name as freelancer_last_name'];
-		const clientColumns = ['c.id as client_id', 'c.first_name as client_first_name', 'c.last_name as client_last_name'];
-		const selectedColumns = savedFreelancerColumns.concat(freelancerColumns, clientColumns);
-		return knex('saved_freelancers')
-			.select(selectedColumns)
-			.where(knex.raw(`saved_freelancers.id = '${id}'`))
-			.innerJoin('freelancers as f', 'saved_freelancers.freelancer_id', 'f.id')
-			.innerJoin('client as c', 'saved_freelancers.client_id', 'c.id')
-			.then((result) => result[0]);
+		return SavedFreelancers.findSavedUser(id);
 	},
 
-	create (data) {
-		return SavedFreelancers.create(data);
-	},
-
-	update (id, data) {
-		return SavedFreelancers.updateById(id, data);
-	},
 
 	delete (id) {
 		return SavedFreelancers.delete(id);
