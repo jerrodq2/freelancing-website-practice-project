@@ -3,10 +3,8 @@
 
 const MainModel = require('./main_model');
 const knex = require('../config/knex');
-const { hashPassword } = require(`${process.cwd()}/src/lib/helper_functions`);
 const Errors = require(`${process.cwd()}/src/lib/errors`);
 const { toSingular } = require(`${process.cwd()}/src/lib/helper_functions`);
-const _ = require('lodash');
 
 
 // a specific class that extends the MainModel, used only for the saved_clients and saved_freelancers models, to abstract re-used code and improve DRYness
