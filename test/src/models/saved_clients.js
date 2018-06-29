@@ -6,6 +6,8 @@ const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 const { describe, it, before } = lab;
 const SavedClients = require(`${process.cwd()}/src/models/saved_clients`);
+const Clients = require(`${process.cwd()}/src/models/clients`);
+const Freelancers = require(`${process.cwd()}/src/models/freelancers`);
 const { db, random, checkErr } = require(`${process.cwd()}/test/src/helpers`);
 
 
@@ -154,11 +156,6 @@ describe.only('Saved Clients Model', () => {
 	});
 
 
-	describe('has an update method', () => {
-
-	});
-
-
 	describe('has a delete method', () => {
 		it('should delete the record if given a correct id and return true if successful', async() => {
 			const createData = await createNewData(),
@@ -186,6 +183,42 @@ describe.only('Saved Clients Model', () => {
 
 
 	describe('has cascading delete on freelancer_id and client_id', () => {
+		it('should be deleted in the event of the client who created it is deleted.', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificFreelancerId = random.guid();
+			createData.freelancer_id = specificFreelancerId;
 
+			await random.freelancer({ id: specificFreelancerId, field_id });
+			const saved_client = await SavedClients.create(createData);
+
+			expect(saved_client).to.be.an.object();
+			expect(saved_client.id).to.equal(specificId);
+			expect(saved_client.freelancer_id).to.equal(specificFreelancerId);
+
+			const result = await Freelancers.delete(specificFreelancerId);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(SavedClients, 'saved_client', 'find', specificId);
+		});
+
+		it('should be deleted in the event of the client who created it is deleted.', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificClientId = createData.client_id;
+
+			const saved_client = await SavedClients.create(createData);
+
+			expect(saved_client).to.be.an.object();
+			expect(saved_client.id).to.equal(specificId);
+			expect(saved_client.client_id).to.equal(specificClientId);
+
+			const result = await Clients.delete(specificClientId);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(SavedClients, 'saved_client', 'find', specificId);
+		});
 	});
 });

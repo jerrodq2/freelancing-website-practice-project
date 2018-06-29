@@ -74,11 +74,6 @@ module.exports = {
 	},
 
 
-	update (id, data) {
-		return SavedClients.updateById(id, data);
-	},
-
-
 	delete (id) {
 		return SavedClients.delete(id);
 	}
