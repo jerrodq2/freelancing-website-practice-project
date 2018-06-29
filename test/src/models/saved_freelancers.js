@@ -97,6 +97,39 @@ describe.only('Saved Freelancers Model', () => {
 				expect(message).to.include(specificFreelancerId);
 			}
 		});
+
+		it('should raise an exception if given an invalid id (not in uuid format', async() => {
+			const createData = await createNewData();
+			createData.id = 1;
+
+			return checkErr.checkIdFormat(SavedFreelancers, 'saved_freelancer', 'create', createData);
+		});
+
+
+		it('should require the freelancer_id to create', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkNotNull(SavedFreelancers, 'saved_freelancer', createData, 'freelancer_id');
+		});
+
+		it('should require the client_id to create', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkNotNull(SavedFreelancers, 'saved_freelancer', createData, 'client_id');
+		});
+
+
+		it('should raise an exception if given an incorrect freelancer_id (foreign key not found)', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkForeign(SavedFreelancers, 'saved_freelancer', 'create', createData, 'freelancer_id', random.guid());
+		});
+
+		it('should raise an exception if given an incorrect client_id (foreign key not found)', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkForeign(SavedFreelancers, 'saved_freelancer', 'create', createData, 'client_id', random.guid());
+		});
 	});
 
 
