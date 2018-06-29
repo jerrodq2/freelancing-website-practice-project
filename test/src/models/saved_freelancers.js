@@ -157,7 +157,28 @@ describe.only('Saved Freelancers Model', () => {
 
 
 	describe('has a delete method', () => {
+		it('should delete the record if given a correct id and return true if successful', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id;
 
+			const saved_freelancer = await random.saved_freelancer(createData);
+			expect(saved_freelancer).to.be.an.object();
+			expect(saved_freelancer.id).to.equal(specificId);
+
+			const result = await SavedFreelancers.delete(specificId);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(SavedFreelancers, 'saved_freelancer', 'find', specificId);
+		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(SavedFreelancers, 'saved_freelancer', 'delete', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(SavedFreelancers, 'saved_freelancer', 'delete', {});
+		});
 	});
 
 
