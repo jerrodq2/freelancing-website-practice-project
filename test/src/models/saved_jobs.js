@@ -77,20 +77,34 @@ describe.only('Saved Jobs Model', () => {
 
 			checkFields(saved_job, specificId, specificJobId);
 		});
-	});
 
+		it('should only allow a freelancer to save a job once, and raise an exception on the second attempt', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificJobId = createData.job_id,
+				secondId = random.guid(),
+				saved_job = await SavedJobs.create(createData);
 
-	describe('has a getAll method', () => {
+			checkFields(saved_job, specificId, specificJobId);
 
+			createData.id = secondId;
+			try {
+				await SavedJobs.create(createData);
+			} catch (err) {
+				expect(err).to.be.an.object();
+				const { message } = err;
+				
+				expect(message).to.be.a.string();
+				expect(message).to.include('saved_job');
+				expect(message).to.include('trying to create can\'t be completed');
+				expect(message).to.include('already saved the job');
+				expect(message).to.include(specificJobId);
+			}
+		});
 	});
 
 
 	describe('has a findOne method', () => {
-
-	});
-
-
-	describe('has an update method', () => {
 
 	});
 
