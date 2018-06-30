@@ -138,7 +138,28 @@ describe.only('Saved Jobs Model', () => {
 
 
 	describe('has a findOne method', () => {
+		it('should retrieve a specific saved_job with a given id, and return the object with relevant information about the job and freelancer', async() => {
+			const saved_job = await SavedJobs.findOne(id);
 
+			// first check the fields that belong to the saved_client record
+			checkFields(saved_job, id);
+
+			expect(saved_job.freelancer_first_name).to.equal(freelancer_first_name);
+			expect(saved_job.freelancer_last_name).to.equal(freelancer_last_name);
+			expect(saved_job.job_title).to.equal(title);
+			expect(saved_job.job_rate).to.equal(rate);
+			expect(saved_job.job_rate_type).to.equal(rate_type);
+			expect(saved_job.job_description).to.equal(description);
+			expect(saved_job.job_experience_level_requested).to.equal(experience_level_requested);
+		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(SavedJobs, 'saved_job', 'find', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(SavedJobs, 'saved_job', 'find', {});
+		});
 	});
 
 
