@@ -93,13 +93,46 @@ describe.only('Saved Jobs Model', () => {
 			} catch (err) {
 				expect(err).to.be.an.object();
 				const { message } = err;
-				
+
 				expect(message).to.be.a.string();
 				expect(message).to.include('saved_job');
 				expect(message).to.include('trying to create can\'t be completed');
 				expect(message).to.include('already saved the job');
 				expect(message).to.include(specificJobId);
 			}
+		});
+
+		it('should raise an exception if given an invalid id (not in uuid format', async() => {
+			const createData = await createNewData();
+			createData.id = 1;
+
+			return checkErr.checkIdFormat(SavedJobs, 'saved_job', 'create', createData);
+		});
+
+
+		it('should require the freelancer_id to create', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkNotNull(SavedJobs, 'saved_job', createData, 'freelancer_id');
+		});
+
+		it('should require the job_id to create', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkNotNull(SavedJobs, 'saved_job', createData, 'job_id');
+		});
+
+
+		it('should raise an exception if given an incorrect freelancer_id (foreign key not found)', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkForeign(SavedJobs, 'saved_job', 'create', createData, 'freelancer_id', random.guid());
+		});
+
+		it('should raise an exception if given an incorrect job_id (foreign key not found)', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkForeign(SavedJobs, 'saved_job', 'create', createData, 'job_id', random.guid());
 		});
 	});
 
