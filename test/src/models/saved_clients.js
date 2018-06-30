@@ -183,7 +183,7 @@ describe('Saved Clients Model', () => {
 
 
 	describe('has cascading delete on freelancer_id and client_id', () => {
-		it('should be deleted in the event of the client who created it is deleted.', async() => {
+		it('should be deleted in the event of the freelancer who created it is deleted.', async() => {
 			const createData = await createNewData(),
 				specificId = createData.id,
 				specificFreelancerId = random.guid();

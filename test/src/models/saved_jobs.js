@@ -190,6 +190,42 @@ describe.only('Saved Jobs Model', () => {
 
 
 	describe('has cascading delete on freelancer_id and job_id', () => {
+		it('should be deleted in the event of the freelancer who created it is deleted.', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificFreelancerId = random.guid();
+			createData.freelancer_id = specificFreelancerId;
 
+			await random.freelancer({ id: specificFreelancerId, field_id });
+			const saved_job = await SavedJobs.create(createData);
+
+			expect(saved_job).to.be.an.object();
+			expect(saved_job.id).to.equal(specificId);
+			expect(saved_job.freelancer_id).to.equal(specificFreelancerId);
+
+			const result = await Freelancers.delete(specificFreelancerId);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(SavedJobs, 'saved_job', 'find', specificId);
+		});
+
+		it('should be deleted in the event of the client who created it is deleted.', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificJobId = createData.job_id;
+
+			const saved_job = await SavedJobs.create(createData);
+
+			expect(saved_job).to.be.an.object();
+			expect(saved_job.id).to.equal(specificId);
+			expect(saved_job.job_id).to.equal(specificJobId);
+
+			const result = await Jobs.delete(specificJobId);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(SavedJobs, 'saved_job', 'find', specificId);
+		});
 	});
 });
