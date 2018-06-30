@@ -22,7 +22,7 @@ module.exports = {
 				// the cause of the error is most likely a missing freelancer_id if this passes
 				if (!freelancer_id)
 					throw Errors.badNull('saved_job', 'create', 'freelancer_id');
-				// the cause of the error is most likely a missing client_id if this passes
+				// the cause of the error is most likely a missing job_id if this passes
 				if (!job_id)
 					throw Errors.badNull('saved_job', 'create', 'job_id');
 				// if the cause of the error wasn't found above, throw the given error

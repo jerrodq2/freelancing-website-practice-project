@@ -4,7 +4,7 @@
 const random = new (require('chance'));
 const SavedJobs = require(`${process.cwd()}/src/models/saved_jobs`);
 
-// used to create a random saved_client. If given no parameters, randomizes all fields
+// used to create a random saved_job. If given no parameters, randomizes all fields
 module.exports = async(opts = {}) => {
 	// incase we need a field_id for the two below conditionals, we only have to create a field once
 	const createFieldId = async() => {
