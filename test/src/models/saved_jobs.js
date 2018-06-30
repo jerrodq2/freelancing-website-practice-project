@@ -34,8 +34,10 @@ describe.only('Saved Jobs Model', () => {
 
 
 	before(async() => {
+		// clearing these two tables will clear saved_jobs via cascading delete
 		await db.resetTable('freelancers');
 		await db.resetTable('jobs');
+		await db.resetTable('clients');
 		await random.field({ id: field_id });
 		await random.freelancer(freelancerData);
 		await random.job(jobData);
@@ -43,9 +45,37 @@ describe.only('Saved Jobs Model', () => {
 	});
 
 
-	describe('has a create method', () => {
-		it('text', async() => {
+	// creates the necessary fields to create a new saved_job record. Needs a new job for each record
+	const createNewData = async() => {
+		const specificId = random.guid(),
+			specificJobId = random.guid(),
+			obj = { id: specificId, job_id: specificJobId };
 
+		await random.job({ id: specificJobId, field_id });
+
+		const createData = Object.assign({}, data, obj);
+		return createData;
+	};
+
+	// checks all fields in a given saved_job record
+	const checkFields = (obj, givenId, givenJobId = job_id) => {
+		expect(obj).to.be.an.object();
+		expect(obj.id).to.equal(givenId);
+		expect(obj.freelancer_id).to.equal(freelancer_id);
+		expect(obj.job_id).to.equal(givenJobId);
+		expect(obj.created_at).to.be.a.date();
+		expect(obj.updated_at).to.equal(null);
+	};
+
+
+	describe('has a create method', () => {
+		it('should create a new saved_job record if given valid data, create new created_at and updated_at fields, and return the new object', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificJobId = createData.job_id,
+				saved_job = await SavedJobs.create(createData);
+
+			checkFields(saved_job, specificId, specificJobId);
 		});
 	});
 

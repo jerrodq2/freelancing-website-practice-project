@@ -65,7 +65,7 @@ describe('Saved Clients Model', () => {
 
 
 	describe('has a create method', () => {
-		it('should create a new saved_client record if given valid data, create new updated_at and updated_at fields, and return the new object', async() => {
+		it('should create a new saved_client record if given valid data, create new created_at and updated_at fields, and return the new object', async() => {
 			const createData = await createNewData(),
 				specificId = createData.id,
 				specificClientId = createData.client_id,
