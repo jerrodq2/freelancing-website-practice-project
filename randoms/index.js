@@ -197,6 +197,26 @@ random.mixin({
 	},
 
 
+	saved_jobs: async(count = 10, opts = {}) => {
+		// create a field if not given, just prevents a field having to be created more than once
+		if (!opts.field_id) {
+			opts.field_id = random.guid();
+			await random.field({ id: opts.field_id });
+		}
+		// create a freelancer if not given
+		if (!opts.freelancer_id) {
+			opts.freelancer_id = random.guid();
+			await random.freelancer({ id: opts.freelancer_id, field_id: opts.field_id });
+		}
+
+		const saved_jobs = _.times(count, () => {
+			opts = _.omit(opts, 'job_id'); // needs a new job for every record, it is created in the saved_job mixin for each record
+			return random.saved_job(opts);
+		});
+		return Promise.all(saved_jobs);
+	},
+
+
 	skills: (count = 10, opts = {}) => {
 		const skills = _.times(count, () => random.skill(opts));
 		return Promise.all(skills);

@@ -65,7 +65,7 @@ describe('Saved Clients Model', () => {
 
 
 	describe('has a create method', () => {
-		it('should create a new saved_client record if given valid data, create new updated_at and updated_at fields, and return the new object', async() => {
+		it('should create a new saved_client record if given valid data, create new created_at and updated_at fields, and return the new object', async() => {
 			const createData = await createNewData(),
 				specificId = createData.id,
 				specificClientId = createData.client_id,
@@ -183,7 +183,7 @@ describe('Saved Clients Model', () => {
 
 
 	describe('has cascading delete on freelancer_id and client_id', () => {
-		it('should be deleted in the event of the client who created it is deleted.', async() => {
+		it('should be deleted in the event of the freelancer who created it is deleted.', async() => {
 			const createData = await createNewData(),
 				specificId = createData.id,
 				specificFreelancerId = random.guid();
@@ -203,7 +203,7 @@ describe('Saved Clients Model', () => {
 			return checkErr.checkNotFound(SavedClients, 'saved_client', 'find', specificId);
 		});
 
-		it('should be deleted in the event of the client who created it is deleted.', async() => {
+		it('should be deleted in the event of the client that was saved is deleted.', async() => {
 			const createData = await createNewData(),
 				specificId = createData.id,
 				specificClientId = createData.client_id;
