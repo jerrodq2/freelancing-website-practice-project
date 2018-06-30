@@ -164,7 +164,28 @@ describe.only('Saved Jobs Model', () => {
 
 
 	describe('has a delete method', () => {
+		it('should delete the record if given a correct id and return true if successful', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id;
 
+			const saved_job = await random.saved_job(createData);
+			expect(saved_job).to.be.an.object();
+			expect(saved_job.id).to.equal(specificId);
+
+			const result = await SavedJobs.delete(specificId);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(SavedJobs, 'saved_job', 'find', specificId);
+		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(SavedJobs, 'saved_job', 'delete', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(SavedJobs, 'saved_job', 'delete', {});
+		});
 	});
 
 
