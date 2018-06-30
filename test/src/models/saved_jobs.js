@@ -11,7 +11,7 @@ const Freelancers = require(`${process.cwd()}/src/models/freelancers`);
 const { db, random, checkErr } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe.only('Saved Jobs Model', () => {
+describe('Saved Jobs Model', () => {
 	// data used to create the saved_job
 	const id = random.guid(),
 		freelancer_id = random.guid(),
@@ -37,7 +37,6 @@ describe.only('Saved Jobs Model', () => {
 		// clearing these two tables will clear saved_jobs via cascading delete
 		await db.resetTable('freelancers');
 		await db.resetTable('jobs');
-		await db.resetTable('clients');
 		await random.field({ id: field_id });
 		await random.freelancer(freelancerData);
 		await random.job(jobData);
@@ -210,7 +209,7 @@ describe.only('Saved Jobs Model', () => {
 			return checkErr.checkNotFound(SavedJobs, 'saved_job', 'find', specificId);
 		});
 
-		it('should be deleted in the event of the client who created it is deleted.', async() => {
+		it('should be deleted in the event of the job that was saved is deleted.', async() => {
 			const createData = await createNewData(),
 				specificId = createData.id,
 				specificJobId = createData.job_id;

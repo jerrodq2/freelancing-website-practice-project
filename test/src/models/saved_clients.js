@@ -203,7 +203,7 @@ describe('Saved Clients Model', () => {
 			return checkErr.checkNotFound(SavedClients, 'saved_client', 'find', specificId);
 		});
 
-		it('should be deleted in the event of the client who created it is deleted.', async() => {
+		it('should be deleted in the event of the client that was saved is deleted.', async() => {
 			const createData = await createNewData(),
 				specificId = createData.id,
 				specificClientId = createData.client_id;
