@@ -7,6 +7,11 @@ const JobActivity = new Model('job_activity');
 
 // TODO: determine when a job is added to a freelancer's job activity. Once accepted? Once finished?
 module.exports = {
+	create (data) {
+		return JobActivity.create(data);
+	},
+
+
 	// TODO: add pagination to the job_activity getAll?
 	// get all the job_activity for one user
 	getAll (id) {
@@ -20,21 +25,20 @@ module.exports = {
 			.innerJoin('jobs as j', 'job_activity.job_id', 'j.id')
 			.innerJoin('clients as c', 'job_activity.client_id', 'c.id');
 	},
+
+
 	// TODO: may make adjustments to include the joins used above
 	findOne (id) {
 		return JobActivity.findOne(id);
 	},
 
-	create (data) {
-		return JobActivity.create(data);
-	},
 
 	update (id, data) {
 		return JobActivity.updateById(id, data);
 	},
 
+
 	delete (id) {
 		return JobActivity.delete(id);
 	}
-
 };

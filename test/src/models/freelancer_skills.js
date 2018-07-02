@@ -15,7 +15,7 @@ describe('Freelancer Skills Model', () => {
 	const id = random.guid(),
 		freelancer_id = random.guid(),
 		skill_id = random.guid(),
-		skill = random.word(),
+		skill = `skill name-${random.guid().substring(0, 16)}`,
 		data = { id, freelancer_id, skill };
 
 	before(async() => {
@@ -30,8 +30,8 @@ describe('Freelancer Skills Model', () => {
 	// creates the necessary unique variables to create a new freelancer_skill record and adds it to the above data object
 	const createNewData = async() => {
 		const specificId = random.guid(),
-			specificSkill = random.word(),
 			skill_id = random.guid(), //not used to create the freelancer_skill, only used in the expect statements
+			specificSkill = `skill name-${random.guid().substring(0, 16)}`,
 			obj = { id: specificId, skill: specificSkill, skill_id },
 			createData = Object.assign({}, data, obj);
 
