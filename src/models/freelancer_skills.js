@@ -58,7 +58,15 @@ module.exports = {
 	// TODO: return anything if there are no skills? To be determined when used by the view through a route, will have a better idea by then
 	// get all freelancer_skills for a single freelancer. A freelancer can only have a max of 20, so pagination isn't needed. Get's passed a freelancer_id
 	getAll (id) {
-		return knex('freelancer_skills').where({ freelancer_id: id });
+		return knex('freelancer_skills').where({ freelancer_id: id })
+			.catch((err) => {
+				// throw error if the id wasn't given in proper uuid format
+				if (Errors.violatesIdSyntax(err))
+					throw Errors.badId('freelancer_skill', 'getAll');
+
+				// if the cause of the error wasn't found above, throw the given error
+				throw err;
+			});
 	},
 
 

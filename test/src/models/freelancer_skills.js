@@ -185,6 +185,10 @@ describe('Freelancer Skills Model', () => {
 			expect(skills).to.be.an.array();
 			expect(skills.length).to.equal(0);
 		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(FreelancerSkills, 'freelancer_skill', 'getAll', {});
+		});
 	});
 
 
