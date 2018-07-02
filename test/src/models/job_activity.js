@@ -157,7 +157,30 @@ describe.only('Job Activity Model', () => {
 
 
 	describe('has a findOne method', () => {
+		it('should retrieve a specific job_activity with a given id, and return the object with relevant information about the client, freelancer, and job', async() => {
+			const activity = await JobActivity.findOne(id);
 
+			// first check the fields that belong to the job_activity record
+			checkFields(activity, id);
+
+			expect(activity.freelancer_first_name).to.equal(freelancer_first_name);
+			expect(activity.freelancer_last_name).to.equal(freelancer_last_name);
+			expect(activity.client_first_name).to.equal(client_first_name);
+			expect(activity.client_last_name).to.equal(client_last_name);
+			expect(activity.job_title).to.equal(title);
+			expect(activity.job_rate).to.equal(rate);
+			expect(activity.job_rate_type).to.equal(rate_type);
+			expect(activity.job_description).to.equal(description);
+			expect(activity.job_experience_level_requested).to.equal(experience_level_requested);
+		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(JobActivity, 'job_activity', 'find', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(JobActivity, 'job_activity', 'find', {});
+		});
 	});
 
 
