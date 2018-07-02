@@ -48,9 +48,37 @@ describe.only('Job Activity Model', () => {
 	});
 
 
-	describe('has a create method', () => {
-		it('text', async() => {
+	// creates an the new variables needed to create a new job_activity record
+	const createNewData = async() => {
+		const specificId = random.guid(),
+			specificJobId = random.guid(),
+			obj = { id: specificId, job_id: specificJobId },
+			createData = Object.assign({}, data, obj);
 
+		await random.job({ id: specificJobId, field_id, client_id, freelancer_id });
+
+		return createData;
+	};
+
+	// checks the basic fields in a given job_activity object
+	const checkFields = (obj, givenId, givenJobId = job_id) => {
+		expect(obj).to.be.an.object();
+		expect(obj.id).to.equal(givenId);
+		expect(obj.freelancer_id).to.equal(freelancer_id);
+		expect(obj.client_id).to.equal(client_id);
+		expect(obj.job_id).to.equal(givenJobId);
+		expect(obj.created_at).to.be.a.date();
+		expect(obj.updated_at).to.equal(null);
+	};
+
+	describe('has a create method', () => {
+		it('should create a new job_activity record if given valid data, create new created_at and udpated_at fields, and return the new object', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificJobId = createData.job_id,
+				activity = await JobActivity.create(createData);
+
+			checkFields(activity, specificId, specificJobId);
 		});
 	});
 
