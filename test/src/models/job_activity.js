@@ -80,6 +80,74 @@ describe.only('Job Activity Model', () => {
 
 			checkFields(activity, specificId, specificJobId);
 		});
+
+		it('should only allow a freelancer to have a job_activity with a specific job_id created once, and raise an exception on the second attempt', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificJobId = createData.job_id,
+				secondId = random.guid(),
+				activity = await JobActivity.create(createData);
+
+			checkFields(activity, specificId, specificJobId);
+
+			createData.id = secondId;
+			try {
+				await JobActivity.create(createData);
+			} catch (err) {
+				expect(err).to.be.an.object();
+				const { message } = err;
+
+				expect(message).to.be.a.string();
+				expect(message).to.include('job_activity');
+				expect(message).to.include('trying to create can\'t be completed');
+				expect(message).to.include('already saved the job');
+				expect(message).to.include(specificJobId);
+			}
+		});
+
+		it('should raise an exception if given an invalid id (not in uuid format', async() => {
+			const createData = await createNewData();
+			createData.id = 1;
+
+			return checkErr.checkIdFormat(JobActivity, 'job_activity', 'create', createData);
+		});
+
+		it('should require the freelancer_id to create', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkNotNull(JobActivity, 'job_activity', createData, 'freelancer_id');
+		});
+
+		it('should require the client_id to create', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkNotNull(JobActivity, 'job_activity', createData, 'client_id');
+		});
+
+		it('should require the job_id to create', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkNotNull(JobActivity, 'job_activity', createData, 'job_id');
+		});
+
+
+		it('should raise an exception if given an incorrect freelancer_id (foreign key not found)', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkForeign(JobActivity, 'job_activity', 'create', createData, 'freelancer_id', random.guid());
+		});
+
+		it('should raise an exception if given an incorrect client_id (foreign key not found)', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkForeign(JobActivity, 'job_activity', 'create', createData, 'client_id', random.guid());
+		});
+
+		it('should raise an exception if given an incorrect job_id (foreign key not found)', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkForeign(JobActivity, 'job_activity', 'create', createData, 'job_id', random.guid());
+		});
 	});
 
 
