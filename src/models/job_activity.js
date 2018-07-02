@@ -7,6 +7,7 @@ const JobActivity = new Model('job_activity');
 
 // TODO: determine when a job is added to a freelancer's job activity. Once accepted? Once finished?
 module.exports = {
+	// TODO: add pagination to the job_activity getAll?
 	// get all the job_activity for one user
 	getAll (id) {
 		const jobActivityColumns = ['job_activity.*'];
