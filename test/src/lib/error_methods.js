@@ -56,6 +56,9 @@ const checkErr = {
 			} else if (action === 'find') {
 				// in the event of findOne, where we have to pass in just the id
 				await Model.findOne(1);
+			} else if (action === 'getAll'){
+				// in the event of getAll, where we have to pass in just an id
+				await Model.getAll(1);
 			} else if (action === 'create'){
 				// in the event of create, where we just pass in the data
 				await Model.create(data);

@@ -9,7 +9,7 @@ const JobActivity = require(`${process.cwd()}/src/models/job_activity`);
 const Jobs = require(`${process.cwd()}/src/models/jobs`);
 const Freelancers = require(`${process.cwd()}/src/models/freelancers`);
 const Clients = require(`${process.cwd()}/src/models/clients`);
-const { db, random, checkErr, _ } = require(`${process.cwd()}/test/src/helpers`);
+const { db, random, checkErr } = require(`${process.cwd()}/test/src/helpers`);
 
 
 describe.only('Job Activity Model', () => {
@@ -153,7 +153,41 @@ describe.only('Job Activity Model', () => {
 
 
 	describe('has a getAll method', () => {
+		it('should retrieve all of the job_activity records with the given freelancer_id and return them as an array of objects', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificJobId = createData.job_id,
+				specificFreelancerId = random.guid();
+			createData.freelancer_id = specificFreelancerId;
 
+			await random.freelancer({ id: specificFreelancerId, field_id });
+			await random.job_activity(createData); //so we can test the first record
+			await random.job_activities(10, { freelancer_id: specificFreelancerId, client_id });
+
+			const activities = await JobActivity.getAll(specificFreelancerId);
+
+			expect(activities).to.be.an.array();
+			expect(activities.length).to.equal(11);
+
+			const record = activities[0];
+			expect(record).to.be.an.object();
+			expect(record.id).to.equal(specificId);
+			expect(record.client_id).to.equal(client_id);
+			expect(record.freelancer_id).to.equal(specificFreelancerId);
+			expect(record.job_id).to.equal(specificJobId);
+		});
+
+		it('should return an empty array if the given freelancer_id has no records for it\'s job_acitivty', async() => {
+			const specificFreelancerId = random.guid(),
+				activities = await JobActivity.getAll(specificFreelancerId);
+
+			expect(activities).to.be.an.array();
+			expect(activities.length).to.equal(0);
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(JobActivity, 'job_activity', 'getAll', {});
+		});
 	});
 
 

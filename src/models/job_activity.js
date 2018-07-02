@@ -58,11 +58,18 @@ module.exports = {
 			.where(knex.raw(`job_activity.freelancer_id = '${id}'`))
 			.innerJoin('jobs as j', 'job_activity.job_id', 'j.id')
 			.innerJoin('freelancers as f', 'job_activity.freelancer_id', 'f.id')
-			.innerJoin('clients as c', 'job_activity.client_id', 'c.id');
+			.innerJoin('clients as c', 'job_activity.client_id', 'c.id')
+			.catch((err) => {
+				// throw error if the id wasn't given in proper uuid format
+				if (Errors.violatesIdSyntax(err))
+					throw Errors.badId('job_activity', 'getAll');
+
+				// if the cause of the error wasn't found above, throw the given error
+				throw err;
+			});
 	},
 
 
-	// TODO: may make adjustments to include the joins used above
 	findOne (id) {
 		return knex('job_activity')
 			.select(selectedColumns)
