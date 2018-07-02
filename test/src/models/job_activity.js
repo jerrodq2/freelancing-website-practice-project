@@ -8,6 +8,7 @@ const { describe, it, before } = lab;
 const JobActivity = require(`${process.cwd()}/src/models/job_activity`);
 const Jobs = require(`${process.cwd()}/src/models/jobs`);
 const Freelancers = require(`${process.cwd()}/src/models/freelancers`);
+const Clients = require(`${process.cwd()}/src/models/clients`);
 const { db, random, checkErr, _ } = require(`${process.cwd()}/test/src/helpers`);
 
 
@@ -211,6 +212,62 @@ describe.only('Job Activity Model', () => {
 
 
 	describe('has cascading delete on job_id, freelancer_id, and client_id', () => {
+		it('should be deleted in the event of the freelancer who created it is deleted.', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificFreelancerId = random.guid();
+			createData.freelancer_id = specificFreelancerId;
 
+			await random.freelancer({ id: specificFreelancerId, field_id });
+			const activity = await JobActivity.create(createData);
+
+			expect(activity).to.be.an.object();
+			expect(activity.id).to.equal(specificId);
+			expect(activity.freelancer_id).to.equal(specificFreelancerId);
+
+			const result = await Freelancers.delete(specificFreelancerId);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(JobActivity, 'job_activity', 'find', specificId);
+		});
+
+		it('should be deleted in the event of the client who created it is deleted.', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificClientId = random.guid();
+			createData.client_id = specificClientId;
+
+			await random.client({ id: specificClientId, field_id });
+			const activity = await JobActivity.create(createData);
+
+			expect(activity).to.be.an.object();
+			expect(activity.id).to.equal(specificId);
+			expect(activity.client_id).to.equal(specificClientId);
+
+			const result = await Clients.delete(specificClientId);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(JobActivity, 'job_activity', 'find', specificId);
+		});
+
+		it('should be deleted in the event of the job who created it is deleted.', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificJobId = createData.job_id;
+
+			const activity = await JobActivity.create(createData);
+
+			expect(activity).to.be.an.object();
+			expect(activity.id).to.equal(specificId);
+			expect(activity.job_id).to.equal(specificJobId);
+
+			const result = await Jobs.delete(specificJobId);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(JobActivity, 'job_activity', 'find', specificId);
+		});
 	});
 });
