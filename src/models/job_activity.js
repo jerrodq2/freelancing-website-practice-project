@@ -16,6 +16,7 @@ const selectedColumns = jobActivityColumns.concat(jobColumns, freelancerColumns,
 
 
 // TODO: determine when a job is added to a freelancer's job activity. Once accepted? Once finished? Update the tests accoridngly once determine, both the tests and mixins (section on specifying the data passed to create the job)
+// this model doesn't have an update method, I don't see  any logical reason why a job_activity record would be updated, just deleted or created
 module.exports = {
 	async create (data) {
 		const { freelancer_id, job_id } = data,
@@ -83,11 +84,6 @@ module.exports = {
 				// if the cause of the error wasn't found above, throw the given error
 				throw err;
 			});
-	},
-
-
-	update (id, data) {
-		return JobActivity.updateById(id, data);
 	},
 
 
