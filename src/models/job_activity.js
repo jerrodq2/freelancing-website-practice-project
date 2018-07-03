@@ -51,11 +51,13 @@ module.exports = {
 
 
 	// TODO: add pagination to the job_activity getAll?
+	// TODO: be default, it orders them by created_at with the first created record being the zero index, should we allow different ordering? by client_id, created_at, etc? Would it be an option in the route, or would we pass it to the view like this and it can be rearranged there?
 	// get all the job_activity for one user
 	getAll (id) {
 		return knex('job_activity')
 			.select(selectedColumns)
 			.where(knex.raw(`job_activity.freelancer_id = '${id}'`))
+			.orderBy('created_at', 'asc')
 			.innerJoin('jobs as j', 'job_activity.job_id', 'j.id')
 			.innerJoin('freelancers as f', 'job_activity.freelancer_id', 'f.id')
 			.innerJoin('clients as c', 'job_activity.client_id', 'c.id')
