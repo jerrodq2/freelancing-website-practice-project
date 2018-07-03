@@ -28,6 +28,7 @@ module.exports = {
 			.then((result) => result[0]);
 	},
 
+	// TODO: make sure a job is still open before create, has to be available otherwise there's no point in the proposal. Send message like "job closed, no longer accepting proposals"
 	create (data) {
 		return Proposals.create(data);
 	},

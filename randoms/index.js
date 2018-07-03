@@ -182,6 +182,31 @@ random.mixin({
 	},
 
 
+	proposals: async(count = 10, opts = {}) => {
+		// create a field if not given
+		if (!opts.field_id) {
+			opts.field_id = random.guid();
+			await random.field({ id: opts.field_id });
+		}
+		// create a client if not given
+		if (!opts.client_id) {
+			opts.client_id = random.guid();
+			await random.client({ id: opts.client_id, field_id: opts.field_id });
+		}
+		// create a freelancer if not given
+		if (!opts.freelancer_id) {
+			opts.freelancer_id = random.guid();
+			await random.freelancer({ id: opts.freelancer_id, field_id: opts.field_id });
+		}
+
+		const proposals = _.times(count, () => {
+			opts = _.omit(opts, 'job_id'); // needs a new job for every record, it is created in the proposal mixin for each record
+			return random.proposal(opts);
+		});
+		return Promise.all(proposals);
+	},
+
+
 	saved_clients: async(count = 10, opts = {}) => {
 		// create a field if not given, just prevents a field having to be created more than once
 		if (!opts.field_id) {
