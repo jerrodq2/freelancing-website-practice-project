@@ -11,6 +11,7 @@ module.exports = {
 	freelancer_review: require('./freelancer_review'),
 	freelancer_skill: require('./freelancer_skill'),
 	freelancer: require('./freelancer'),
+	job_activity: require('./job_activity'),
 	job: require('./job'),
 	saved_client: require('./saved_client'),
 	saved_freelancer: require('./saved_freelancer'),
