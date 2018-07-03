@@ -12,7 +12,7 @@ const Clients = require(`${process.cwd()}/src/models/clients`);
 const { db, random, checkErr } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe.only('Job Activity Model', () => {
+describe('Job Activity Model', () => {
 	// These variables are used to create the job_activity record
 	const id = random.guid(),
 		freelancer_id = random.guid(),
