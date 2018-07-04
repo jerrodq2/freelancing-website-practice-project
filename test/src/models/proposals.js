@@ -40,6 +40,8 @@ describe.only('Proposals Model', () => {
 	const field_id = random.guid(),
 		freelancer_first_name = random.name(),
 		freelancer_last_name = random.name(),
+		freelancer_job_title = random.word(),
+		freelancer_experience_level = 'expert',
 		client_first_name = random.name(),
 		client_last_name = random.name(),
 		job_title = random.word(),
@@ -48,7 +50,7 @@ describe.only('Proposals Model', () => {
 		job_description = random.paragraph(),
 		experience_level_requested = 'expert',
 
-		freelancerData = { id: freelancer_id, field_id, first_name: freelancer_first_name, last_name: freelancer_last_name },
+		freelancerData = { id: freelancer_id, field_id, first_name: freelancer_first_name, last_name: freelancer_last_name, job_title: freelancer_job_title, experience_level: freelancer_experience_level },
 
 		clientData = { id: client_id, field_id, first_name: client_first_name, last_name: client_last_name },
 
@@ -219,7 +221,32 @@ describe.only('Proposals Model', () => {
 
 
 	describe('has a findOne method', () => {
+		it('should retrieve a specific proposal with a given id, and return the object with relevant information about the client, freelancer, and job', async() => {
+			const proposal = await Proposals.findOne(id);
 
+			// first check the fields that belong to the job_activity record
+			checkFields(proposal, id);
+
+			expect(proposal.freelancer_first_name).to.equal(freelancer_first_name);
+			expect(proposal.freelancer_last_name).to.equal(freelancer_last_name);
+			expect(proposal.freelancer_job_title).to.equal(freelancer_job_title);
+			expect(proposal.freelancer_experience_level).to.equal(freelancer_experience_level);
+			expect(proposal.client_first_name).to.equal(client_first_name);
+			expect(proposal.client_last_name).to.equal(client_last_name);
+			expect(proposal.job_title).to.equal(job_title);
+			expect(proposal.job_rate).to.equal(rate);
+			expect(proposal.job_rate_type).to.equal(rate_type);
+			expect(proposal.job_description).to.equal(job_description);
+			expect(proposal.job_experience_level_requested).to.equal(experience_level_requested);
+		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(Proposals, 'proposal', 'find', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(Proposals, 'proposal', 'find', {});
+		});
 	});
 
 
@@ -229,6 +256,11 @@ describe.only('Proposals Model', () => {
 
 
 	describe('has a delete method', () => {
+
+	});
+
+
+	describe('has cascading delete on freelancer_id, client_id, and job_id', () => {
 
 	});
 });
