@@ -4,13 +4,67 @@
 const knex = require('../config/knex');
 const Model = require('./main_model');
 const Proposals = new Model('proposals');
+const Errors = require(`${process.cwd()}/src/lib/errors`);
 
 
 module.exports = {
+	// TODO: make sure a job is still open before create, has to be available otherwise there's no point in the proposal. Send message like "job closed, no longer accepting proposals"
+	async create (data) {
+		const { job_id, freelancer_id } = data;
+
+		// first we make sure the job is still open/not closed
+		const check_job = await knex('jobs').where({ id: job_id })
+			.then((job) => {
+				// throw error if the job with the given id couldn't be found
+				if (!job[0]) throw Errors.badForeignKey('proposal', 'create', 'job_id');
+
+				return job[0];
+			})
+			.catch((err) => {
+				// throw error if the id wasn't given in proper uuid format
+				if (Errors.violatesIdSyntax(err))
+					throw Errors.badId('proposal', 'find');
+				// the cause of the error is most likely a missing job_id if this passes
+				if (!job_id)
+					throw Errors.badNull('proposal', 'create', 'job_id');
+				// if the cause of the error wasn't found above, throw the given error
+				throw err;
+			});
+		// if the job is closed, we raise an exception
+		if (check_job.closed) {
+			const message = 'The proposal you were trying to create can\'t be completed, this job is closed';
+
+			throw Errors.Boom.badRequest(message);
+		}
+
+		// next we check to see if this freelancer has already written a proposal for this job
+		const check_freelancer = await knex('proposals').where({ job_id, freelancer_id })
+			.catch((err) => {
+				// throw error if the id wasn't given in proper uuid format
+				if (Errors.violatesIdSyntax(err))
+					throw Errors.badId('proposal', 'find');
+				// the cause of the error is most likely a missing freelancer_id if this passes
+				if (!freelancer_id)
+					throw Errors.badNull('proposal', 'create', 'freelancer_id');
+				// if the cause of the error wasn't found above, throw the given error
+				throw err;
+			});
+
+		if (check_freelancer[0]) {
+			const message = 'The proposal you were trying to create can\'t be completed, this freelancer has already written a proposal for this job';
+
+			throw Errors.Boom.badRequest(message);
+		}
+
+		return Proposals.create(data);
+	},
+
 
 	getAll () {
 		// TODO: to be setup with pagination later
 	},
+
+
 	findOne (id) {
 		// specify the columns I want from each table
 		const proposalsColumns = ['proposals.*' ];
@@ -28,14 +82,11 @@ module.exports = {
 			.then((result) => result[0]);
 	},
 
-	// TODO: make sure a job is still open before create, has to be available otherwise there's no point in the proposal. Send message like "job closed, no longer accepting proposals"
-	create (data) {
-		return Proposals.create(data);
-	},
 
 	update (id, data) {
 		return Proposals.updateById(id, data);
 	},
+
 
 	delete (id) {
 		return Proposals.delete(id);
