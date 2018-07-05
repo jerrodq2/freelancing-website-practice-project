@@ -145,13 +145,75 @@ describe.only('Invitations Model', () => {
 			} catch (err) {
 				expect(err).to.be.an.object();
 				const { message } = err;
-				
+
 				expect(message).to.be.a.string();
 				expect(message).to.include('invitation');
 				expect(message).to.include('trying to create');
 				expect(message).to.include('can\'t be completed');
 				expect(message).to.include('this client has already written an invitation to this freelancer for this job');
 			}
+		});
+
+		it('should raise an exception if given an invalid id (not in uuid format', async() => {
+			const createData = await createNewData();
+			createData.id = 1;
+
+			return checkErr.checkIdFormat(Invitations, 'invitation', 'create', createData);
+		});
+
+		it('should require the freelancer_id to create', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkNotNull(Invitations, 'invitation', createData, 'freelancer_id');
+		});
+
+		it('should require the client_id to create', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkNotNull(Invitations, 'invitation', createData, 'client_id');
+		});
+
+		it('should require the job_id to create', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkNotNull(Invitations, 'invitation', createData, 'job_id');
+		});
+
+		it('should require the title to create', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkNotNull(Invitations, 'invitation', createData, 'title');
+		});
+
+		it('should require the description to create', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkNotNull(Invitations, 'invitation', createData, 'description');
+		});
+
+		it('should require the status to create', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkNotNull(Invitations, 'invitation', createData, 'status');
+		});
+
+
+		it('should raise an exception if given an incorrect freelancer_id (foreign key not found)', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkForeign(Invitations, 'invitation', 'create', createData, 'freelancer_id', random.guid());
+		});
+
+		it('should raise an exception if given an incorrect client_id (foreign key not found)', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkForeign(Invitations, 'invitation', 'create', createData, 'client_id', random.guid());
+		});
+
+		it('should raise an exception if given an incorrect job_id (foreign key not found)', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkForeign(Invitations, 'invitation', 'create', createData, 'job_id', random.guid());
 		});
 	});
 
