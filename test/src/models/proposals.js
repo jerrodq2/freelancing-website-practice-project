@@ -12,8 +12,8 @@ const Clients = require(`${process.cwd()}/src/models/clients`);
 const { db, random, checkErr } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe.only('Proposals Model', () => {
-	// simple function to round Javascript dates to the nearest date. When creating a new date with JS, it creates problems in the test, since the database rounds it to a day and saves it like that, so this eliminates that problem
+describe('Proposals Model', () => {
+	// simple function to round Javascript dates to the nearest day. When creating a new date with JS, it creates problems in the test, since the database rounds it to a day and saves it like that, so this eliminates that problem
 	const roundDate = (date) => {
 		const offsetMs = date.getTimezoneOffset() * 60 * 1000, oneDayMs = 24 * 60 * 60 * 1000;
 		return new Date(Math.floor((date.getTime() - offsetMs) / oneDayMs) * oneDayMs + offsetMs);
@@ -96,7 +96,7 @@ describe.only('Proposals Model', () => {
 
 
 	describe('has a create method', () => {
-		it('should create a new job_activity record if given valid data, create new created_at and udpated_at fields, and return the new object', async() => {
+		it('should create a new proposal record if given valid data, create new created_at and udpated_at fields, and return the new object', async() => {
 			const createData = await createNewData(),
 				specificId = createData.id,
 				specificJobId = createData.job_id,
@@ -219,7 +219,7 @@ describe.only('Proposals Model', () => {
 		it('should retrieve a specific proposal with a given id, and return the object with relevant information about the client, freelancer, and job', async() => {
 			const proposal = await Proposals.findOne(id);
 
-			// first check the fields that belong to the job_activity record
+			// first check the fields that belong to the proposal record
 			checkFields(proposal, id);
 
 			expect(proposal.freelancer_first_name).to.equal(freelancer_first_name);

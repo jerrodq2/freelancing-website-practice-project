@@ -8,7 +8,6 @@ const Errors = require(`${process.cwd()}/src/lib/errors`);
 
 
 module.exports = {
-	// TODO: make sure a job is still open before create, has to be available otherwise there's no point in the proposal. Send message like "job closed, no longer accepting proposals"
 	async create (data) {
 		const { job_id, freelancer_id } = data;
 
@@ -50,6 +49,7 @@ module.exports = {
 				throw err;
 			});
 
+		// if the freelancer has already written a proposal for this job, we raise an exception
 		if (check_freelancer[0]) {
 			const message = 'The proposal you were trying to create can\'t be completed, this freelancer has already written a proposal for this job';
 
