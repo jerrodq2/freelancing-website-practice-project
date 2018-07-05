@@ -339,6 +339,62 @@ describe.only('Proposals Model', () => {
 
 
 	describe('has cascading delete on freelancer_id, client_id, and job_id', () => {
+		it('should be deleted in the event of the freelancer who created it is deleted.', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificFreelancerId = random.guid();
+			createData.freelancer_id = specificFreelancerId;
 
+			await random.freelancer({ id: specificFreelancerId, field_id });
+			const proposal = await random.proposal(createData);
+
+			expect(proposal).to.be.an.object();
+			expect(proposal.id).to.equal(specificId);
+			expect(proposal.freelancer_id).to.equal(specificFreelancerId);
+
+			const result = await Freelancers.delete(specificFreelancerId);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(Proposals, 'proposal', 'find', specificId);
+		});
+
+		it('should be deleted in the event of the client who created it is deleted.', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificClientId = random.guid();
+			createData.client_id = specificClientId;
+
+			await random.client({ id: specificClientId, field_id });
+			const proposal = await random.proposal(createData);
+
+			expect(proposal).to.be.an.object();
+			expect(proposal.id).to.equal(specificId);
+			expect(proposal.client_id).to.equal(specificClientId);
+
+			const result = await Clients.delete(specificClientId);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(Proposals, 'proposal', 'find', specificId);
+		});
+
+		it('should be deleted in the event of the job who created it is deleted.', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificJobId = createData.job_id;
+
+			const proposal = await random.proposal(createData);
+
+			expect(proposal).to.be.an.object();
+			expect(proposal.id).to.equal(specificId);
+			expect(proposal.job_id).to.equal(specificJobId);
+
+			const result = await Jobs.delete(specificJobId);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(Proposals, 'proposal', 'find', specificId);
+		});
 	});
 });
