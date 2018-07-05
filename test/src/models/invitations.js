@@ -5,14 +5,14 @@ const { expect } = require('code');
 const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 const { describe, it, before } = lab;
-const Proposals = require(`${process.cwd()}/src/models/proposals`);
+const Invitations = require(`${process.cwd()}/src/models/invitations`);
 const Jobs = require(`${process.cwd()}/src/models/jobs`);
 const Freelancers = require(`${process.cwd()}/src/models/freelancers`);
 const Clients = require(`${process.cwd()}/src/models/clients`);
 const { db, random, checkErr } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe('Proposals Model', () => {
+describe('Invitations Model', () => {
 	// roundDate is a simple function to round Javascript dates to the nearest day. When creating a new date with JS, it creates problems in the test, since the database rounds it to a day and saves it like that, so this eliminates that problem
 	const today = new Date(),
 		roundDate = (date) => {
@@ -20,12 +20,12 @@ describe('Proposals Model', () => {
 			return new Date(Math.floor((date.getTime() - offsetMs) / oneDayMs) * oneDayMs + offsetMs);
 		};
 
-	let estimated_time_limit = new Date();
-	// put the estimated_time_limit to be two weeks from now
-	estimated_time_limit.setDate(today.getDate()+14);
-	estimated_time_limit = roundDate(estimated_time_limit); // round it to be a day (no minutes, seconds, etc.), this is how it is saved in the db
+	let requested_time_limit = new Date();
+	// put the requested_time_limit to be two weeks from now
+	requested_time_limit.setDate(today.getDate()+14);
+	requested_time_limit = roundDate(requested_time_limit); // round it to be a day (no minutes, seconds, etc.), this is how it is saved in the db
 
-	// These variables are used to create the proposal record
+	// These variables are used to create the invitation record
 	const id = random.guid(),
 		freelancer_id = random.guid(),
 		job_id = random.guid(),
@@ -33,7 +33,7 @@ describe('Proposals Model', () => {
 		title = random.word(),
 		description = random.paragraph(),
 		status = 'pending',
-		data = { id, freelancer_id, job_id, client_id, title, description, estimated_time_limit, status };
+		data = { id, freelancer_id, job_id, client_id, title, description, requested_time_limit, status };
 
 	// these variables are used to create the freelancer, client, and job, used in below tests for accuracy
 	const field_id = random.guid(),
@@ -62,23 +62,24 @@ describe('Proposals Model', () => {
 		await random.freelancer(freelancerData);
 		await random.client(clientData);
 		await random.job(jobData);
-		await random.proposal(data);
+		await random.invitation(data);
 	});
 
 
-	// creates an the new variables needed to create a new proposal record
+	// creates an the new variables needed to create a new invitation record
 	const createNewData = async() => {
 		const specificId = random.guid(),
 			specificJobId = random.guid(),
 			obj = { id: specificId, job_id: specificJobId },
 			createData = Object.assign({}, data, obj);
 
-		await random.job({ id: specificJobId, field_id, client_id, freelancer_id, closed: 'false' });
+		await random.job({ id: specificJobId, field_id, client_id, closed: 'false' });
+
 
 		return createData;
 	};
 
-	// checks the basic fields in a given proposal object
+	// checks the basic fields in a given invitation object
 	const checkFields = (obj, givenId, givenJobId = job_id) => {
 		expect(obj).to.be.an.object();
 		expect(obj.id).to.equal(givenId);
@@ -87,24 +88,24 @@ describe('Proposals Model', () => {
 		expect(obj.job_id).to.equal(givenJobId);
 		expect(obj.title).to.equal(title);
 		expect(obj.description).to.equal(description);
-		expect(obj.estimated_time_limit).to.equal(estimated_time_limit);
+		expect(obj.requested_time_limit).to.equal(requested_time_limit);
 		expect(obj.status).to.equal(status);
 		expect(obj.created_at).to.be.a.date();
 		expect(obj.updated_at).to.equal(null);
 	};
 
-
 	describe('has a create method', () => {
-		it('should create a new proposal record if given valid data, create new created_at and udpated_at fields, and return the new object', async() => {
+		it('should create a new invitation record if given valid data, create new created_at and udpated_at fields, and return the new object', async() => {
 			const createData = await createNewData(),
 				specificId = createData.id,
 				specificJobId = createData.job_id,
-				proposal = await Proposals.create(createData);
+				specificFreelancerId = createData.freelancer_id,
+				invitation = await Invitations.create(createData);
 
-			checkFields(proposal, specificId, specificJobId);
+			checkFields(invitation, specificId, specificJobId, specificFreelancerId);
 		});
 
-		it('should only allow you to create a new proposal if the job is still open and should raise an exception when you try to create it when the job is closed', async() => {
+		it('should only allow you to create a new invitation if the job is still open and should raise an exception when you try to create it when the job is closed', async() => {
 			const specificId = random.guid(),
 				specificJobId = random.guid(),
 				obj = { id: specificId, job_id: specificJobId },
@@ -113,40 +114,41 @@ describe('Proposals Model', () => {
 			await random.job({ id: specificJobId, field_id, client_id, freelancer_id, closed: true });
 
 			try {
-				await Proposals.create(createData);
+				await Invitations.create(createData);
 			} catch (err) {
 				expect(err).to.be.an.object();
 				const { message } = err;
 
 				expect(message).to.be.a.string();
-				expect(message).to.include('proposal');
+				expect(message).to.include('invitation');
 				expect(message).to.include('trying to create');
 				expect(message).to.include('can\'t be completed');
 				expect(message).to.include('this job is closed');
 			}
 		});
 
-		it('should only allow a freelancer to create one proposal per job and raise an exception on the second attempt', async() => {
+		it('should only allow a client to create one invitation per freelancer for the same job and raise an exception on the second attempt', async() => {
 			const createData = await createNewData(),
 				specificId = createData.id,
 				specificJobId = createData.job_id,
+				specificFreelancerId = createData.freelancer_id,
 				secondId = random.guid(),
-				proposal = await Proposals.create(createData);
+				invitation = await Invitations.create(createData);
 
-			checkFields(proposal, specificId, specificJobId);
+			checkFields(invitation, specificId, specificJobId, specificFreelancerId);
 
 			createData.id = secondId;
 			try {
-				await Proposals.create(createData);
+				await Invitations.create(createData);
 			} catch (err) {
 				expect(err).to.be.an.object();
 				const { message } = err;
 
 				expect(message).to.be.a.string();
-				expect(message).to.include('proposal');
+				expect(message).to.include('invitation');
 				expect(message).to.include('trying to create');
 				expect(message).to.include('can\'t be completed');
-				expect(message).to.include('freelancer has already written a proposal for this job');
+				expect(message).to.include('this client has already written an invitation to this freelancer for this job');
 			}
 		});
 
@@ -154,154 +156,154 @@ describe('Proposals Model', () => {
 			const createData = await createNewData();
 			createData.id = 1;
 
-			return checkErr.checkIdFormat(Proposals, 'proposal', 'create', createData);
+			return checkErr.checkIdFormat(Invitations, 'invitation', 'create', createData);
 		});
 
 		it('should require the freelancer_id to create', async() => {
 			const createData = await createNewData();
 
-			return checkErr.checkNotNull(Proposals, 'proposal', createData, 'freelancer_id');
+			return checkErr.checkNotNull(Invitations, 'invitation', createData, 'freelancer_id');
 		});
 
 		it('should require the client_id to create', async() => {
 			const createData = await createNewData();
 
-			return checkErr.checkNotNull(Proposals, 'proposal', createData, 'client_id');
+			return checkErr.checkNotNull(Invitations, 'invitation', createData, 'client_id');
 		});
 
 		it('should require the job_id to create', async() => {
 			const createData = await createNewData();
 
-			return checkErr.checkNotNull(Proposals, 'proposal', createData, 'job_id');
+			return checkErr.checkNotNull(Invitations, 'invitation', createData, 'job_id');
 		});
 
 		it('should require the title to create', async() => {
 			const createData = await createNewData();
 
-			return checkErr.checkNotNull(Proposals, 'proposal', createData, 'title');
+			return checkErr.checkNotNull(Invitations, 'invitation', createData, 'title');
 		});
 
 		it('should require the description to create', async() => {
 			const createData = await createNewData();
 
-			return checkErr.checkNotNull(Proposals, 'proposal', createData, 'description');
+			return checkErr.checkNotNull(Invitations, 'invitation', createData, 'description');
 		});
 
 		it('should require the status to create', async() => {
 			const createData = await createNewData();
 
-			return checkErr.checkNotNull(Proposals, 'proposal', createData, 'status');
+			return checkErr.checkNotNull(Invitations, 'invitation', createData, 'status');
 		});
 
 
 		it('should raise an exception if given an incorrect freelancer_id (foreign key not found)', async() => {
 			const createData = await createNewData();
 
-			return checkErr.checkForeign(Proposals, 'proposal', 'create', createData, 'freelancer_id', random.guid());
+			return checkErr.checkForeign(Invitations, 'invitation', 'create', createData, 'freelancer_id', random.guid());
 		});
 
 		it('should raise an exception if given an incorrect client_id (foreign key not found)', async() => {
 			const createData = await createNewData();
 
-			return checkErr.checkForeign(Proposals, 'proposal', 'create', createData, 'client_id', random.guid());
+			return checkErr.checkForeign(Invitations, 'invitation', 'create', createData, 'client_id', random.guid());
 		});
 
 		it('should raise an exception if given an incorrect job_id (foreign key not found)', async() => {
 			const createData = await createNewData();
 
-			return checkErr.checkForeign(Proposals, 'proposal', 'create', createData, 'job_id', random.guid());
+			return checkErr.checkForeign(Invitations, 'invitation', 'create', createData, 'job_id', random.guid());
 		});
 	});
 
 
 	describe('has a findOne method', () => {
-		it('should retrieve a specific proposal with a given id, and return the object with relevant information about the client, freelancer, and job', async() => {
-			const proposal = await Proposals.findOne(id);
+		it('should retrieve a specific invitation with a given id, and return the object with relevant information about the client, freelancer, and job', async() => {
+			const invitation = await Invitations.findOne(id);
 
-			// first check the fields that belong to the proposal record
-			checkFields(proposal, id);
+			// first check the fields that belong to the invitation record
+			checkFields(invitation, id);
 
-			expect(proposal.freelancer_first_name).to.equal(freelancer_first_name);
-			expect(proposal.freelancer_last_name).to.equal(freelancer_last_name);
-			expect(proposal.freelancer_job_title).to.equal(freelancer_job_title);
-			expect(proposal.freelancer_experience_level).to.equal(freelancer_experience_level);
-			expect(proposal.client_first_name).to.equal(client_first_name);
-			expect(proposal.client_last_name).to.equal(client_last_name);
-			expect(proposal.job_title).to.equal(job_title);
-			expect(proposal.job_rate).to.equal(rate);
-			expect(proposal.job_rate_type).to.equal(rate_type);
-			expect(proposal.job_description).to.equal(job_description);
-			expect(proposal.job_experience_level_requested).to.equal(experience_level_requested);
+			expect(invitation.freelancer_first_name).to.equal(freelancer_first_name);
+			expect(invitation.freelancer_last_name).to.equal(freelancer_last_name);
+			expect(invitation.freelancer_job_title).to.equal(freelancer_job_title);
+			expect(invitation.freelancer_experience_level).to.equal(freelancer_experience_level);
+			expect(invitation.client_first_name).to.equal(client_first_name);
+			expect(invitation.client_last_name).to.equal(client_last_name);
+			expect(invitation.job_title).to.equal(job_title);
+			expect(invitation.job_rate).to.equal(rate);
+			expect(invitation.job_rate_type).to.equal(rate_type);
+			expect(invitation.job_description).to.equal(job_description);
+			expect(invitation.job_experience_level_requested).to.equal(experience_level_requested);
 		});
 
 		it('should raise an exception if given an incorrect id (not found)', async() => {
-			return checkErr.checkNotFound(Proposals, 'proposal', 'find', random.guid());
+			return checkErr.checkNotFound(Invitations, 'invitation', 'find', random.guid());
 		});
 
 		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
-			return checkErr.checkIdFormat(Proposals, 'proposal', 'find', {});
+			return checkErr.checkIdFormat(Invitations, 'invitation', 'find', {});
 		});
 	});
 
 
 	describe('has an update method', () => {
-		let new_estimated_time_limit = new Date();
-		// put the estimated_time_limit to be one week from now
-		new_estimated_time_limit.setDate(today.getDate()+7);
-		new_estimated_time_limit = roundDate(new_estimated_time_limit);
+		let new_requested_time_limit = new Date();
+		// put the new_requested_time_limit to be one week from now
+		new_requested_time_limit.setDate(today.getDate()+7);
+		new_requested_time_limit = roundDate(new_requested_time_limit);
 
 		const new_title = random.word(),
 			new_description = random.paragraph(),
 			new_status = 'pending',
-			updateData = { title: new_title, description: new_description, status: new_status, estimated_time_limit: new_estimated_time_limit };
+			updateData = { title: new_title, description: new_description, status: new_status, requested_time_limit: new_requested_time_limit };
 
-		it('should update the proposal if given a valid id and data, update the updated_at field, and return the updated object', async() => {
+		it('should update the invitation if given a valid id and data, update the updated_at field, and return the updated object', async() => {
 			const createData = await createNewData(),
 				specificId = createData.id,
 				specificJobId = createData.job_id,
-				proposal = await random.proposal(createData);
+				invitation = await random.invitation(createData);
 
-			checkFields(proposal, specificId, specificJobId);
+			checkFields(invitation, specificId, specificJobId);
 
-			const updatedProposal = await Proposals.update(specificId, updateData);
+			const updatedInvitation = await Invitations.update(specificId, updateData);
 
-			expect(updatedProposal).to.be.an.object();
-			expect(updatedProposal.id).to.equal(specificId);
-			expect(updatedProposal.freelancer_id).to.equal(freelancer_id);
-			expect(updatedProposal.client_id).to.equal(client_id);
-			expect(updatedProposal.job_id).to.equal(specificJobId);
-			expect(updatedProposal.title).to.equal(new_title);
-			expect(updatedProposal.description).to.equal(new_description);
-			expect(updatedProposal.estimated_time_limit).to.equal(new_estimated_time_limit);
-			expect(updatedProposal.status).to.equal(new_status);
-			expect(updatedProposal.created_at).to.be.a.date();
-			expect(updatedProposal.updated_at).to.be.a.date();
+			expect(updatedInvitation).to.be.an.object();
+			expect(updatedInvitation.id).to.equal(specificId);
+			expect(updatedInvitation.freelancer_id).to.equal(freelancer_id);
+			expect(updatedInvitation.client_id).to.equal(client_id);
+			expect(updatedInvitation.job_id).to.equal(specificJobId);
+			expect(updatedInvitation.title).to.equal(new_title);
+			expect(updatedInvitation.description).to.equal(new_description);
+			expect(updatedInvitation.requested_time_limit).to.equal(new_requested_time_limit);
+			expect(updatedInvitation.status).to.equal(new_status);
+			expect(updatedInvitation.created_at).to.be.a.date();
+			expect(updatedInvitation.updated_at).to.be.a.date();
 		});
 
-		it('should update the proposal record if given a valid id and data, even if only given one field', async() => {
+		it('should update the invitation record if given a valid id and data, even if only given one field', async() => {
 			const createData = await createNewData(),
 				specificId = createData.id,
 				specificJobId = createData.job_id,
-				proposal = await random.proposal(createData);
+				invitation = await random.invitation(createData);
 
-			checkFields(proposal, specificId, specificJobId);
+			checkFields(invitation, specificId, specificJobId);
 
-			const updatedProposal = await Proposals.update(specificId, { title: new_title });
+			const updatedInvitation = await Invitations.update(specificId, { title: new_title });
 
-			expect(updatedProposal).to.be.an.object();
-			expect(updatedProposal.id).to.equal(specificId);
-			expect(updatedProposal.job_id).to.equal(specificJobId);
-			expect(updatedProposal.title).to.equal(new_title);
-			expect(updatedProposal.created_at).to.be.a.date();
-			expect(updatedProposal.updated_at).to.be.a.date();
+			expect(updatedInvitation).to.be.an.object();
+			expect(updatedInvitation.id).to.equal(specificId);
+			expect(updatedInvitation.job_id).to.equal(specificJobId);
+			expect(updatedInvitation.title).to.equal(new_title);
+			expect(updatedInvitation.created_at).to.be.a.date();
+			expect(updatedInvitation.updated_at).to.be.a.date();
 		});
 
 		it('should raise an exception if given an incorrect id (not found)', async() => {
-			return checkErr.checkNotFound(Proposals, 'proposal', 'update', random.guid());
+			return checkErr.checkNotFound(Invitations, 'invitation', 'update', random.guid());
 		});
 
 		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
-			return checkErr.checkIdFormat(Proposals, 'proposal', 'update', {});
+			return checkErr.checkIdFormat(Invitations, 'invitation', 'update', {});
 		});
 	});
 
@@ -311,23 +313,23 @@ describe('Proposals Model', () => {
 			const createData = await createNewData(),
 				specificId = createData.id;
 
-			const proposal = await random.proposal(createData);
-			expect(proposal).to.be.an.object();
-			expect(proposal.id).to.equal(specificId);
+			const invitation = await random.invitation(createData);
+			expect(invitation).to.be.an.object();
+			expect(invitation.id).to.equal(specificId);
 
-			const result = await Proposals.delete(specificId);
+			const result = await Invitations.delete(specificId);
 			expect(result).to.equal(true);
 
 			// check that trying to find the record now returns a not found error
-			return checkErr.checkNotFound(Proposals, 'proposal', 'find', specificId);
+			return checkErr.checkNotFound(Invitations, 'invitation', 'find', specificId);
 		});
 
 		it('should raise an exception if given an incorrect id (not found)', async() => {
-			return checkErr.checkNotFound(Proposals, 'proposal', 'delete', random.guid());
+			return checkErr.checkNotFound(Invitations, 'invitation', 'delete', random.guid());
 		});
 
 		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
-			return checkErr.checkIdFormat(Proposals, 'proposal', 'delete', {});
+			return checkErr.checkIdFormat(Invitations, 'invitation', 'delete', {});
 		});
 	});
 
@@ -340,17 +342,17 @@ describe('Proposals Model', () => {
 			createData.freelancer_id = specificFreelancerId;
 
 			await random.freelancer({ id: specificFreelancerId, field_id });
-			const proposal = await random.proposal(createData);
+			const invitation = await random.invitation(createData);
 
-			expect(proposal).to.be.an.object();
-			expect(proposal.id).to.equal(specificId);
-			expect(proposal.freelancer_id).to.equal(specificFreelancerId);
+			expect(invitation).to.be.an.object();
+			expect(invitation.id).to.equal(specificId);
+			expect(invitation.freelancer_id).to.equal(specificFreelancerId);
 
 			const result = await Freelancers.delete(specificFreelancerId);
 			expect(result).to.equal(true);
 
 			// check that trying to find the record now returns a not found error
-			return checkErr.checkNotFound(Proposals, 'proposal', 'find', specificId);
+			return checkErr.checkNotFound(Invitations, 'invitation', 'find', specificId);
 		});
 
 		it('should be deleted in the event of the client who created it is deleted.', async() => {
@@ -360,17 +362,17 @@ describe('Proposals Model', () => {
 			createData.client_id = specificClientId;
 
 			await random.client({ id: specificClientId, field_id });
-			const proposal = await random.proposal(createData);
+			const invitation = await random.invitation(createData);
 
-			expect(proposal).to.be.an.object();
-			expect(proposal.id).to.equal(specificId);
-			expect(proposal.client_id).to.equal(specificClientId);
+			expect(invitation).to.be.an.object();
+			expect(invitation.id).to.equal(specificId);
+			expect(invitation.client_id).to.equal(specificClientId);
 
 			const result = await Clients.delete(specificClientId);
 			expect(result).to.equal(true);
 
 			// check that trying to find the record now returns a not found error
-			return checkErr.checkNotFound(Proposals, 'proposal', 'find', specificId);
+			return checkErr.checkNotFound(Invitations, 'invitation', 'find', specificId);
 		});
 
 		it('should be deleted in the event of the job who created it is deleted.', async() => {
@@ -378,17 +380,17 @@ describe('Proposals Model', () => {
 				specificId = createData.id,
 				specificJobId = createData.job_id;
 
-			const proposal = await random.proposal(createData);
+			const invitation = await random.invitation(createData);
 
-			expect(proposal).to.be.an.object();
-			expect(proposal.id).to.equal(specificId);
-			expect(proposal.job_id).to.equal(specificJobId);
+			expect(invitation).to.be.an.object();
+			expect(invitation.id).to.equal(specificId);
+			expect(invitation.job_id).to.equal(specificJobId);
 
 			const result = await Jobs.delete(specificJobId);
 			expect(result).to.equal(true);
 
 			// check that trying to find the record now returns a not found error
-			return checkErr.checkNotFound(Proposals, 'proposal', 'find', specificId);
+			return checkErr.checkNotFound(Invitations, 'invitation', 'find', specificId);
 		});
 	});
 });

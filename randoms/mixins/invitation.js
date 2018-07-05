@@ -2,9 +2,9 @@
 
 
 const random = new (require('chance'));
-const Proposals = require(`${process.cwd()}/src/models/proposals`);
+const Invitations = require(`${process.cwd()}/src/models/invitations`);
 
-// used to create a random proposal. If given no parameters, randomizes all fields
+// used to create a random invitation. If given no parameters, randomizes all fields
 module.exports = async(opts = {}) => {
 	// incase we need a field_id for the below conditionals, we only have to create a field once
 	const createFieldId = async() => {
@@ -32,14 +32,14 @@ module.exports = async(opts = {}) => {
 	}
 
 
-	return Proposals.create({
+	return Invitations.create({
 		id: opts.id || random.guid(),
 		freelancer_id: opts.freelancer_id,
 		client_id: opts.client_id,
 		job_id: opts.job_id,
 		title: opts.title || random.word(),
 		description: opts.description || random.paragraph(),
-		estimated_time_limit: opts.estimated_time_limit || null,
+		requested_time_limit: opts.requested_time_limit || null,
 		status: opts.status || 'pending',
 	});
 };
