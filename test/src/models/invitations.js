@@ -309,11 +309,88 @@ describe.only('Invitations Model', () => {
 
 
 	describe('has a delete method', () => {
+		it('should delete the record if given a correct id and return true if successful', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id;
 
+			const invitation = await random.invitation(createData);
+			expect(invitation).to.be.an.object();
+			expect(invitation.id).to.equal(specificId);
+
+			const result = await Invitations.delete(specificId);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(Invitations, 'invitation', 'find', specificId);
+		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(Invitations, 'invitation', 'delete', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(Invitations, 'invitation', 'delete', {});
+		});
 	});
 
 
 	describe('has cascading delete on freelancer_id, client_id, and job_id', () => {
+		it('should be deleted in the event of the freelancer who created it is deleted.', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificFreelancerId = random.guid();
+			createData.freelancer_id = specificFreelancerId;
 
+			await random.freelancer({ id: specificFreelancerId, field_id });
+			const invitation = await random.invitation(createData);
+
+			expect(invitation).to.be.an.object();
+			expect(invitation.id).to.equal(specificId);
+			expect(invitation.freelancer_id).to.equal(specificFreelancerId);
+
+			const result = await Freelancers.delete(specificFreelancerId);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(Invitations, 'invitation', 'find', specificId);
+		});
+
+		it('should be deleted in the event of the client who created it is deleted.', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificClientId = random.guid();
+			createData.client_id = specificClientId;
+
+			await random.client({ id: specificClientId, field_id });
+			const invitation = await random.invitation(createData);
+
+			expect(invitation).to.be.an.object();
+			expect(invitation.id).to.equal(specificId);
+			expect(invitation.client_id).to.equal(specificClientId);
+
+			const result = await Clients.delete(specificClientId);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(Invitations, 'invitation', 'find', specificId);
+		});
+
+		it('should be deleted in the event of the job who created it is deleted.', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificJobId = createData.job_id;
+
+			const invitation = await random.invitation(createData);
+
+			expect(invitation).to.be.an.object();
+			expect(invitation.id).to.equal(specificId);
+			expect(invitation.job_id).to.equal(specificJobId);
+
+			const result = await Jobs.delete(specificJobId);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(Invitations, 'invitation', 'find', specificId);
+		});
 	});
 });
