@@ -39,7 +39,7 @@ module.exports = async(opts = {}) => {
 		job_id: opts.job_id,
 		title: opts.title || random.word(),
 		description: opts.description || random.paragraph(),
-		requested_time_limit: opts.requested_time_limit || null, // may test this in more detail later on
+		requested_time_limit: opts.requested_time_limit || null,
 		status: opts.status || 'pending',
 	});
 };

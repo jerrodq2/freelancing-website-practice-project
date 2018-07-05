@@ -12,7 +12,7 @@ const Clients = require(`${process.cwd()}/src/models/clients`);
 const { db, random, checkErr } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe.only('Invitations Model', () => {
+describe('Invitations Model', () => {
 	// roundDate is a simple function to round Javascript dates to the nearest day. When creating a new date with JS, it creates problems in the test, since the database rounds it to a day and saves it like that, so this eliminates that problem
 	const today = new Date(),
 		roundDate = (date) => {
@@ -220,7 +220,7 @@ describe.only('Invitations Model', () => {
 		it('should retrieve a specific invitation with a given id, and return the object with relevant information about the client, freelancer, and job', async() => {
 			const invitation = await Invitations.findOne(id);
 
-			// first check the fields that belong to the proposal record
+			// first check the fields that belong to the invitation record
 			checkFields(invitation, id);
 
 			expect(invitation.freelancer_first_name).to.equal(freelancer_first_name);
