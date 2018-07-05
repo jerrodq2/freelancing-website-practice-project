@@ -13,6 +13,7 @@ module.exports = {
 	freelancer: require('./freelancer'),
 	job_activity: require('./job_activity'),
 	job: require('./job'),
+	proposal: require('./proposal'),
 	saved_client: require('./saved_client'),
 	saved_freelancer: require('./saved_freelancer'),
 	saved_job: require('./saved_job'),
