@@ -218,13 +218,33 @@ describe.only('Invitations Model', () => {
 	});
 
 
-	describe('has a getAll method', () => {
-
-	});
-
-
 	describe('has a findOne method', () => {
+		it('should retrieve a specific invitation with a given id, and return the object with relevant information about the client, freelancer, and job', async() => {
+			const invitation = await Invitations.findOne(id);
 
+			// first check the fields that belong to the proposal record
+			checkFields(invitation, id);
+
+			expect(invitation.freelancer_first_name).to.equal(freelancer_first_name);
+			expect(invitation.freelancer_last_name).to.equal(freelancer_last_name);
+			expect(invitation.freelancer_job_title).to.equal(freelancer_job_title);
+			expect(invitation.freelancer_experience_level).to.equal(freelancer_experience_level);
+			expect(invitation.client_first_name).to.equal(client_first_name);
+			expect(invitation.client_last_name).to.equal(client_last_name);
+			expect(invitation.job_title).to.equal(job_title);
+			expect(invitation.job_rate).to.equal(rate);
+			expect(invitation.job_rate_type).to.equal(rate_type);
+			expect(invitation.job_description).to.equal(job_description);
+			expect(invitation.job_experience_level_requested).to.equal(experience_level_requested);
+		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(Invitations, 'invitation', 'find', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(Invitations, 'invitation', 'find', {});
+		});
 	});
 
 

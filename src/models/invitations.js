@@ -63,6 +63,7 @@ module.exports = {
 	},
 
 
+	// TODO: Perhaps different methods? One for clients who want to see all of the invitations for a job and one for freelancers who want to see all of the invitations they've been sent. One for rejected, pending, and accepted invitations?
 	getAll () {
 		// TODO: to be setup with pagination later
 	},
@@ -72,7 +73,7 @@ module.exports = {
 		// specify the columns I want from each table
 		const invitationsColumns = ['invitations.*' ];
 		const jobColumns = ['j.id as job_id', 'j.title as job_title', 'j.rate as job_rate', 'j.rate_type as job_rate_type', 'j.description as job_description', 'j.experience_level_requested as job_experience_level_requested'];
-		const clientColumns = ['c.id as client_id', 'c.first_name as client_first_name', ' c.last_name as clients_last_name'];
+		const clientColumns = ['c.id as client_id', 'c.first_name as client_first_name', ' c.last_name as client_last_name'];
 		const freelancerColumns = ['f.id as freelancer_id', 'f.first_name as freelancer_first_name', 'f.last_name as freelancer_last_name', 'f.job_title as freelancer_job_title', 'f.experience_level as freelancer_experience_level'];
 
 		const selectedColumns = invitationsColumns.concat(jobColumns, clientColumns, freelancerColumns);
@@ -82,7 +83,20 @@ module.exports = {
 			.innerJoin('jobs as j', 'invitations.job_id', 'j.id')
 			.innerJoin('clients as c', 'invitations.client_id', 'c.id')
 			.innerJoin('freelancers as f', 'invitations.freelancer_id', 'f.id')
-			.then((result) => result[0]);
+			.then((result) => {
+				// throw error if the record with the given id couldn't be found
+				if (!result[0]) throw Errors.notFound('invitation', 'find');
+
+				return result[0];
+			})
+			.catch((err) => {
+				// throw error if the id wasn't given in proper uuid format
+				if (Errors.violatesIdSyntax(err))
+					throw Errors.badId('invitation', 'find');
+
+				// if the cause of the error wasn't found above, throw the given error
+				throw err;
+			});
 	},
 
 
