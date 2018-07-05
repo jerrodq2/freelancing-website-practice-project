@@ -13,11 +13,17 @@ const { db, random, checkErr } = require(`${process.cwd()}/test/src/helpers`);
 
 
 describe('Proposals Model', () => {
-	// simple function to round Javascript dates to the nearest day. When creating a new date with JS, it creates problems in the test, since the database rounds it to a day and saves it like that, so this eliminates that problem
-	const roundDate = (date) => {
-		const offsetMs = date.getTimezoneOffset() * 60 * 1000, oneDayMs = 24 * 60 * 60 * 1000;
-		return new Date(Math.floor((date.getTime() - offsetMs) / oneDayMs) * oneDayMs + offsetMs);
-	};
+	// roundDate is a simple function to round Javascript dates to the nearest day. When creating a new date with JS, it creates problems in the test, since the database rounds it to a day and saves it like that, so this eliminates that problem
+	const today = new Date(),
+		roundDate = (date) => {
+			const offsetMs = date.getTimezoneOffset() * 60 * 1000, oneDayMs = 24 * 60 * 60 * 1000;
+			return new Date(Math.floor((date.getTime() - offsetMs) / oneDayMs) * oneDayMs + offsetMs);
+		};
+
+	let estimated_time_limit = new Date();
+	// put the estimated_time_limit to be two weeks from now
+	estimated_time_limit.setDate(today.getDate()+14);
+	estimated_time_limit = roundDate(estimated_time_limit); // round it to be a day (no minutes, seconds, etc.), this is how it is saved in the db
 
 	// These variables are used to create the proposal record
 	const id = random.guid(),
@@ -27,14 +33,7 @@ describe('Proposals Model', () => {
 		title = random.word(),
 		description = random.paragraph(),
 		status = 'pending',
-		today = new Date();
-
-	let estimated_time_limit = new Date();
-	// put the estimated_time_limit to be two weeks from now
-	estimated_time_limit.setDate(today.getDate()+14);
-	estimated_time_limit = roundDate(estimated_time_limit); // round it to be a day (no minutes, seconds, etc.), this is how it is saved in the db
-
-	const data = { id, freelancer_id, job_id, client_id, title, description, estimated_time_limit, status };
+		data = { id, freelancer_id, job_id, client_id, title, description, estimated_time_limit, status };
 
 	// these variables are used to create the freelancer, client, and job, used in below tests for accuracy
 	const field_id = random.guid(),
