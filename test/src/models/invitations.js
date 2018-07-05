@@ -70,11 +70,9 @@ describe.only('Invitations Model', () => {
 	const createNewData = async() => {
 		const specificId = random.guid(),
 			specificJobId = random.guid(),
-			specificFreelancerId = random.guid(),
-			obj = { id: specificId, job_id: specificJobId, freelancer_id: specificFreelancerId },
+			obj = { id: specificId, job_id: specificJobId },
 			createData = Object.assign({}, data, obj);
 
-		await random.freelancer({ id: specificFreelancerId, field_id });
 		await random.job({ id: specificJobId, field_id, client_id, closed: 'false' });
 
 
@@ -82,10 +80,10 @@ describe.only('Invitations Model', () => {
 	};
 
 	// checks the basic fields in a given invitation object
-	const checkFields = (obj, givenId, givenJobId = job_id, givenFreelancerId = freelancer_id) => {
+	const checkFields = (obj, givenId, givenJobId = job_id) => {
 		expect(obj).to.be.an.object();
 		expect(obj.id).to.equal(givenId);
-		expect(obj.freelancer_id).to.equal(givenFreelancerId);
+		expect(obj.freelancer_id).to.equal(freelancer_id);
 		expect(obj.client_id).to.equal(client_id);
 		expect(obj.job_id).to.equal(givenJobId);
 		expect(obj.title).to.equal(title);
@@ -249,7 +247,64 @@ describe.only('Invitations Model', () => {
 
 
 	describe('has an update method', () => {
+		let new_requested_time_limit = new Date();
+		// put the new_requested_time_limit to be one week from now
+		new_requested_time_limit.setDate(today.getDate()+7);
+		new_requested_time_limit = roundDate(new_requested_time_limit);
 
+		const new_title = random.word(),
+			new_description = random.paragraph(),
+			new_status = 'pending',
+			updateData = { title: new_title, description: new_description, status: new_status, requested_time_limit: new_requested_time_limit };
+
+		it('should update the invitation if given a valid id and data, update the updated_at field, and return the updated object', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificJobId = createData.job_id,
+				invitation = await random.invitation(createData);
+
+			checkFields(invitation, specificId, specificJobId);
+
+			const updatedInvitation = await Invitations.update(specificId, updateData);
+
+			expect(updatedInvitation).to.be.an.object();
+			expect(updatedInvitation.id).to.equal(specificId);
+			expect(updatedInvitation.freelancer_id).to.equal(freelancer_id);
+			expect(updatedInvitation.client_id).to.equal(client_id);
+			expect(updatedInvitation.job_id).to.equal(specificJobId);
+			expect(updatedInvitation.title).to.equal(new_title);
+			expect(updatedInvitation.description).to.equal(new_description);
+			expect(updatedInvitation.requested_time_limit).to.equal(new_requested_time_limit);
+			expect(updatedInvitation.status).to.equal(new_status);
+			expect(updatedInvitation.created_at).to.be.a.date();
+			expect(updatedInvitation.updated_at).to.be.a.date();
+		});
+
+		it('should update the invitation record if given a valid id and data, even if only given one field', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificJobId = createData.job_id,
+				invitation = await random.invitation(createData);
+
+			checkFields(invitation, specificId, specificJobId);
+
+			const updatedInvitation = await Invitations.update(specificId, { title: new_title });
+
+			expect(updatedInvitation).to.be.an.object();
+			expect(updatedInvitation.id).to.equal(specificId);
+			expect(updatedInvitation.job_id).to.equal(specificJobId);
+			expect(updatedInvitation.title).to.equal(new_title);
+			expect(updatedInvitation.created_at).to.be.a.date();
+			expect(updatedInvitation.updated_at).to.be.a.date();
+		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(Invitations, 'invitation', 'update', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(Invitations, 'invitation', 'update', {});
+		});
 	});
 
 
