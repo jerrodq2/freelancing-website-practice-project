@@ -65,9 +65,93 @@ describe.only('Invitations Model', () => {
 		await random.invitation(data);
 	});
 
-	describe('has a create method', () => {
-		it('text', async() => {
 
+	// creates an the new variables needed to create a new invitation record
+	const createNewData = async() => {
+		const specificId = random.guid(),
+			specificJobId = random.guid(),
+			specificFreelancerId = random.guid(),
+			obj = { id: specificId, job_id: specificJobId, freelancer_id: specificFreelancerId },
+			createData = Object.assign({}, data, obj);
+
+		await random.freelancer({ id: specificFreelancerId, field_id });
+		await random.job({ id: specificJobId, field_id, client_id, closed: 'false' });
+
+
+		return createData;
+	};
+
+	// checks the basic fields in a given invitation object
+	const checkFields = (obj, givenId, givenJobId = job_id, givenFreelancerId = freelancer_id) => {
+		expect(obj).to.be.an.object();
+		expect(obj.id).to.equal(givenId);
+		expect(obj.freelancer_id).to.equal(givenFreelancerId);
+		expect(obj.client_id).to.equal(client_id);
+		expect(obj.job_id).to.equal(givenJobId);
+		expect(obj.title).to.equal(title);
+		expect(obj.description).to.equal(description);
+		expect(obj.requested_time_limit).to.equal(requested_time_limit);
+		expect(obj.status).to.equal(status);
+		expect(obj.created_at).to.be.a.date();
+		expect(obj.updated_at).to.equal(null);
+	};
+
+	describe('has a create method', () => {
+		it('should create a new invitation record if given valid data, create new created_at and udpated_at fields, and return the new object', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificJobId = createData.job_id,
+				specificFreelancerId = createData.freelancer_id,
+				invitation = await Invitations.create(createData);
+
+			checkFields(invitation, specificId, specificJobId, specificFreelancerId);
+		});
+
+		it('should only allow you to create a new invitation if the job is still open and should raise an exception when you try to create it when the job is closed', async() => {
+			const specificId = random.guid(),
+				specificJobId = random.guid(),
+				obj = { id: specificId, job_id: specificJobId },
+				createData = Object.assign({}, data, obj);
+
+			await random.job({ id: specificJobId, field_id, client_id, freelancer_id, closed: true });
+
+			try {
+				await Invitations.create(createData);
+			} catch (err) {
+				expect(err).to.be.an.object();
+				const { message } = err;
+
+				expect(message).to.be.a.string();
+				expect(message).to.include('invitation');
+				expect(message).to.include('trying to create');
+				expect(message).to.include('can\'t be completed');
+				expect(message).to.include('this job is closed');
+			}
+		});
+
+		it('should only allow a client to create one invitation per freelancer for the same job and raise an exception on the second attempt', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificJobId = createData.job_id,
+				specificFreelancerId = createData.freelancer_id,
+				secondId = random.guid(),
+				invitation = await Invitations.create(createData);
+
+			checkFields(invitation, specificId, specificJobId, specificFreelancerId);
+
+			createData.id = secondId;
+			try {
+				await Invitations.create(createData);
+			} catch (err) {
+				expect(err).to.be.an.object();
+				const { message } = err;
+				
+				expect(message).to.be.a.string();
+				expect(message).to.include('invitation');
+				expect(message).to.include('trying to create');
+				expect(message).to.include('can\'t be completed');
+				expect(message).to.include('this client has already written an invitation to this freelancer for this job');
+			}
 		});
 	});
 
