@@ -215,11 +215,6 @@ describe.only('Proposals Model', () => {
 	});
 
 
-	describe('has a getAll method', () => {
-
-	});
-
-
 	describe('has a findOne method', () => {
 		it('should retrieve a specific proposal with a given id, and return the object with relevant information about the client, freelancer, and job', async() => {
 			const proposal = await Proposals.findOne(id);

@@ -60,6 +60,7 @@ module.exports = {
 	},
 
 
+	// TODO: Perhaps different methods? One for clients who want to see all of the proposals for a job and one for freelancers who want to see all of the proposals. One for rejected, pending, and accepted proposals?
 	getAll () {
 		// TODO: to be setup with pagination later
 	},
