@@ -96,6 +96,7 @@ module.exports = {
 	},
 
 
+	// TODO: don't allow the freelancer_id, client_id, or job_id to be updated, prevent in the route, probably with JOI
 	update (id, data) {
 		return Proposals.updateById(id, data);
 	},

@@ -251,7 +251,64 @@ describe.only('Proposals Model', () => {
 
 
 	describe('has an update method', () => {
+		let new_estimated_time_limit = new Date();
+		// put the estimated_time_limit to be one week from now
+		new_estimated_time_limit.setDate(today.getDate()+7);
+		new_estimated_time_limit = roundDate(new_estimated_time_limit);
 
+		const new_title = random.word(),
+			new_description = random.paragraph(),
+			new_status = 'pending',
+			updateData = { title: new_title, description: new_description, status: new_status, estimated_time_limit: new_estimated_time_limit };
+
+		it('should update the proposal if given a valid id and data, update the updated_at field, and return the updated object', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificJobId = createData.job_id,
+				proposal = await random.proposal(createData);
+
+			checkFields(proposal, specificId, specificJobId);
+
+			const updatedProposal = await Proposals.update(specificId, updateData);
+
+			expect(updatedProposal).to.be.an.object();
+			expect(updatedProposal.id).to.equal(specificId);
+			expect(updatedProposal.freelancer_id).to.equal(freelancer_id);
+			expect(updatedProposal.client_id).to.equal(client_id);
+			expect(updatedProposal.job_id).to.equal(specificJobId);
+			expect(updatedProposal.title).to.equal(new_title);
+			expect(updatedProposal.description).to.equal(new_description);
+			expect(updatedProposal.estimated_time_limit).to.equal(new_estimated_time_limit);
+			expect(updatedProposal.status).to.equal(new_status);
+			expect(updatedProposal.created_at).to.be.a.date();
+			expect(updatedProposal.updated_at).to.be.a.date();
+		});
+
+		it('should update the proposal record if given a valid id and data, even if only given one field', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificJobId = createData.job_id,
+				proposal = await random.proposal(createData);
+
+			checkFields(proposal, specificId, specificJobId);
+
+			const updatedProposal = await Proposals.update(specificId, { title: new_title });
+
+			expect(updatedProposal).to.be.an.object();
+			expect(updatedProposal.id).to.equal(specificId);
+			expect(updatedProposal.job_id).to.equal(specificJobId);
+			expect(updatedProposal.title).to.equal(new_title);
+			expect(updatedProposal.created_at).to.be.a.date();
+			expect(updatedProposal.updated_at).to.be.a.date();
+		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(Proposals, 'proposal', 'update', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(Proposals, 'proposal', 'update', {});
+		});
 	});
 
 
