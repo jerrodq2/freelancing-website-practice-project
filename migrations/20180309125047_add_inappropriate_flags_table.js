@@ -13,7 +13,6 @@ exports.up = (knex) => knex.schema.createTable('inappropriate_flags', (table) =>
 	table.uuid('invitation_id').nullable().references('id').inTable('invitations').onDelete('CASCADE');
 	table.uuid('client_who_flagged').nullable().references('id').inTable('clients').onDelete('CASCADE'); // client that created the flag
 	table.uuid('freelancer_who_flagged').nullable().references('id').inTable('freelancers').onDelete('CASCADE'); // freelancer that created the flag
-	table.string('message').notNullable();
 	table.timestamps();
 });
 

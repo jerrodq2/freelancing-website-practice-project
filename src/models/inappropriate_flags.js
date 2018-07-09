@@ -22,6 +22,8 @@ module.exports = {
 		return InappropriateFlags.create(data);
 	},
 
+
+	// TODO: is update necessary? Probably just need update and create 
 	update (id, data) {
 		return InappropriateFlags.updateById(id, data);
 	},
