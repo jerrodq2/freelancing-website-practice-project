@@ -135,6 +135,29 @@ random.mixin({
 	},
 
 
+	inappropriate_flags: async(count = 10, opts = {}) => {
+		let createClient = false;
+
+		if (_.isEmpty(opts)) {
+			createClient = true; // this signals the single mixin to create a new client every time
+			// create a field so it doesn't have to be created more than once
+			opts.field_id = random.guid();
+			await random.field({ id: opts.field_id });
+			// create a freelancer if not given
+			opts.freelancer_who_flagged = random.guid();
+			await random.freelancer({ id: opts.freelancer_who_flagged, field_id: opts.field_id });
+		}
+
+		const flags = _.times(count, () => {
+			if (createClient) {
+				opts = _.omit(opts, 'client_id'); // if createClientis true then it needs a new client for every record, it is created in the invitation mixin for each record
+			}
+			return random.inappropriate_flag(opts, createClient);
+		});
+		return Promise.all(flags);
+	},
+
+
 	invitations: async(count = 10, opts = {}) => {
 		// create a field if not given
 		if (!opts.field_id) {
