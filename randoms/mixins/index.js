@@ -11,6 +11,7 @@ module.exports = {
 	freelancer_review: require('./freelancer_review'),
 	freelancer_skill: require('./freelancer_skill'),
 	freelancer: require('./freelancer'),
+	inappropriate_flag: require('./inappropriate_flag'),
 	invitation: require('./invitation'),
 	job_activity: require('./job_activity'),
 	job: require('./job'),

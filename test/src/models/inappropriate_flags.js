@@ -16,26 +16,29 @@ const Invitations = require(`${process.cwd()}/src/models/invitations`);
 const { db, random, checkErr, _ } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe('Inappropriate Flags Model', () => {
+describe.only('Inappropriate Flags Model', () => {
 	const id = random.guid(),
 		job_id = random.guid(),
 		client_id = random.guid(),
 		freelancer_id = random.guid(),
 		field_id = random.guid(),
-		data = { id, job_id, client_id };
+		data = { id, job_id, freelancer_who_flagged: freelancer_id };
 
 
 	before(async() => {
 		await db.resetAll();
+		await random.field({ id: field_id });
 		await random.client({ id: client_id, field_id });
 		await random.freelancer({ id: freelancer_id, field_id });
 		await random.job({ id: job_id, field_id, freelancer_id, client_id });
-		await random.inappropriate_flag({ id, job_id, freelancer_who_flagged: freelancer_id });
+		await random.inappropriate_flag(data);
 	});
 
-	
-	describe('has a create method', () => {
 
+	describe('has a create method', () => {
+		it('text', async() => {
+
+		});
 	});
 
 
