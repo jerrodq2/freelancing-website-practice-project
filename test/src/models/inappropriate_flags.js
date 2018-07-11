@@ -13,7 +13,7 @@ const ClientReviews = require(`${process.cwd()}/src/models/client_reviews`);
 const FreelancerReviews = require(`${process.cwd()}/src/models/freelancer_reviews`);
 const Proposals = require(`${process.cwd()}/src/models/proposals`);
 const Invitations = require(`${process.cwd()}/src/models/invitations`);
-const { db, random, checkErr, _ } = require(`${process.cwd()}/test/src/helpers`);
+const { db, random, checkErr } = require(`${process.cwd()}/test/src/helpers`);
 
 
 describe.only('Inappropriate Flags Model', () => {
@@ -48,11 +48,6 @@ describe.only('Inappropriate Flags Model', () => {
 
 
 	describe('has a findOne method', () => {
-
-	});
-
-
-	describe('has an update method', () => {
 
 	});
 
