@@ -1,8 +1,15 @@
-// TODO: o	Each table would need the respective id field (job_id), one field for being flagged by a client, and one for being flagged by a freelancer, and a field for the reason (message or enum?). The view would probably have a link to a pop up in order to create the flag, don't have to show that the item is flagged in the view (see upwork example)
-exports.up = function(knex, Promise) {
+'use strict';
 
-};
 
-exports.down = function(knex, Promise) {
+// creates the flagged_clients table. This is for clients who have been flagged as inappropriate. It also saves the client or freelancer who created the flag or flagged the client in question.
+exports.up = (knex) => knex.schema.createTable('flagged_clients', (table) => {
+	table.uuid('id').notNullable().primary().defaultTo(knex.raw('gen_random_uuid()'));
+	table.uuid('client_id').notNullable().references('id').inTable('clients').onDelete('RESTRICT');
+	table.uuid('client_who_flagged').nullable().references('id').inTable('clients').onDelete('RESTRICT');
+	table.uuid('freelancer_who_flagged').nullable().references('id').inTable('freelancers').onDelete('RESTRICT');
+	table.string('reason').notNullable();
+	table.timestamps();
+});
 
-};
+
+exports.down = (knex) => knex.schema.dropTable('flagged_clients');
