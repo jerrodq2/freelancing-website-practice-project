@@ -28,7 +28,8 @@ describe.only('Flagged Clients Model', () => {
 		await random.client({ id: client_id, field_id });
 		await random.client({ id: client_who_flagged, field_id });
 		await random.freelancer({ id: freelancer_who_flagged, field_id });
-		await random.inappropriate_flag(data);
+		await random.flagged_client(data);
+		await random.flagged_client();
 	});
 
 
