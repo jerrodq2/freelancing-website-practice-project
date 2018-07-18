@@ -79,6 +79,26 @@ random.mixin({
 	},
 
 
+	flagged_clients: async(count = 10, opts = {}) => {
+		// create a field if not given
+		if (!opts.field_id) {
+			opts.field_id = random.guid();
+			await random.field({ id: opts.field_id });
+		}
+		// if not given either of these keys, we set the flag to be created by a freelancer by default
+		if (!opts.client_who_flagged && !opts.freelancer_who_flagged) {
+			opts.freelancer_who_flagged = random.guid();
+			await random.freelancer({ id: opts.freelancer_who_flagged, field_id: opts.field_id });
+		}
+
+		const flagged_clients = _.times(count, () => {
+			opts = _.omit(opts, 'client_id'); // needs a unique client for every record
+			return random.flagged_client(opts);
+		});
+		return Promise.all(flagged_clients);
+	},
+
+
 	freelancer_reviews: async(count = 10, opts = {}) => {
 		// create a field if not given
 		if (!opts.field_id) {
@@ -132,29 +152,6 @@ random.mixin({
 
 		const freelancers = _.times(count, () => random.freelancer(opts));
 		return Promise.all(freelancers);
-	},
-
-
-	inappropriate_flags: async(count = 10, opts = {}) => {
-		let createClient = false;
-
-		if (_.isEmpty(opts)) {
-			createClient = true; // this signals the single mixin to create a new client every time
-			// create a field so it doesn't have to be created more than once
-			opts.field_id = random.guid();
-			await random.field({ id: opts.field_id });
-			// create a freelancer if not given
-			opts.freelancer_who_flagged = random.guid();
-			await random.freelancer({ id: opts.freelancer_who_flagged, field_id: opts.field_id });
-		}
-
-		const flags = _.times(count, () => {
-			if (createClient) {
-				opts = _.omit(opts, 'client_id'); // if createClientis true then it needs a new client for every record, it is created in the invitation mixin for each record
-			}
-			return random.inappropriate_flag(opts, createClient);
-		});
-		return Promise.all(flags);
 	},
 
 
