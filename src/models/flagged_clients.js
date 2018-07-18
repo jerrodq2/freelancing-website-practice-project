@@ -7,6 +7,7 @@ const FlaggedClients = new Model('flagged_clients');
 
 module.exports = {
 	// TODO: determine if we need two different methods for the flag being created by the client and by the freelancer. Perhaps it is only one create method, and which parameter (client_who_flagged/freelancer_who_flagged)is sent is determineded in the route
+	// TODO: Ensure a freelancer or client can only flag a specific job once (pre create check)
 	create (data) {
 		return FlaggedClients.create(data);
 	},
