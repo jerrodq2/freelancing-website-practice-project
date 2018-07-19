@@ -21,13 +21,23 @@ describe.only('Flagged Clients Model', () => {
 		field_id = random.guid(),
 		data = { id, client_id, freelancer_who_flagged, reason };
 
+	// variables used to specify fields of the client and freelancer, used in the tests below
+	const client_first_name = random.name(),
+		client_last_name = random.name(),
+		freelancer_first_name = random.name(),
+		freelancer_last_name = random.name(),
+
+		clientData = { id: client_who_flagged, field_id, first_name: client_first_name, last_name: client_last_name },
+
+		freelancerData = { id: freelancer_who_flagged, field_id, first_name: freelancer_first_name, last_name: freelancer_last_name };
+
 
 	before(async() => {
 		await db.resetAll();
 		await random.field({ id: field_id });
 		await random.client({ id: client_id, field_id });
-		await random.client({ id: client_who_flagged, field_id });
-		await random.freelancer({ id: freelancer_who_flagged, field_id });
+		await random.client(clientData);
+		await random.freelancer(freelancerData);
 		await random.flagged_client(data);
 	});
 
@@ -174,13 +184,55 @@ describe.only('Flagged Clients Model', () => {
 	});
 
 
-	describe('has a getAll method', () => {
-
-	});
-
-
 	describe('has a findOne method', () => {
+		it('should retrieve a specific flagged_client record with a given id, and return the object with relevant information about the freelancer who flagged it and all info about the client_who_flagged equal null if it was flagged by a freelancer', async() => {
+			const flagged_client = await FlaggedClients.findOne(id);
 
+			expect(flagged_client).to.be.an.object();
+			expect(flagged_client.id).to.equal(id);
+			expect(flagged_client.client_id).to.equal(client_id);
+			expect(flagged_client.client_who_flagged).to.equal(null);
+			expect(flagged_client.flagging_client_first_name).to.equal(null);
+			expect(flagged_client.flagging_client_last_name).to.equal(null);
+			expect(flagged_client.freelancer_who_flagged).to.equal(freelancer_who_flagged);
+			expect(flagged_client.flagging_freelancer_first_name).to.equal(freelancer_first_name);
+			expect(flagged_client.flagging_freelancer_last_name).to.equal(freelancer_last_name);
+			expect(flagged_client.reason).to.equal(reason);
+			expect(flagged_client.created_at).to.be.a.date();
+			expect(flagged_client.updated_at).to.equal(null);
+		});
+
+		it('should retrieve a specific flagged_client record with a given id, and return the object with relevant information about the client who flagged it and all info about the freelancer_who_flagged equal null if it was flagged by a client', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificClientId = createData.client_id;
+			createData.freelancer_who_flagged = null;
+			createData.client_who_flagged = client_who_flagged;
+
+			await random.flagged_client(createData);
+			const flagged_client = await FlaggedClients.findOne(specificId);
+
+			expect(flagged_client).to.be.an.object();
+			expect(flagged_client.id).to.equal(specificId);
+			expect(flagged_client.client_id).to.equal(specificClientId);
+			expect(flagged_client.client_who_flagged).to.equal(client_who_flagged);
+			expect(flagged_client.flagging_client_first_name).to.equal(client_first_name);
+			expect(flagged_client.flagging_client_last_name).to.equal(client_last_name);
+			expect(flagged_client.freelancer_who_flagged).to.equal(null);
+			expect(flagged_client.flagging_freelancer_first_name).to.equal(null);
+			expect(flagged_client.flagging_freelancer_last_name).to.equal(null);
+			expect(flagged_client.reason).to.equal(reason);
+			expect(flagged_client.created_at).to.be.a.date();
+			expect(flagged_client.updated_at).to.equal(null);
+		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(FlaggedClients, 'flagged_client', 'find', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(FlaggedClients, 'flagged_client', 'find', {});
+		});
 	});
 
 
