@@ -3,7 +3,6 @@
 
 const Model = require('./flag_model');
 const FlaggedClients = new Model('flagged_clients');
-const knex = require('../config/knex');
 const Errors = require(`${process.cwd()}/src/lib/errors`);
 
 
@@ -69,33 +68,37 @@ module.exports = {
 
 
 	findOne (id) {
-		// TODO: put a link in the view leading to the client profile for more info, and the to the user who flagged it
-		const flagColumns = ['flagged_clients.*'];
-		const clientColumns = ['c.id as client_id', 'c.first_name as client_first_name', 'c.last_name as client_last_name'];
-		const flaggingClientColumns = ['fc.id as client_who_flagged', 'fc.first_name as flagging_client_first_name', 'fc.last_name as flagging_client_last_name'];
-		const flaggingFreelancerColumns = ['ff.id as freelancer_who_flagged', 'ff.first_name as flagging_freelancer_first_name', 'ff.last_name as flagging_freelancer_last_name'];
+		const clientColumns = ['c.id as client_id', 'c.first_name as client_first_name', 'c.last_name as client_last_name'],
+			joinText = ['clients as c', 'flagged_clients.client_id', 'c.id'];
 
-		const selectedColumns = flagColumns.concat(clientColumns, flaggingClientColumns, flaggingFreelancerColumns);
-		return knex('flagged_clients')
-			.select(selectedColumns)
-			.where(knex.raw(`flagged_clients.id = '${id}'`))
-			.innerJoin('clients as c', 'flagged_clients.client_id', 'c.id')
-			.leftJoin('clients as fc', 'flagged_clients.client_who_flagged', 'fc.id')
-			.leftJoin('freelancers as ff', 'flagged_clients.freelancer_who_flagged', 'ff.id')
-			.then((result) => {
-				// throw error if the record with the given id couldn't be found
-				if (!result[0]) throw Errors.notFound('flagged_client', 'find');
-
-				return result[0];
-			})
-			.catch((err) => {
-				// throw error if the id wasn't given in proper uuid format
-				if (Errors.violatesIdSyntax(err))
-					throw Errors.badId('flagged_client', 'find');
-
-				// if the cause of the error wasn't found above, throw the given error
-				throw err;
-			});
+		return FlaggedClients.findOneFlag(id, clientColumns, joinText);
+		// TODO: remove these comments
+		// const flagColumns = ['flagged_clients.*'];
+		// const clientColumns = ['c.id as client_id', 'c.first_name as client_first_name', 'c.last_name as client_last_name'];
+		// const flaggingClientColumns = ['fc.id as client_who_flagged', 'fc.first_name as flagging_client_first_name', 'fc.last_name as flagging_client_last_name'];
+		// const flaggingFreelancerColumns = ['ff.id as freelancer_who_flagged', 'ff.first_name as flagging_freelancer_first_name', 'ff.last_name as flagging_freelancer_last_name'];
+		//
+		// const selectedColumns = flagColumns.concat(clientColumns, flaggingClientColumns, flaggingFreelancerColumns);
+		// return knex('flagged_clients')
+		// 	.select(selectedColumns)
+		// 	.where(knex.raw(`flagged_clients.id = '${id}'`))
+		// 	.innerJoin('clients as c', 'flagged_clients.client_id', 'c.id')
+		// 	.leftJoin('clients as fc', 'flagged_clients.client_who_flagged', 'fc.id')
+		// 	.leftJoin('freelancers as ff', 'flagged_clients.freelancer_who_flagged', 'ff.id')
+		// 	.then((result) => {
+		// 		// throw error if the record with the given id couldn't be found
+		// 		if (!result[0]) throw Errors.notFound('flagged_client', 'find');
+		//
+		// 		return result[0];
+		// 	})
+		// 	.catch((err) => {
+		// 		// throw error if the id wasn't given in proper uuid format
+		// 		if (Errors.violatesIdSyntax(err))
+		// 			throw Errors.badId('flagged_client', 'find');
+		//
+		// 		// if the cause of the error wasn't found above, throw the given error
+		// 		throw err;
+		// 	});
 	},
 
 

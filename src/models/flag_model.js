@@ -63,6 +63,39 @@ class FlagModel extends MainModel {
 
 		return this.create(data);
 	}
+
+
+	async findOneFlag (id, givenColumn, joinText) {
+		// TODO: put a link in the view leading to the objects (ex: client profile, job page, etc.) for more info, and the to the user who flagged it
+		const flagColumns = [`${this.tableName}.*`];
+		const flaggingClientColumns = ['fc.id as client_who_flagged', 'fc.first_name as flagging_client_first_name', 'fc.last_name as flagging_client_last_name'];
+		const flaggingFreelancerColumns = ['ff.id as freelancer_who_flagged', 'ff.first_name as flagging_freelancer_first_name', 'ff.last_name as flagging_freelancer_last_name'];
+
+		const selectedColumns = flagColumns.concat(flaggingClientColumns, flaggingFreelancerColumns, givenColumn);
+		return knex(this.tableName)
+			.select(selectedColumns)
+			.where(knex.raw(`${this.tableName}.id = '${id}'`))
+			// since the join statement for the actual object being flagged (client, job, review, etc.) can be so different, the text is created in the model (flagged_clients, flagged_jobs, etc.) and passed here, to keep it as simple as possible. Example of the joinText below
+			// example of joinText = ['clients as c', 'flagged_clients.client_id', 'c.id']
+			.innerJoin(joinText[0], joinText[1], joinText[2])
+			.leftJoin('clients as fc', `${this.tableName}.client_who_flagged`, 'fc.id')
+			.leftJoin('freelancers as ff', `${this.tableName}.freelancer_who_flagged`, 'ff.id')
+			.then((result) => {
+				// throw error if the record with the given id couldn't be found
+				if (!result[0]) throw Errors.notFound(toSingular(this.tableName), 'find');
+
+				return result[0];
+			})
+			.catch((err) => {
+				// throw error if the id wasn't given in proper uuid format
+				if (Errors.violatesIdSyntax(err))
+					throw Errors.badId(toSingular(this.tableName), 'find');
+
+				// if the cause of the error wasn't found above, throw the given error
+				throw err;
+			});
+	}
+
 }
 
 
