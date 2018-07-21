@@ -268,12 +268,47 @@ describe.only('Flagged Clients Model', () => {
 				specificId = createData.id,
 				specificClientId = createData.client_id,
 				flagged_client = await random.flagged_client(createData);
-			
+
 			expect(flagged_client).to.be.an.object();
 			expect(flagged_client.id).to.equal(specificId);
 			expect(flagged_client.client_id).to.equal(specificClientId);
 
 			const result = await Clients.delete(specificClientId);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(FlaggedClients, 'flagged_client', 'find', specificId);
+		});
+
+		it('should be deleted in the event of the client who created the flag is deleted.', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id;
+
+			createData.client_who_flagged = client_who_flagged;
+			createData.freelancer_who_flagged = null;
+			const flagged_client = await random.flagged_client(createData);
+
+			expect(flagged_client).to.be.an.object();
+			expect(flagged_client.id).to.equal(specificId);
+			expect(flagged_client.client_who_flagged).to.equal(client_who_flagged);
+
+			const result = await Clients.delete(client_who_flagged);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(FlaggedClients, 'flagged_client', 'find', specificId);
+		});
+
+		it('should be deleted in the event of the freelancer who created the flag is deleted.', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				flagged_client = await random.flagged_client(createData);
+
+			expect(flagged_client).to.be.an.object();
+			expect(flagged_client.id).to.equal(specificId);
+			expect(flagged_client.freelancer_who_flagged).to.equal(freelancer_who_flagged);
+
+			const result = await Freelancers.delete(freelancer_who_flagged);
 			expect(result).to.equal(true);
 
 			// check that trying to find the record now returns a not found error
