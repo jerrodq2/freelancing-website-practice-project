@@ -237,11 +237,47 @@ describe.only('Flagged Clients Model', () => {
 
 
 	describe('has a delete method', () => {
+		it('should delete the record if given a correct id and return true if successful', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				flagged_client = await random.flagged_client(createData);
 
+			expect(flagged_client).to.be.an.object();
+			expect(flagged_client.id).to.equal(specificId);
+
+			const result = await FlaggedClients.delete(specificId);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(FlaggedClients, 'flagged_client', 'find', specificId);
+		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(FlaggedClients, 'flagged_client', 'delete', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(FlaggedClients, 'flagged_client', 'delete', {});
+		});
 	});
 
 
-	describe('has cascading delete on job_id, client_id, freelancer_id, client_review_id, freelancer_review_id, proposal_id, and invitation_id', () => {
+	describe('has cascading delete on client_id, client_who_flagged, and freelancer_who_flagged', () => {
+		it('should be deleted in the event of the client who was flagged is deleted.', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificClientId = createData.client_id,
+				flagged_client = await random.flagged_client(createData);
+			
+			expect(flagged_client).to.be.an.object();
+			expect(flagged_client.id).to.equal(specificId);
+			expect(flagged_client.client_id).to.equal(specificClientId);
 
+			const result = await Clients.delete(specificClientId);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(FlaggedClients, 'flagged_client', 'find', specificId);
+		});
 	});
 });
