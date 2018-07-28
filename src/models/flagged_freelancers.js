@@ -1,14 +1,19 @@
 'use strict';
 
 
-const Model = require('./main_model');
+const Model = require('./flag_model');
 const FlaggedFreelancers = new Model('flagged_freelancers');
+const Errors = require(`${process.cwd()}/src/lib/errors`);
 
 
 module.exports = {
-	// TODO: determine if we need two different methods for the flag being created by the client and by the freelancer. Perhaps it is only one create method, and which parameter (client_who_flagged/freelancer_who_flagged)is sent is determineded in the route
-	create (data) {
-		return FlaggedFreelancers.create(data);
+	// TODO: determine which parameter (client_who_flagged/freelancer_who_flagged) is is sent in the route (maybe two different routes?)
+	async create (data) {
+		// a premptive check, saves us trouble in the flag_model create method
+		if (!data.freelancer_id)
+			throw Errors.badNull('flagged_freelancer', 'create', 'freelancer_id');
+			
+		return FlaggedFreelancers.createFlag(data, 'freelancer');
 	},
 
 

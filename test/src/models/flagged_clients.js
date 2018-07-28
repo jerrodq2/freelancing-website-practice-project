@@ -77,7 +77,6 @@ describe('Flagged Clients Model', () => {
 
 		it('should allow you to create a new flagged_client if given valid data with the flag being created by a client (client_who_flagged), create new created_at and updated_at fields, and return the new flagged_client object', async() => {
 			const specificId = random.guid(),
-				// data = { id, client_id, freelancer_who_flagged, reason }
 				obj = { id: specificId, client_who_flagged, freelancer_who_flagged: null },
 				createData = Object.assign({}, data, obj),
 				flagged_client = await FlaggedClients.create(createData);
@@ -142,7 +141,7 @@ describe('Flagged Clients Model', () => {
 			return checkErr.checkIdFormat(FlaggedClients, 'flagged_client', 'create', createData);
 		});
 
-		it('should raise either freelancer_who_flagged or client_who_flagged and should raise an exception if given neither', async() => {
+		it('should require either freelancer_who_flagged or client_who_flagged and should raise an exception if given neither', async() => {
 			const createData = await createNewData();
 			createData.freelancer_who_flagged = null;
 
