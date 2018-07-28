@@ -42,9 +42,38 @@ describe.only('Flagged Freelancers Model', () => {
 	});
 
 
-	describe('has a create method', () => {
-		it('text', async() => {
+	// simple function that creates a new freelancer that can be flagged
+	const createNewData = async() => {
+		const specificId = random.guid(),
+			specificFreelancerId = random.guid(),
+			obj = { id: specificId, freelancer_id: specificFreelancerId },
+			createData = Object.assign({}, data, obj);
 
+		await random.freelancer({ id: specificFreelancerId, field_id });
+		return createData;
+	};
+
+	// checks all fields in a given flagged_freelancer object
+	const checkFields = (obj, givenId, givenFreelancerId = freelancer_id, givenFlaggingClient = client_who_flagged, givenFlaggingFreelancer = null) => {
+		expect(obj).to.be.an.object();
+		expect(obj.id).to.equal(givenId);
+		expect(obj.freelancer_id).to.equal(givenFreelancerId);
+		expect(obj.client_who_flagged).to.equal(givenFlaggingClient);
+		expect(obj.freelancer_who_flagged).to.equal(givenFlaggingFreelancer);
+		expect(obj.reason).to.equal(reason);
+		expect(obj.created_at).to.be.a.date();
+		expect(obj.updated_at).to.equal(null);
+	};
+
+
+	describe('has a create method', () => {
+		it('should allow you to create a new flagged_freelancer if given valid data with the flag being created by a client (client_who_flagged), create new created_at and updated_at fields, and return the new flagged_freelancer object', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificFreelancerId = createData.freelancer_id,
+				flagged_freelancer = await FlaggedFreelancers.create(createData);
+
+			checkFields(flagged_freelancer, specificId, specificFreelancerId);
 		});
 	});
 
