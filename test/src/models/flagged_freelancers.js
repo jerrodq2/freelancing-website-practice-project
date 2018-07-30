@@ -11,7 +11,7 @@ const Freelancers = require(`${process.cwd()}/src/models/freelancers`);
 const { db, random, checkErr } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe.only('Flagged Freelancers Model', () => {
+describe('Flagged Freelancers Model', () => {
 	// create the first flag as a client flagging a freelancer
 	const id = random.guid(),
 		freelancer_id = random.guid(),
