@@ -21,23 +21,27 @@ describe.only('Flagged Freelancers Model', () => {
 		field_id = random.guid(),
 		data = { id, freelancer_id, client_who_flagged, reason };
 
-	// variables used to specify fields of the client and freelancer, used in the tests below
+	// variables used to specify fields of the client and freelancers, used in the tests below
 	const client_first_name = random.name(),
 		client_last_name = random.name(),
 		freelancer_first_name = random.name(),
 		freelancer_last_name = random.name(),
+		flagging_freelancer_first_name = random.name(),
+		flagging_freelancer_last_name = random.name(),
+
+		freelancer_data = { id: freelancer_id, field_id, first_name: freelancer_first_name, last_name: freelancer_last_name },
 
 		clientData = { id: client_who_flagged, field_id, first_name: client_first_name, last_name: client_last_name },
 
-		freelancerData = { id: freelancer_who_flagged, field_id, first_name: freelancer_first_name, last_name: freelancer_last_name };
+		flaggingFreelancerData = { id: freelancer_who_flagged, field_id, first_name: flagging_freelancer_first_name, last_name: flagging_freelancer_last_name };
 
 
 	before(async() => {
 		await db.resetAll();
 		await random.field({ id: field_id });
-		await random.freelancer({ id: freelancer_id, field_id });
+		await random.freelancer(freelancer_data);
 		await random.client(clientData);
-		await random.freelancer(freelancerData);
+		await random.freelancer(flaggingFreelancerData);
 		await random.flagged_freelancer(data);
 	});
 
@@ -185,7 +189,55 @@ describe.only('Flagged Freelancers Model', () => {
 
 
 	describe('has a findOne method', () => {
+		it('should retrieve a specific flagged_freelancer record with a given id, and return the object with relevant information about the freelancer that was flagged, client who flagged it and all info about the freelancer_who_flagged equal to null if it was flagged by a client', async() => {
+			const flagged_freelancer = await FlaggedFreelancers.findOne(id);
 
+			expect(flagged_freelancer).to.be.an.object();
+			expect(flagged_freelancer.id).to.equal(id);
+			expect(flagged_freelancer.freelancer_id).to.equal(freelancer_id);
+			expect(flagged_freelancer.freelancer_first_name).to.equal(freelancer_first_name);
+			expect(flagged_freelancer.freelancer_last_name).to.equal(freelancer_last_name);
+			expect(flagged_freelancer.client_who_flagged).to.equal(client_who_flagged);
+			expect(flagged_freelancer.flagging_client_first_name).to.equal(client_first_name);
+			expect(flagged_freelancer.flagging_client_last_name).to.equal(client_last_name);
+			expect(flagged_freelancer.freelancer_who_flagged).to.equal(null);
+			expect(flagged_freelancer.flagging_freelancer_first_name).to.equal(null);
+			expect(flagged_freelancer.flagging_freelancer_last_name).to.equal(null);
+			expect(flagged_freelancer.reason).to.equal(reason);
+			expect(flagged_freelancer.created_at).to.be.a.date();
+			expect(flagged_freelancer.updated_at).to.equal(null);
+		});
+
+		it('should retrieve a specific flagged_freelancer record with a given id, and return the object with relevant information about the freelancer who flagged it and all info about the client_who_flagged equal to null if it was flagged by a freelancer', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificFreelancerId = createData.freelancer_id;
+			createData.freelancer_who_flagged = freelancer_who_flagged;
+			createData.client_who_flagged = null;
+
+			await random.flagged_freelancer(createData);
+			const flagged_freelancer = await FlaggedFreelancers.findOne(specificId);
+			expect(flagged_freelancer).to.be.an.object();
+			expect(flagged_freelancer.id).to.equal(specificId);
+			expect(flagged_freelancer.freelancer_id).to.equal(specificFreelancerId);
+			expect(flagged_freelancer.client_who_flagged).to.equal(null);
+			expect(flagged_freelancer.flagging_client_first_name).to.equal(null);
+			expect(flagged_freelancer.flagging_client_last_name).to.equal(null);
+			expect(flagged_freelancer.freelancer_who_flagged).to.equal(freelancer_who_flagged);
+			expect(flagged_freelancer.flagging_freelancer_first_name).to.equal(flagging_freelancer_first_name);
+			expect(flagged_freelancer.flagging_freelancer_last_name).to.equal(flagging_freelancer_last_name);
+			expect(flagged_freelancer.reason).to.equal(reason);
+			expect(flagged_freelancer.created_at).to.be.a.date();
+			expect(flagged_freelancer.updated_at).to.equal(null);
+		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(FlaggedFreelancers, 'flagged_freelancer', 'find', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(FlaggedFreelancers, 'flagged_freelancer', 'find', {});
+		});
 	});
 
 
