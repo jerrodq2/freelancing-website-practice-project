@@ -268,6 +268,56 @@ describe.only('Flagged Freelancers Model', () => {
 
 
 	describe('has cascading delete on freelancer_id, client_who_flagged, and freelancer_who_flagged', () => {
+		it('should be deleted in the event of the freelancer who was flagged is deleted.', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificFreelancerId = createData.freelancer_id,
+				flagged_freelancer = await random.flagged_freelancer(createData);
 
+			expect(flagged_freelancer).to.be.an.object();
+			expect(flagged_freelancer.id).to.equal(specificId);
+			expect(flagged_freelancer.freelancer_id).to.equal(specificFreelancerId);
+
+			const result = await Freelancers.delete(specificFreelancerId);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(FlaggedFreelancers, 'flagged_freelancer', 'find', specificId);
+		});
+
+		it('should be deleted in the event of the client who created the flag is deleted.', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				flagged_freelancer = await random.flagged_freelancer(createData);
+
+			expect(flagged_freelancer).to.be.an.object();
+			expect(flagged_freelancer.id).to.equal(specificId);
+			expect(flagged_freelancer.client_who_flagged).to.equal(client_who_flagged);
+
+			const result = await Clients.delete(client_who_flagged);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(FlaggedFreelancers, 'flagged_freelancer', 'find', specificId);
+		});
+
+		it('should be deleted in the event of the freelancer who created the flag is deleted.', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id;
+
+			createData.client_who_flagged = null;
+			createData.freelancer_who_flagged = freelancer_who_flagged;
+			const flagged_freelancer = await random.flagged_freelancer(createData);
+
+			expect(flagged_freelancer).to.be.an.object();
+			expect(flagged_freelancer.id).to.equal(specificId);
+			expect(flagged_freelancer.freelancer_who_flagged).to.equal(freelancer_who_flagged);
+
+			const result = await Freelancers.delete(freelancer_who_flagged);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(FlaggedFreelancers, 'flagged_freelancer', 'find', specificId);
+		});
 	});
 });
