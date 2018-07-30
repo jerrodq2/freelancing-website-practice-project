@@ -10,7 +10,7 @@ const Jobs = require(`${process.cwd()}/src/models/jobs`);
 exports.seed = async (knex) => {
 	// Deletes ALL existing entries
 	await knex('jobs').del();
-	// Inserts seed entries, all of these jobs are created as open. Some are updated to be closed in a later file in order to have more varied data. This allows proposals and invitations to be created for them to replicate the normal workflow in the seeds. If they were closed, tying to create a proposal or invitaton for those jobs would create an error.
+	// Inserts seed entries, all of these jobs are created as open. Some are updated to be closed in another seed file (10) in order to have more varied data. This allows proposals and invitations to be created for them to replicate the normal workflow in the seeds. If they were closed, tying to create a proposal or invitaton for those jobs would create an error.
 	return Promise.all([
 		Jobs.create({
 			id: jobIds.basic_website,
