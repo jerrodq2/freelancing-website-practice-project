@@ -31,7 +31,7 @@ describe.only('Flagged Jobs Model', () => {
 		freelancer_first_name = random.name(),
 		freelancer_last_name = random.name(),
 
-		jobData = { id: job_id, field_id, title, description },
+		jobData = { id: job_id, client_id, field_id, title, description },
 
 		clientData = { id: client_who_flagged, field_id, first_name: client_first_name, last_name: client_last_name },
 
@@ -41,8 +41,8 @@ describe.only('Flagged Jobs Model', () => {
 	before(async() => {
 		await db.resetAll();
 		await random.field({ id: field_id });
-		await random.job(jobData);
 		await random.client({ id: client_id, field_id });
+		await random.job(jobData);
 		await random.client(clientData);
 		await random.freelancer(freelancerData);
 		await random.flagged_job(data);
