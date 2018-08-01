@@ -8,6 +8,7 @@ module.exports = {
 	education_history: require('./education_history'),
 	employment_history: require('./employment_history'),
 	field: require('./field'),
+	flagged_client_review: require('./flagged_client_review'),
 	flagged_client: require('./flagged_client'),
 	flagged_freelancer: require('./flagged_freelancer'),
 	flagged_job: require('./flagged_job'),
