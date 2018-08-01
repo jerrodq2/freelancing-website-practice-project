@@ -127,6 +127,34 @@ random.mixin({
 	},
 
 
+	flagged_freelancer_reviews: async(count = 10, opts = {}) => {
+		// create a field if not given
+		if (!opts.field_id) {
+			opts.field_id = random.guid();
+			await random.field({ id: opts.field_id });
+		}
+		if (!opts.client_id) {
+			opts.client_id = random.guid();
+			await random.client({ id: opts.client_id, field_id: opts.field_id });
+		}
+		if (!opts.freelancer_id) {
+			opts.freelancer_id = random.guid();
+			await random.freelancer({ id: opts.freelancer_id, field_id: opts.field_id });
+		}
+		// if not given either of these keys, we set the flag to be created by a freelancer by default
+		if (!opts.client_who_flagged && !opts.freelancer_who_flagged) {
+			opts.freelancer_who_flagged = random.guid();
+			await random.freelancer({ id: opts.freelancer_who_flagged, field_id: opts.field_id });
+		}
+
+		const flagged_freelancer_reviews = _.times(count, () => {
+			opts = _.omit(opts, 'freelancer_review_id'); // needs a unique freelancer_review for every record
+			return random.flagged_freelancer_review(opts);
+		});
+		return Promise.all(flagged_freelancer_reviews);
+	},
+
+
 	flagged_freelancers: async(count = 10, opts = {}) => {
 		// create a field if not given
 		if (!opts.field_id) {
