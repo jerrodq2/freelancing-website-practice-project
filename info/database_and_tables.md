@@ -21,13 +21,13 @@ Below are the individual tables, their purposes/use, examples of each (Ex:), and
 * **clients** - These are users who post different jobs, basically the 'client' in the job relationship, the ones who have a need, and need a developers help, ex: need a website made. I made this a separate table from freelancers partially due to the extra fields/columns that freelancers have, and partially just for clarity. It was easier to think of them as separate entities this way. They can create/post jobs, control everything related to said jobs, write reviews about freelancers they've worked with, search for freelancers, mark things as inappropriate, save freelancers, and invite freelancers to accept a job.
 	* Ex: A user that posts a job, accepts a contract with a freelancer, and pays the freelancer for their work (if this was in production at least)
 	* One-To-One: N/A
-	* One-To-Many: has one with fields where a client can only have one field. It also has this relationship with jobs, client_reviews, freelancer_reviews, saved_jobs, saved_clients, proposals, and invitations, and all flagged models (flagged clients, jobs, etc.), where one client can have many of each. One Client can also have many flags about it via the flagged_clients model.
+	* One-To-Many: has one with fields where a client can only have one field. It also has this relationship with jobs, client_reviews, freelancer_reviews, saved_jobs, saved_clients, proposals, invitations, and all flagged models (flagged clients, jobs, etc.), where one client can have many of each. One Client can also have many flags about it via the flagged_clients model.
 	* Many-To-Many: Both saved_clients and saved_freelancers act as intermediary tables for a many-to-many relationship between clients and freelancers
 
 * **freelancers** - These are the users who come to the site to accept work/jobs. These are the developers who accept and fulfill the job requests and get paid (if this was in production at least). These are the 'workers' in the job relationship. This table is more complex than the client, it has a few more fields such as summary and job_title, and it has several other tables that are only associated with it, such as freelancer_skills, education_history, employment_history and job_activity. For these reasons, I made it a separate table from clients and admins. This type of user can accept jobs, search for clients/jobs, write proposals for a job, write reviews about clients they've worked with, mark things as inappropriate, save clients, and control everything related to them such as their skills and education/employment history.
 	* Ex: A user who writes a proposal to a client to take on a job and gets paid for it (if it was in production)
 	* One-To-One: N/A
-	* One-To-Many: has one with fields where a freelancer can only have one field. It also has this relationship with jobs, client_reviews, freelancer_reviews, saved_jobs, saved_clients, saved_freelancers, job_activity, education_history, employment_history, proposals, and invitations, and all flagged models (flagged clients, jobs, etc.), where one freelancer can have many of each. One Freelancer can also have many flags about it via the flagged_freelancers model.
+	* One-To-Many: has one with fields where a freelancer can only have one field. It also has this relationship with jobs, client_reviews, freelancer_reviews, saved_jobs, saved_clients, saved_freelancers, job_activity, education_history, employment_history, proposals, invitations, and all flagged models (flagged clients, jobs, etc.), where one freelancer can have many of each. One Freelancer can also have many flags about it via the flagged_freelancers model.
 	* Many-To-Many: Both saved_clients and saved_freelancers act as intermediary tables for a many-to-many relationship between clients and freelancers. It also has a many-to-many relationship with skills through the freelancer_skills table.
 
 * **fields** - This is a table that is pre-generated via the seeds, it wasn't intended to have any user interaction. It simply shows the general area that certain fields are involved in, ex: web development, Wordpress, front end, mobile app, etc. These are not meant to be added onto or changed in any way.
@@ -131,12 +131,6 @@ Below are the individual tables, their purposes/use, examples of each (Ex:), and
 	* One-To-One: N/A
 	* One-To-Many: Has a this relationship with client and freelancers as they can both create many flagged_job records. It also has this relationship with jobs, where one job can be flagged many times.
 	* Many-To-Many: N/A
-
-
-
-
-
-
 
 * **flagged_client_reviews** - This table is so either clients or freelancers can flag a client_review as inappropriate. It is created with a reason, and only an admin can see and review the flag after it's created.
 	* Ex: A client/freelancer sees a client_review that seems inappropriate, so they flag it and specify the reason why.
