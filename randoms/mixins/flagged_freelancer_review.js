@@ -2,9 +2,9 @@
 
 
 const random = new (require('chance'));
-const FlaggedClientReviews = require(`${process.cwd()}/src/models/flagged_client_reviews`);
+const FlaggedFreelancerReviews = require(`${process.cwd()}/src/models/flagged_freelancer_reviews`);
 
-// used to create a random flagged_client_review. If given no parameters, randomizes all fields, creates a flag created by a freelancer by default
+// used to create a random flagged_freelancer_review. If given no parameters, randomizes all fields, creates a flag created by a freelancer by default
 module.exports = async(opts = {}) => {
 	// incase we need a field_id for the below client and freelancers, we only have to create a field once
 	const createFieldId = async() => {
@@ -25,12 +25,12 @@ module.exports = async(opts = {}) => {
 	};
 
 
-	// if the needed client_review isn't given, we create it here
-	if (!opts.client_review_id) {
+	// if the needed freelancer_review isn't given, we create it here
+	if (!opts.freelancer_review_id) {
 		if (!opts.client_id) await createClientId();
 		if (!opts.freelancer_id) await createFreelancerId();
-		opts.client_review_id = random.guid();
-		await random.client_review({ id: opts.client_review_id, client_id: opts.client_id, freelancer_id: opts.freelancer_id });
+		opts.freelancer_review_id = random.guid();
+		await random.freelancer_review({ id: opts.freelancer_review_id, client_id: opts.client_id, freelancer_id: opts.freelancer_id });
 	}
 
 	// if we aren't given either of these keys, we set the flag to be created by a freelancer by default
@@ -41,9 +41,9 @@ module.exports = async(opts = {}) => {
 	}
 
 
-	return FlaggedClientReviews.create({
+	return FlaggedFreelancerReviews.create({
 		id: opts.id || random.guid(),
-		client_review_id: opts.client_review_id || null,
+		freelancer_review_id: opts.freelancer_review_id || null,
 		client_who_flagged: opts.client_who_flagged || null,
 		freelancer_who_flagged: opts.freelancer_who_flagged || null,
 		reason: opts.reason || random.sentence(),
