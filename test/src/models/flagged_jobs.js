@@ -271,7 +271,7 @@ describe('Flagged Jobs Model', () => {
 
 
 	describe('has cascading delete on job_id, client_who_flagged, and freelancer_who_flagged', () => {
-		it('should be deleted in the event of the jobJob who was flagged is deleted.', async() => {
+		it('should be deleted in the event of the job that was flagged is deleted.', async() => {
 			const createData = await createNewData(),
 				specificId = createData.id,
 				specificJobId = createData.job_id,
