@@ -49,9 +49,144 @@ describe.only('Flagged Client Reviews Model', () => {
 		await random.flagged_client_review(data);
 	});
 
-	describe('has a create method', () => {
-		it('text', async() => {
 
+	// simple function that creates a new client_review that can be flagged
+	const createNewData = async() => {
+		const specificId = random.guid(),
+			specificReviewId = random.guid(),
+			obj = { id: specificId, client_review_id: specificReviewId },
+			createData = Object.assign({}, data, obj);
+
+		await random.client_review({ id: specificReviewId, client_id, field_id });
+		return createData;
+	};
+
+	// checks all fields in a given flagged_client_review object
+	const checkFields = (obj, givenId, givenReviewId = client_review_id, givenFlaggingClient = null, givenFlaggingFreelancer = freelancer_who_flagged) => {
+		expect(obj).to.be.an.object();
+		expect(obj.id).to.equal(givenId);
+		expect(obj.client_review_id).to.equal(givenReviewId);
+		expect(obj.client_who_flagged).to.equal(givenFlaggingClient);
+		expect(obj.freelancer_who_flagged).to.equal(givenFlaggingFreelancer);
+		expect(obj.reason).to.equal(reason);
+		expect(obj.created_at).to.be.a.date();
+		expect(obj.updated_at).to.equal(null);
+	};
+
+	describe('has a create method', () => {
+		it('should allow you to create a new flagged_client_review if given valid data with the flag being created by a freelancer (freelancer_who_flagged), create new created_at and updated_at fields, and return the new flagged_client_review object', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificReviewId = createData.client_review_id,
+				flagged_review = await FlaggedClientReviews.create(createData);
+
+			checkFields(flagged_review, specificId, specificReviewId);
+		});
+
+		it('should allow you to create a new flagged_client_review if given valid data with the flag being created by a client (client_who_flagged), create new created_at and updated_at fields, and return the new flagged_client_review object', async() => {
+			const specificId = random.guid(),
+				obj = { id: specificId, client_who_flagged, freelancer_who_flagged: null },
+				createData = Object.assign({}, data, obj),
+				flagged_review = await FlaggedClientReviews.create(createData);
+
+			checkFields(flagged_review, specificId, client_review_id, client_who_flagged, null);
+		});
+
+		it('shouldn\'t allow a client_review to be flagged twice by the same freelancer and should raise an exception on the second attempt', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				secondId = random.guid(),
+				specificReviewId = createData.client_review_id,
+				flagged_review = await FlaggedClientReviews.create(createData);
+
+			checkFields(flagged_review, specificId, specificReviewId);
+			createData.id = secondId;
+
+			try {
+				await FlaggedClientReviews.create(createData);
+			} catch (err) {
+				expect(err).to.be.an.object();
+				const { message } = err;
+				expect(message).to.be.a.string();
+				expect(message).to.include('flagged_client_review');
+				expect(message).to.include('create');
+				expect(message).to.include('can\'t be completed');
+				expect(message).to.include('freelancer');
+				expect(message).to.include('already flagged');
+			}
+		});
+
+		it('shouldn\'t allow a client_review to be flagged twice by the same client and should raise an exception on the second attempt', async() => {
+			const specificData = await createNewData(),
+				specificId = specificData.id,
+				secondId = random.guid(),
+				specificReviewId = specificData.client_review_id,
+				obj = { client_who_flagged, freelancer_who_flagged: null },
+				createData = Object.assign({}, specificData, obj ),
+				flagged_review = await FlaggedClientReviews.create(createData);
+
+			checkFields(flagged_review, specificId, specificReviewId, client_who_flagged, null);
+			createData.id = secondId;
+
+			try {
+				await FlaggedClientReviews.create(createData);
+			} catch (err) {
+				expect(err).to.be.an.object();
+				const { message } = err;
+				expect(message).to.be.a.string();
+				expect(message).to.include('flagged_client_review');
+				expect(message).to.include('create');
+				expect(message).to.include('can\'t be completed');
+				expect(message).to.include('client');
+				expect(message).to.include('already flagged');
+			}
+		});
+
+		it('should raise an exception if given an invalid id (not in uuid format', async() => {
+			const createData = await createNewData();
+			createData.id = 1;
+
+			return checkErr.checkIdFormat(FlaggedClientReviews, 'flagged_client_review', 'create', createData);
+		});
+
+		it('should require either freelancer_who_flagged or client_who_flagged and should raise an exception if given neither', async() => {
+			const createData = await createNewData();
+			createData.freelancer_who_flagged = null;
+
+			return checkErr.checkNotNull(FlaggedClientReviews, 'flagged_client_review', createData, 'freelancer_who_flagged and client_who_flagged');
+		});
+
+		it('should require a client_review_id to create', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkNotNull(FlaggedClientReviews, 'flagged_client_review', createData, 'client_review_id');
+		});
+
+		it('should require a reason to create', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkNotNull(FlaggedClientReviews, 'flagged_client_review', createData, 'reason');
+		});
+
+
+		it('should raise an exception if given an incorrect client_review_id (foreign key not found)', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkForeign(FlaggedClientReviews, 'flagged_client_review', 'create', createData, 'client_review_id', random.guid());
+		});
+
+		it('should raise an exception if given an incorrect freelancer_who_flagged (foreign key not found)', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkForeign(FlaggedClientReviews, 'flagged_client_review', 'create', createData, 'freelancer_who_flagged', random.guid());
+		});
+
+		it('should raise an exception if given an incorrect client_who_flagged (foreign key not found)', async() => {
+			const createData = await createNewData();
+			createData.client_who_flagged = client_who_flagged;
+			createData.freelancer_who_flagged = null;
+
+			return checkErr.checkForeign(FlaggedClientReviews, 'flagged_client_review', 'create', createData, 'client_who_flagged', random.guid());
 		});
 	});
 
