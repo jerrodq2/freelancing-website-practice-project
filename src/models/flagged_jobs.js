@@ -1,14 +1,19 @@
 'use strict';
 
 
-const Model = require('./main_model');
+const Model = require('./flag_model');
 const FlaggedJobs = new Model('flagged_jobs');
+const Errors = require(`${process.cwd()}/src/lib/errors`);
 
 
 module.exports = {
-	// TODO: determine if we need two different methods for the flag being created by the client and by the freelancer. Perhaps it is only one create method, and which parameter (client_who_flagged/freelancer_who_flagged)is sent is determineded in the route
+	// TODO: determine which parameter (client_who_flagged/freelancer_who_flagged) is is sent in the route (maybe two different routes?)
 	create (data) {
-		return FlaggedJobs.create(data);
+		// a premptive check, saves us trouble in the flag_model create method
+		if (!data.job_id)
+			throw Errors.badNull('flagged_job', 'create', 'job_id');
+
+		return FlaggedJobs.createFlag(data, 'job');
 	},
 
 
@@ -18,7 +23,10 @@ module.exports = {
 
 
 	findOne (id) {
-		return FlaggedJobs.findOne(id);
+		const jobColumns = ['j.id as job_id', 'j.title as job_title', 'j.description as job_description'],
+			joinText = ['jobs as j', 'flagged_jobs.job_id', 'j.id'];
+
+		return FlaggedJobs.findOneFlag(id, jobColumns, joinText);
 	},
 
 
