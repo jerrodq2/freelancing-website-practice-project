@@ -12,7 +12,7 @@ const Jobs = require(`${process.cwd()}/src/models/jobs`);
 const { db, random, checkErr } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe.only('Flagged Jobs Model', () => {
+describe('Flagged Jobs Model', () => {
 	// create the first flag as a freelancer flagging a job
 	const id = random.guid(),
 		job_id = random.guid(),
@@ -245,11 +245,82 @@ describe.only('Flagged Jobs Model', () => {
 
 
 	describe('has a delete method', () => {
+		it('should delete the record if given a correct id and return true if successful', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				flagged_job = await random.flagged_job(createData);
 
+			expect(flagged_job).to.be.an.object();
+			expect(flagged_job.id).to.equal(specificId);
+
+			const result = await FlaggedJobs.delete(specificId);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(FlaggedJobs, 'flagged_job', 'find', specificId);
+		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(FlaggedJobs, 'flagged_job', 'delete', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(FlaggedJobs, 'flagged_job', 'delete', {});
+		});
 	});
 
 
 	describe('has cascading delete on job_id, client_who_flagged, and freelancer_who_flagged', () => {
+		it('should be deleted in the event of the jobJob who was flagged is deleted.', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificJobId = createData.job_id,
+				flagged_job = await random.flagged_job(createData);
 
+			expect(flagged_job).to.be.an.object();
+			expect(flagged_job.id).to.equal(specificId);
+			expect(flagged_job.job_id).to.equal(specificJobId);
+
+			const result = await Jobs.delete(specificJobId);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(FlaggedJobs, 'flagged_job', 'find', specificId);
+		});
+
+		it('should be deleted in the event of the freelancer who created the flag is deleted.', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				flagged_job = await random.flagged_job(createData);
+
+			expect(flagged_job).to.be.an.object();
+			expect(flagged_job.id).to.equal(specificId);
+			expect(flagged_job.freelancer_who_flagged).to.equal(freelancer_who_flagged);
+
+			const result = await Freelancers.delete(freelancer_who_flagged);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(FlaggedJobs, 'flagged_job', 'find', specificId);
+		});
+
+		it('should be deleted in the event of the client who created the flag is deleted.', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id;
+
+			createData.client_who_flagged = client_who_flagged;
+			createData.freelancer_who_flagged = null;
+			const flagged_job = await random.flagged_job(createData);
+
+			expect(flagged_job).to.be.an.object();
+			expect(flagged_job.id).to.equal(specificId);
+			expect(flagged_job.client_who_flagged).to.equal(client_who_flagged);
+
+			const result = await Clients.delete(client_who_flagged);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(FlaggedJobs, 'flagged_job', 'find', specificId);
+		});
 	});
 });
