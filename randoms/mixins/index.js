@@ -10,6 +10,7 @@ module.exports = {
 	field: require('./field'),
 	flagged_client: require('./flagged_client'),
 	flagged_freelancer: require('./flagged_freelancer'),
+	flagged_job: require('./flagged_job'),
 	freelancer_review: require('./freelancer_review'),
 	freelancer_skill: require('./freelancer_skill'),
 	freelancer: require('./freelancer'),
