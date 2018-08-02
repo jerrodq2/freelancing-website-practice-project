@@ -12,7 +12,7 @@ exports.seed = async (knex) => {
 	return Promise.all([
 		FlaggedClientReviews.create({
 			client_review_id: miscIds.jessica_review,
-			client_who_flagged: clientIds.jessica,
+			client_who_flagged: clientIds.natasha,
 			reason: 'She\'s just attacking me personally',
 		}),
 	]);
