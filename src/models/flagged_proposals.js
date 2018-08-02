@@ -1,14 +1,18 @@
 'use strict';
 
 
-const Model = require('./main_model');
+const Model = require('./flag_model');
 const FlaggedProposals = new Model('flagged_proposals');
+const Errors = require(`${process.cwd()}/src/lib/errors`);
 
 
 module.exports = {
-	// TODO: determine if we need two different methods for the flag being created by the client and by the freelancer. Perhaps it is only one create method, and which parameter (client_who_flagged/freelancer_who_flagged)is sent is determineded in the route
 	create (data) {
-		return FlaggedProposals.create(data);
+		// a premptive check, saves us trouble in the flag_model create method
+		if (!data.proposal_id)
+			throw Errors.badNull('flagged_proposal', 'create', 'proposal_id');
+
+		return FlaggedProposals.createFlag(data, 'proposal');
 	},
 
 
@@ -17,8 +21,11 @@ module.exports = {
 	},
 
 
-	findOne (id) {
-		return FlaggedProposals.findOne(id);
+	findOne (id) { // TODO: will this work going through the flag_model? It doesn't have any freelancer_who_flagged fields, but maybe since it's a left join
+		const proposalColumns = ['p.id as proposal_id', 'p.title as proposal_title', 'p.description as proposal_description'],
+			joinText = ['proposals as p', 'flagged_proposals.proposal_id', 'p.id'];
+
+		return FlaggedProposals.findOneFlag(id, proposalColumns, joinText);
 	},
 
 

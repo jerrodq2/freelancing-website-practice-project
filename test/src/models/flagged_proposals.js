@@ -44,9 +44,93 @@ describe.only('Flagged Proposals Model', () => {
 		await random.flagged_proposal(data);
 	});
 
-	describe('has a create method', () => {
-		it('text', async() => {
 
+	// simple function that creates a new proposal that can be flagged
+	const createNewData = async() => {
+		const specificId = random.guid(),
+			specificProposalId = random.guid(),
+			obj = { id: specificId, proposal_id: specificProposalId },
+			createData = Object.assign({}, data, obj);
+
+		await random.proposal({ id: specificProposalId, client_id, freelancer_id });
+		return createData;
+	};
+
+	// checks all fields in a given flagged_proposal object
+	const checkFields = (obj, givenId, specificProposalId = proposal_id) => {
+		expect(obj).to.be.an.object();
+		expect(obj.id).to.equal(givenId);
+		expect(obj.proposal_id).to.equal(specificProposalId);
+		expect(obj.client_who_flagged).to.equal(client_who_flagged);
+		expect(obj.reason).to.equal(reason);
+		expect(obj.created_at).to.be.a.date();
+		expect(obj.updated_at).to.equal(null);
+	};
+
+	describe('has a create method', () => {
+		it('should allow you to create a new flagged_proposal if given valid data with the flag being created by a client (client_who_flagged), create new created_at and updated_at fields, and return the new flagged_proposal object', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificProposalId = createData.proposal_id,
+				flagged_proposal = await FlaggedProposals.create(createData);
+
+			checkFields(flagged_proposal, specificId, specificProposalId);
+		});
+
+		it('shouldn\'t allow a proposal to be flagged twice by the same client and should raise an exception on the second attempt', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				secondId = random.guid(),
+				specificProposalId = createData.proposal_id,
+				flagged_proposal = await FlaggedProposals.create(createData);
+
+			checkFields(flagged_proposal, specificId, specificProposalId);
+			createData.id = secondId;
+
+			try {
+				await FlaggedProposals.create(createData);
+			} catch (err) {
+				expect(err).to.be.an.object();
+				const { message } = err;
+				expect(message).to.be.a.string();
+				expect(message).to.include('flagged_proposal');
+				expect(message).to.include('create');
+				expect(message).to.include('can\'t be completed');
+				expect(message).to.include('client');
+				expect(message).to.include('already flagged');
+			}
+		});
+
+		it('should raise an exception if given an invalid id (not in uuid format', async() => {
+			const createData = await createNewData();
+			createData.id = 1;
+
+			return checkErr.checkIdFormat(FlaggedProposals, 'flagged_proposal', 'create', createData);
+		});
+
+		it('should require a proposal_id to create', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkNotNull(FlaggedProposals, 'flagged_proposal', createData, 'proposal_id');
+		});
+
+		it('should require a reason to create', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkNotNull(FlaggedProposals, 'flagged_proposal', createData, 'reason');
+		});
+
+
+		it('should raise an exception if given an incorrect proposal_id (foreign key not found)', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkForeign(FlaggedProposals, 'flagged_proposal', 'create', createData, 'proposal_id', random.guid());
+		});
+
+		it('should raise an exception if given an incorrect client_who_flagged (foreign key not found)', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkForeign(FlaggedProposals, 'flagged_proposal', 'create', createData, 'client_who_flagged', random.guid());
 		});
 	});
 
