@@ -245,11 +245,82 @@ describe.only('Flagged Freelancer Reviews Model', () => {
 
 
 	describe('has a delete method', () => {
+		it('should delete the record if given a correct id and return true if successful', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				flagged_review = await random.flagged_freelancer_review(createData);
 
+			expect(flagged_review).to.be.an.object();
+			expect(flagged_review.id).to.equal(specificId);
+
+			const result = await FlaggedFreelancerReviews.delete(specificId);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(FlaggedFreelancerReviews, 'flagged_freelancer_review', 'find', specificId);
+		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(FlaggedFreelancerReviews, 'flagged_freelancer_review', 'delete', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(FlaggedFreelancerReviews, 'flagged_freelancer_review', 'delete', {});
+		});
 	});
 
 
 	describe('has cascading delete on freelancer_review_id, client_who_flagged, and freelancer_who_flagged', () => {
+		it('should be deleted in the event of the freelancer_review that was flagged is deleted.', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificReviewId = createData.freelancer_review_id,
+				flagged_review = await random.flagged_freelancer_review(createData);
 
+			expect(flagged_review).to.be.an.object();
+			expect(flagged_review.id).to.equal(specificId);
+			expect(flagged_review.freelancer_review_id).to.equal(specificReviewId);
+
+			const result = await FreelancerReviews.delete(specificReviewId);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(FlaggedFreelancerReviews, 'flagged_freelancer_review', 'find', specificId);
+		});
+
+		it('should be deleted in the event of the freelancer who created the flag is deleted.', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				flagged_review = await random.flagged_freelancer_review(createData);
+
+			expect(flagged_review).to.be.an.object();
+			expect(flagged_review.id).to.equal(specificId);
+			expect(flagged_review.freelancer_who_flagged).to.equal(freelancer_who_flagged);
+
+			const result = await Freelancers.delete(freelancer_who_flagged);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(FlaggedFreelancerReviews, 'flagged_freelancer_review', 'find', specificId);
+		});
+
+		it('should be deleted in the event of the client who created the flag is deleted.', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id;
+
+			createData.client_who_flagged = client_who_flagged;
+			createData.freelancer_who_flagged = null;
+			const flagged_review = await random.flagged_freelancer_review(createData);
+
+			expect(flagged_review).to.be.an.object();
+			expect(flagged_review.id).to.equal(specificId);
+			expect(flagged_review.client_who_flagged).to.equal(client_who_flagged);
+
+			const result = await Clients.delete(client_who_flagged);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(FlaggedFreelancerReviews, 'flagged_freelancer_review', 'find', specificId);
+		});
 	});
 });
