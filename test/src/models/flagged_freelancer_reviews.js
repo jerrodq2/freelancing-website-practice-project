@@ -12,7 +12,7 @@ const FreelancerReviews = require(`${process.cwd()}/src/models/freelancer_review
 const { db, random, checkErr } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe.only('Flagged Freelancer Reviews Model', () => {
+describe('Flagged Freelancer Reviews Model', () => {
 	// create the first flag as a freelancer flagging a freelancer_review
 	const id = random.guid(),
 		freelancer_review_id = random.guid(),

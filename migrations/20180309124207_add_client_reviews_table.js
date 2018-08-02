@@ -8,7 +8,7 @@ exports.up = (knex) => knex.schema.createTable('client_reviews', (table) => {
 	table.text('review').notNullable();
 	table.uuid('freelancer_id').notNullable().references('id').inTable('freelancers').onDelete('CASCADE');
 	table.uuid('client_id').notNullable().references('id').inTable('clients').onDelete('CASCADE');
-	table.uuid('job_id').notNullable().references('id').inTable('jobs').onDelete('CASCADE').unique(); // only one freelancer_review per job
+	table.uuid('job_id').notNullable().references('id').inTable('jobs').onDelete('CASCADE').unique(); // only one client_review per job
 	table.timestamps();
 
 });
