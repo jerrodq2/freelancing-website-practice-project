@@ -7,12 +7,11 @@ const lab = exports.lab = Lab.script();
 const { describe, it, before } = lab;
 const FlaggedProposals = require(`${process.cwd()}/src/models/flagged_proposals`);
 const Clients = require(`${process.cwd()}/src/models/clients`);
-const Freelancers = require(`${process.cwd()}/src/models/freelancers`);
 const Proposals = require(`${process.cwd()}/src/models/proposals`);
 const { db, random, checkErr } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe.only('Flagged Proposals Model', () => {
+describe('Flagged Proposals Model', () => {
 	// only clients can create a flagged_proposal
 	const id = random.guid(),
 		proposal_id = random.guid(),
@@ -163,11 +162,63 @@ describe.only('Flagged Proposals Model', () => {
 
 
 	describe('has a delete method', () => {
+		it('should delete the record if given a correct id and return true if successful', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				flagged_proposal = await random.flagged_proposal(createData);
 
+			expect(flagged_proposal).to.be.an.object();
+			expect(flagged_proposal.id).to.equal(specificId);
+
+			const result = await FlaggedProposals.delete(specificId);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(FlaggedProposals, 'flagged_proposal', 'find', specificId);
+		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(FlaggedProposals, 'flagged_proposal', 'delete', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(FlaggedProposals, 'flagged_proposal', 'delete', {});
+		});
 	});
 
 
 	describe('has cascading delete on proposal_id, client_who_flagged, and freelancer_who_flagged', () => {
+		it('should be deleted in the event of the proposal that was flagged is deleted.', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificProposalId = createData.proposal_id,
+				flagged_proposal = await random.flagged_proposal(createData);
 
+			expect(flagged_proposal).to.be.an.object();
+			expect(flagged_proposal.id).to.equal(specificId);
+			expect(flagged_proposal.proposal_id).to.equal(specificProposalId);
+
+			const result = await Proposals.delete(specificProposalId);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(FlaggedProposals, 'flagged_proposal', 'find', specificId);
+		});
+
+		it('should be deleted in the event of the client who created the flag is deleted.', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				flagged_proposal = await random.flagged_proposal(createData);
+
+			expect(flagged_proposal).to.be.an.object();
+			expect(flagged_proposal.id).to.equal(specificId);
+			expect(flagged_proposal.client_who_flagged).to.equal(client_who_flagged);
+
+			const result = await Clients.delete(client_who_flagged);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(FlaggedProposals, 'flagged_proposal', 'find', specificId);
+		});
 	});
 });
