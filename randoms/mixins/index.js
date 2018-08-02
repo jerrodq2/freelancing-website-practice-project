@@ -13,6 +13,7 @@ module.exports = {
 	flagged_freelancer_review: require('./flagged_freelancer_review'),
 	flagged_freelancer: require('./flagged_freelancer'),
 	flagged_job: require('./flagged_job'),
+	flagged_proposal: require('./flagged_proposal'),
 	freelancer_review: require('./freelancer_review'),
 	freelancer_skill: require('./freelancer_skill'),
 	freelancer: require('./freelancer'),
