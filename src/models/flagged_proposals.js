@@ -21,11 +21,11 @@ module.exports = {
 	},
 
 
-	findOne (id) { // TODO: will this work going through the flag_model? It doesn't have any freelancer_who_flagged fields, but maybe since it's a left join
+	findOne (id) {
 		const proposalColumns = ['p.id as proposal_id', 'p.title as proposal_title', 'p.description as proposal_description'],
 			joinText = ['proposals as p', 'flagged_proposals.proposal_id', 'p.id'];
 
-		return FlaggedProposals.findOneFlag(id, proposalColumns, joinText);
+		return FlaggedProposals.findOneInvitation(id, proposalColumns, joinText, 'client');
 	},
 
 

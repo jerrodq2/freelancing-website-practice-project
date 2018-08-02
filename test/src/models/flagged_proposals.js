@@ -136,7 +136,29 @@ describe.only('Flagged Proposals Model', () => {
 
 
 	describe('has a findOne method', () => {
+		it('should retrieve a specific flagged_proposal record with a given id, and return the object with relevant information about the proposal that was flagged, the client who flagged it', async() => {
+			const flagged_proposal = await FlaggedProposals.findOne(id);
 
+			expect(flagged_proposal).to.be.an.object();
+			expect(flagged_proposal.id).to.equal(id);
+			expect(flagged_proposal.proposal_id).to.equal(proposal_id);
+			expect(flagged_proposal.proposal_title).to.equal(title);
+			expect(flagged_proposal.proposal_description).to.equal(description);
+			expect(flagged_proposal.client_who_flagged).to.equal(client_who_flagged);
+			expect(flagged_proposal.flagging_client_first_name).to.equal(first_name);
+			expect(flagged_proposal.flagging_client_last_name).to.equal(last_name);
+			expect(flagged_proposal.reason).to.equal(reason);
+			expect(flagged_proposal.created_at).to.be.a.date();
+			expect(flagged_proposal.updated_at).to.equal(null);
+		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(FlaggedProposals, 'flagged_proposal', 'find', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(FlaggedProposals, 'flagged_proposal', 'find', {});
+		});
 	});
 
 
