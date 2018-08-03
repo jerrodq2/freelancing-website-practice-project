@@ -66,6 +66,7 @@ describe('Flagged Proposals Model', () => {
 		expect(obj.updated_at).to.equal(null);
 	};
 
+
 	describe('has a create method', () => {
 		it('should allow you to create a new flagged_proposal if given valid data with the flag being created by a client (client_who_flagged), create new created_at and updated_at fields, and return the new flagged_proposal object', async() => {
 			const createData = await createNewData(),

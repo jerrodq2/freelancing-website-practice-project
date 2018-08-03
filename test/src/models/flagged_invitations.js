@@ -35,18 +35,102 @@ describe.only('Flagged Invitations Model', () => {
 
 	before(async() => {
 		await db.resetAll();
-		// await random.field({ id: field_id });
-		// await random.client({ id: client_id, field_id });
-		// await random.freelancer({ id: freelancer_id, field_id });
-		// await random.invitation(invitationData);
-		// await random.freelancer(freelancerData);
-		// await random.flagged_invitation(data);
-		await random.flagged_invitations();
+		await random.field({ id: field_id });
+		await random.client({ id: client_id, field_id });
+		await random.freelancer({ id: freelancer_id, field_id });
+		await random.invitation(invitationData);
+		await random.freelancer(freelancerData);
+		await random.flagged_invitation(data);
 	});
 
-	describe('has a create method', () => {
-		it('text', async() => {
 
+	// simple function that creates a new invitation that can be flagged
+	const createNewData = async() => {
+		const specificId = random.guid(),
+			specificInvitationId = random.guid(),
+			obj = { id: specificId, invitation_id: specificInvitationId },
+			createData = Object.assign({}, data, obj);
+
+		await random.invitation({ id: specificInvitationId, client_id, freelancer_id });
+		return createData;
+	};
+
+	// checks all fields in a given flagged_invitation object
+	const checkFields = (obj, givenId, specificInvitationId = invitation_id) => {
+		expect(obj).to.be.an.object();
+		expect(obj.id).to.equal(givenId);
+		expect(obj.invitation_id).to.equal(specificInvitationId);
+		expect(obj.freelancer_who_flagged).to.equal(freelancer_who_flagged);
+		expect(obj.reason).to.equal(reason);
+		expect(obj.created_at).to.be.a.date();
+		expect(obj.updated_at).to.equal(null);
+	};
+
+
+	describe('has a create method', () => {
+		it('should allow you to create a new flagged_invitation if given valid data with the flag being created by a freelancer (freelancer_who_flagged), create new created_at and updated_at fields, and return the new flagged_invitation object', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificInvitationId = createData.invitation_id,
+				flagged_invitation = await FlaggedInvitations.create(createData);
+
+			checkFields(flagged_invitation, specificId, specificInvitationId);
+		});
+
+		it('shouldn\'t allow an invitation to be flagged twice by the same freelancer and should raise an exception on the second attempt', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				secondId = random.guid(),
+				specificInvitationId = createData.invitation_id,
+				flagged_invitation = await FlaggedInvitations.create(createData);
+
+			checkFields(flagged_invitation, specificId, specificInvitationId);
+			createData.id = secondId;
+
+			try {
+				await FlaggedInvitations.create(createData);
+			} catch (err) {
+				expect(err).to.be.an.object();
+				const { message } = err;
+				expect(message).to.be.a.string();
+				expect(message).to.include('flagged_invitation');
+				expect(message).to.include('create');
+				expect(message).to.include('can\'t be completed');
+				expect(message).to.include('freelancer');
+				expect(message).to.include('already flagged');
+			}
+		});
+
+		it('should raise an exception if given an invalid id (not in uuid format', async() => {
+			const createData = await createNewData();
+			createData.id = 1;
+
+			return checkErr.checkIdFormat(FlaggedInvitations, 'flagged_invitation', 'create', createData);
+		});
+
+		it('should require a invitation_id to create', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkNotNull(FlaggedInvitations, 'flagged_invitation', createData, 'invitation_id');
+		});
+
+		it('should require a reason to create', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkNotNull(FlaggedInvitations, 'flagged_invitation', createData, 'reason');
+		});
+
+
+		it('should raise an exception if given an incorrect invitation_id (foreign key not found)', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkForeign(FlaggedInvitations, 'flagged_invitation', 'create', createData, 'invitation_id', random.guid());
+		});
+
+		it('should raise an exception if given an incorrect freelancer_who_flagged (foreign key not found)', async() => {
+			const createData = await createNewData();
+
+			return checkErr.checkForeign(FlaggedInvitations, 'flagged_invitation', 'create', createData, 'freelancer_who_flagged', random.guid());
 		});
 	});
 
