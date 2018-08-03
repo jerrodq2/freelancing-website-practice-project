@@ -136,7 +136,29 @@ describe.only('Flagged Invitations Model', () => {
 
 
 	describe('has a findOne method', () => {
+		it('should retrieve a specific flagged_invitation record with a given id, and return the object with relevant information about the invitation that was flagged, the freelancer who flagged it', async() => {
+			const flagged_invitation = await FlaggedInvitations.findOne(id);
 
+			expect(flagged_invitation).to.be.an.object();
+			expect(flagged_invitation.id).to.equal(id);
+			expect(flagged_invitation.invitation_id).to.equal(invitation_id);
+			expect(flagged_invitation.invitation_title).to.equal(title);
+			expect(flagged_invitation.invitation_description).to.equal(description);
+			expect(flagged_invitation.freelancer_who_flagged).to.equal(freelancer_who_flagged);
+			expect(flagged_invitation.flagging_freelancer_first_name).to.equal(first_name);
+			expect(flagged_invitation.flagging_freelancer_last_name).to.equal(last_name);
+			expect(flagged_invitation.reason).to.equal(reason);
+			expect(flagged_invitation.created_at).to.be.a.date();
+			expect(flagged_invitation.updated_at).to.equal(null);
+		});
+
+		it('should raise an exception if given an incorrect id (not found)', async() => {
+			return checkErr.checkNotFound(FlaggedInvitations, 'flagged_invitation', 'find', random.guid());
+		});
+
+		it('should raise an exception when given an invalid id (not in uuid format)', async() => {
+			return checkErr.checkIdFormat(FlaggedInvitations, 'flagged_invitation', 'find', {});
+		});
 	});
 
 

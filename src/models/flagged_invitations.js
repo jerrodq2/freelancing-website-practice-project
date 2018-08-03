@@ -23,7 +23,7 @@ module.exports = {
 
 	findOne (id) {
 		const invitationColumns = ['i.id as invitation_id', 'i.title as invitation_title', 'i.description as invitation_description'],
-			joinText = ['invitations as p', 'flagged_invitations.invitation_id', 'p.id'];
+			joinText = ['invitations as i', 'flagged_invitations.invitation_id', 'i.id'];
 
 		return FlaggedInvitations.findOneInvitation(id, invitationColumns, joinText, 'freelancer');
 	},
