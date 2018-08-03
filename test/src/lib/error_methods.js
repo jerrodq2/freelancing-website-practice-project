@@ -25,7 +25,7 @@ const checkErr = {
 
 			cause: the specific reason that caused the error, ex: not found, violated the not-null constraint
 		*/
-		console.log(err.message);
+		
 		expect(err).to.be.an.object();
 		const { message } = err;
 

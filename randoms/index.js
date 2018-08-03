@@ -175,11 +175,46 @@ random.mixin({
 	},
 
 
+	flagged_invitations: async(count = 10, opts = {}) => {
+		// create a field if not given
+		if (!opts.field_id) {
+			opts.field_id = random.guid();
+			await random.field({ id: opts.field_id });
+		}
+		// we create the client and freelancer here if not given, this saves us the trouble of creating a new client/freelancer for every invitation
+		if (!opts.client_id) {
+			opts.client_id = random.guid();
+			await random.client({ id: opts.client_id, field_id: opts.field_id });
+		}
+		if (!opts.freelancer_id) {
+			opts.freelancer_id = random.guid();
+			await random.freelancer({ id: opts.freelancer_id, field_id: opts.field_id });
+		}
+
+		// if the needed freelancer_who_flagged isn't given, we create it here. This flag can only be created by a freelancer
+		if (!opts.freelancer_who_flagged) {
+			opts.freelancer_who_flagged = random.guid();
+			await random.freelancer({ id: opts.freelancer_who_flagged, field_id: opts.field_id });
+		}
+
+		const flagged_invitations = _.times(count, () => {
+			opts = _.omit(opts, 'invitation_id'); // needs a unique invitation and job for every record
+			return random.flagged_invitation(opts);
+		});
+		return Promise.all(flagged_invitations);
+	},
+
+
 	flagged_jobs: async(count = 10, opts = {}) => {
 		// create a field if not given
 		if (!opts.field_id) {
 			opts.field_id = random.guid();
 			await random.field({ id: opts.field_id });
+		}
+		// by creating the client here, we prevent a new client from having to be creted for every job
+		if (!opts.client_id) {
+			opts.client_id = random.guid();
+			await random.client({ id: opts.client_id, field_id: opts.field_id });
 		}
 		// if not given either of these keys, we set the flag to be created by a freelancer by default
 		if (!opts.client_who_flagged && !opts.freelancer_who_flagged) {
@@ -192,6 +227,36 @@ random.mixin({
 			return random.flagged_job(opts);
 		});
 		return Promise.all(flagged_jobs);
+	},
+
+
+	flagged_proposals: async(count = 10, opts = {}) => {
+		// create a field if not given
+		if (!opts.field_id) {
+			opts.field_id = random.guid();
+			await random.field({ id: opts.field_id });
+		}
+		// we create the client and freelancer here if not given, this saves us the trouble of creating a new client/freelancer for every proposal
+		if (!opts.client_id) {
+			opts.client_id = random.guid();
+			await random.client({ id: opts.client_id, field_id: opts.field_id });
+		}
+		if (!opts.freelancer_id) {
+			opts.freelancer_id = random.guid();
+			await random.freelancer({ id: opts.freelancer_id, field_id: opts.field_id });
+		}
+
+		// if the needed client_who_flagged isn't given, we create it here. This flag can only be created by a client
+		if (!opts.client_who_flagged) {
+			opts.client_who_flagged = random.guid();
+			await random.client({ id: opts.client_who_flagged, field_id: opts.field_id });
+		}
+
+		const flagged_proposals = _.times(count, () => {
+			opts = _.omit(opts, 'proposal_id'); // needs a unique proposal and job for every record
+			return random.flagged_proposal(opts);
+		});
+		return Promise.all(flagged_proposals);
 	},
 
 
