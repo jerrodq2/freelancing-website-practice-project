@@ -189,6 +189,37 @@ describe.only('Flagged Invitations Model', () => {
 
 
 	describe('has cascading delete on invitation_id and freelancer_who_flagged', () => {
+		it('should be deleted in the event of the invitation that was flagged is deleted.', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				specificInvitationId = createData.invitation_id,
+				flagged_invitation = await random.flagged_invitation(createData);
 
+			expect(flagged_invitation).to.be.an.object();
+			expect(flagged_invitation.id).to.equal(specificId);
+			expect(flagged_invitation.invitation_id).to.equal(specificInvitationId);
+
+			const result = await Invitations.delete(specificInvitationId);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(FlaggedInvitations, 'flagged_invitation', 'find', specificId);
+		});
+
+		it('should be deleted in the event of the freelancer who created the flag is deleted.', async() => {
+			const createData = await createNewData(),
+				specificId = createData.id,
+				flagged_invitation = await random.flagged_invitation(createData);
+
+			expect(flagged_invitation).to.be.an.object();
+			expect(flagged_invitation.id).to.equal(specificId);
+			expect(flagged_invitation.freelancer_who_flagged).to.equal(freelancer_who_flagged);
+
+			const result = await Freelancers.delete(freelancer_who_flagged);
+			expect(result).to.equal(true);
+
+			// check that trying to find the record now returns a not found error
+			return checkErr.checkNotFound(FlaggedInvitations, 'flagged_invitation', 'find', specificId);
+		});
 	});
 });
