@@ -211,6 +211,11 @@ random.mixin({
 			opts.field_id = random.guid();
 			await random.field({ id: opts.field_id });
 		}
+		// by creating the client here, we prevent a new client from having to be creted for every job
+		if (!opts.client_id) {
+			opts.client_id = random.guid();
+			await random.client({ id: opts.client_id, field_id: opts.field_id });
+		}
 		// if not given either of these keys, we set the flag to be created by a freelancer by default
 		if (!opts.client_who_flagged && !opts.freelancer_who_flagged) {
 			opts.freelancer_who_flagged = random.guid();

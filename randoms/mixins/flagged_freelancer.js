@@ -13,7 +13,7 @@ module.exports = async(opts = {}) => {
 	};
 
 
-	// if the needed foreign keys aren't given, we create them here
+	// if the needed freelancer_id isn't given, we create it here
 	if (!opts.freelancer_id) {
 		if (!opts.field_id) await createFieldId();
 		opts.freelancer_id = random.guid();
@@ -30,7 +30,7 @@ module.exports = async(opts = {}) => {
 
 	return FlaggedFreelancers.create({
 		id: opts.id || random.guid(),
-		freelancer_id: opts.freelancer_id || null,
+		freelancer_id: opts.freelancer_id,
 		client_who_flagged: opts.client_who_flagged || null,
 		freelancer_who_flagged: opts.freelancer_who_flagged || null,
 		reason: opts.reason || random.sentence(),

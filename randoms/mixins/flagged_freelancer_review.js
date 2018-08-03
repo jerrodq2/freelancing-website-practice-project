@@ -29,8 +29,12 @@ module.exports = async(opts = {}) => {
 	if (!opts.freelancer_review_id) {
 		if (!opts.client_id) await createClientId();
 		if (!opts.freelancer_id) await createFreelancerId();
+
+		const job_id = random.guid(); // create the job needed for the freelancer_review, creating it here saves us from having to create more fields, clients, and freelancers in the job mixin
+		await random.job({ id: job_id, field_id: opts.field_id, client_id: opts.client_id, freelancer_id: opts.freelancer_id, closed: true, available: false });
+
 		opts.freelancer_review_id = random.guid();
-		await random.freelancer_review({ id: opts.freelancer_review_id, client_id: opts.client_id, freelancer_id: opts.freelancer_id });
+		await random.freelancer_review({ id: opts.freelancer_review_id, client_id: opts.client_id, freelancer_id: opts.freelancer_id, job_id });
 	}
 
 	// if we aren't given either of these keys, we set the flag to be created by a freelancer by default
@@ -43,7 +47,7 @@ module.exports = async(opts = {}) => {
 
 	return FlaggedFreelancerReviews.create({
 		id: opts.id || random.guid(),
-		freelancer_review_id: opts.freelancer_review_id || null,
+		freelancer_review_id: opts.freelancer_review_id,
 		client_who_flagged: opts.client_who_flagged || null,
 		freelancer_who_flagged: opts.freelancer_who_flagged || null,
 		reason: opts.reason || random.sentence(),

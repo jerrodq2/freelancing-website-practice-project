@@ -11,7 +11,7 @@ const Invitations = require(`${process.cwd()}/src/models/invitations`);
 const { db, random, checkErr } = require(`${process.cwd()}/test/src/helpers`);
 
 
-describe.only('Flagged Invitations Model', () => {
+describe('Flagged Invitations Model', () => {
 	// only freelancers can create a flagged_invitation
 	const id = random.guid(),
 		invitation_id = random.guid(),

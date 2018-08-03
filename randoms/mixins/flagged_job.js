@@ -12,12 +12,19 @@ module.exports = async(opts = {}) => {
 		await random.field({ id: opts.field_id });
 	};
 
+	// by creating a client here we save it and a field from having to be created in the job mixins, this is especially helpful in the multi mixin
+	const createClientId = async() => {
+		if (!opts.field_id) await createFieldId();
+		opts.client_id = random.guid();
+		await random.client({ id: opts.client_id, field_id: opts.field_id });
+	};
 
 	// if the needed job isn't given, we create it here
 	if (!opts.job_id) {
 		if (!opts.field_id) await createFieldId();
+		if (!opts.client_id) await createClientId();
 		opts.job_id = random.guid();
-		await random.job({ id: opts.job_id, field_id: opts.field_id });
+		await random.job({ id: opts.job_id, field_id: opts.field_id, client_id: opts.client_id });
 	}
 
 	// if we aren't given either of these keys, we set the flag to be created by a freelancer by default
