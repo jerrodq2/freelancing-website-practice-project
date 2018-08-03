@@ -25,7 +25,7 @@ module.exports = async(opts = {}) => {
 	};
 
 
-	// if the needed client_review isn't given, we create it here
+	// if the needed proposal isn't given, we create it here
 	if (!opts.proposal_id) {
 		if (!opts.client_id) await createClientId();
 		if (!opts.freelancer_id) await createFreelancerId();
