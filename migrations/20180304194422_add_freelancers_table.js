@@ -27,6 +27,7 @@ exports.up = (knex) => knex.schema.createTable('freelancers', (table) => {
 	table.string('video_url').nullable();
 	table.string('portfolio_url').nullable();
 	table.boolean('available').notNullable().defaultTo(true).index();
+	table.boolean('active').notNullable().defaultTo(true);
 	table.timestamps();
 });
 
