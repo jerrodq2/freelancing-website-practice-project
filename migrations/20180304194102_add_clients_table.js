@@ -21,7 +21,6 @@ exports.up = (knex) => knex.schema.createTable('clients', (table) => {
 	table.string('zip').nullable().index();
 	table.string('phone').nullable();
 	table.date('dob').nullable();
-	table.boolean('active').notNullable().defaultTo(true);
 	table.timestamps();
 });
 
