@@ -6,8 +6,9 @@ const Clients = new UserModel('clients');
 
 
 module.exports = {
+	// TODO: method to switch from active to inactive? Should there be one for both, or just one that switches back and forth? Here or in say the admin model?
 	getAll () {
-		// TODO: to be setup with pagination later
+		// TODO: to be setup with pagination later, make sure to include the active field in the getAll search
 	},
 
 
