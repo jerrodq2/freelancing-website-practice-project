@@ -11,4 +11,6 @@ module.exports = {
 	leon: 'd6aa0436-e459-460c-9973-b0d530b9ba48',
 	dick: '6770a8be-14d8-467c-a699-edfc6973c8dd',
 	joker: '75a775df-23e6-4193-a35e-eb77bdd401b4',
+	april: 'b42bfa28-fc84-43ac-81bc-09e0d24f819c',
+	andy: 'c03e3b47-6841-402b-a495-7f7f506c12f6',
 };

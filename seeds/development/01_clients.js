@@ -150,5 +150,33 @@ exports.seed = async (knex) => {
 			field_id: fieldIds.other,
 			summary: 'Trickster',
 		}),
+
+		Clients.create({
+			id: clientIds.leslie,
+			first_name: 'Leslie',
+			last_name: 'Knope',
+			username: 'rknope',
+			email: 'leslie@knope.com',
+			password: 'password',
+			gender: 'female',
+			age: 35,
+			field_id: fieldIds.full_stack,
+			summary: 'A happy memeber of the parks and rec team that does some freelancing on the side.',
+			active: false,
+		}),
+
+		Clients.create({
+			id: clientIds.ron,
+			first_name: 'Ron',
+			last_name: 'Swanson',
+			username: 'rswanson',
+			email: 'ron@swanson.com',
+			password: 'password',
+			gender: 'male',
+			age: 45,
+			field_id: fieldIds.full_stack,
+			summary: 'I hate government.',
+			active: false,
+		}),
 	]);
 };

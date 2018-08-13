@@ -170,5 +170,43 @@ exports.seed = async (knex) => {
 			city: 'Gotham',
 			experience_level: 'expert'
 		}),
+
+		Freelancers.create({
+			id: freelancerIds.april,
+			first_name: 'April',
+			last_name: 'Ludgate',
+			username: 'aludgate',
+			email: 'april@ludgate.com',
+			password: 'password',
+			job_title: 'nothing',
+			rate: 300,
+			gender: 'female',
+			age: 19,
+			field_id: fieldIds.other,
+			summary: 'You\'ll regret it',
+			state: 'IN',
+			city: '',
+			experience_level: 'expert',
+			active: false,
+		}),
+
+		Freelancers.create({
+			id: freelancerIds.andy,
+			first_name: 'Andy',
+			last_name: 'Dwyer',
+			username: 'adwyer',
+			email: 'andy@dwyer.com',
+			password: 'password',
+			job_title: 'Awesome guitarist',
+			rate: 150,
+			gender: 'male',
+			age: 28,
+			field_id: fieldIds.other,
+			summary: 'Who wants to have some fun??',
+			state: 'IN',
+			city: '',
+			experience_level: 'expert',
+			active: false,
+		}),
 	]);
 };
