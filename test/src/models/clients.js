@@ -6,7 +6,7 @@ const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 const { describe, it, before } = lab;
 const Clients = require(`${process.cwd()}/src/models/clients`);
-const { db, random, knex, checkErr } = require(`${process.cwd()}/test/src/helpers`);
+const { db, random, knex, checkErr, _ } = require(`${process.cwd()}/test/src/helpers`);
 
 
 describe('Clients Model', () => {
@@ -112,26 +112,45 @@ describe('Clients Model', () => {
 		it('should require a first_name to create', async() => {
 			return checkErr.checkNotNull(Clients, 'client', createNewData(), 'first_name');
 		});
+
 		it('should require a last_name to create', () => {
 			return checkErr.checkNotNull(Clients, 'client', createNewData(), 'last_name');
 		});
+
 		it('should require a username to create', () => {
 			return checkErr.checkNotNull(Clients, 'client', createNewData(), 'username');
 		});
+
 		it('should require a email to create', () => {
 			return checkErr.checkNotNull(Clients, 'client', createNewData(), 'email');
 		});
+
 		it('should require a gender to create', () => {
 			return checkErr.checkNotNull(Clients, 'client', createNewData(), 'gender');
 		});
+
 		it('should require a age to create', () => {
 			return checkErr.checkNotNull(Clients, 'client', createNewData(), 'age');
 		});
+
 		it('should require a field_id to create', () => {
 			return checkErr.checkNotNull(Clients, 'client', createNewData(), 'field_id');
 		});
+
 		it('should require a password to create', () => {
 			return checkErr.checkNotNull(Clients, 'client', createNewData(), 'password');
+		});
+
+		it('should default active to \'true\' if not given', async () => {
+			const data = createNewData(),
+				specificId = data.id;
+			const createData = _.omit(data, field);
+
+			const client = await Clients.create(createData);
+
+			expect(client).to.be.an.object();
+			expect(client.id).to.equal(specificId);
+			expect(client.active).to.equal(true);
 		});
 
 		// check that certain fields have to be unique to create
@@ -207,9 +226,10 @@ describe('Clients Model', () => {
 			newZip = random.zip(),
 			newPhone = random.phone(),
 			newDob = random.date({ string: true }),
+			active = false,
 			specificId = random.guid(); // used in below checkUnique error tests
 
-		let updateData = { field_id: newFieldId, first_name: newFirstName, last_name: newLastName, gender: newGender, age: newAge, summary: newSummary, state: newState, city: newCity, zip: newZip, phone: newPhone, dob: newDob };
+		let updateData = { field_id: newFieldId, first_name: newFirstName, last_name: newLastName, gender: newGender, age: newAge, summary: newSummary, state: newState, city: newCity, zip: newZip, phone: newPhone, dob: newDob, active };
 
 
 		before(async() => {
@@ -246,6 +266,7 @@ describe('Clients Model', () => {
 			expect(updatedClient.zip).to.equal(newZip);
 			expect(updatedClient.phone).to.equal(newPhone);
 			expect(updatedClient.dob).to.equal(new Date(newDob));
+			expect(updatedClient.active).to.equal(false);
 			expect(updatedClient.email).to.equal(newEmail);
 			expect(updatedClient.updated_at).to.be.a.date();
 			expect(updatedClient.username).to.equal(undefined);
