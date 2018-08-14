@@ -45,10 +45,15 @@ class InvitationAndProposalModel extends MainModel {
 
 
 	async createInvitation (data, modelType = 'proposal') {
-		const { job_id, freelancer_id, client_id } = data,
-			// userType is used in the error message below, it represents the user trying to create the proposal/invitation in question, freelancer for proposal and client for invitation
-			userType = modelType === 'proposal'? 'freelancer' : 'client';
-
+		const { job_id, freelancer_id, client_id } = data;
+		
+		// this message is used in the error message below and differs based on if the model is a proposal or inivtation accordingly
+		let specificMessage;
+		if (modelType === 'proposal') {
+			specificMessage = 'this freelancer has already written a proposal for this job';
+		} else {
+			specificMessage = 'this client has already written an invitation to this freelancer for this job';
+		}
 
 		// first we check if the job is even open
 		await this.checkJobIsOpen(job_id);
@@ -76,7 +81,7 @@ class InvitationAndProposalModel extends MainModel {
 
 		// if the user (freelancer or client) has already written a proposal/invitation for this job, we raise an exception
 		if (check_freelancer[0]) {
-			const message = `The ${toSingular(this.tableName)} you were trying to create can't be completed, this ${userType} has already written a ${toSingular(this.tableName)} for this job`;
+			const message = `The ${toSingular(this.tableName)} you were trying to create can't be completed, ${specificMessage}`;
 
 			throw Errors.Boom.badRequest(message);
 		}
