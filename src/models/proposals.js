@@ -7,7 +7,7 @@ const Proposals = new Model('proposals');
 
 module.exports = {
 	create (data) {
-		return Proposals.createProposal(data);
+		return Proposals.createInvitation(data);
 	},
 
 
