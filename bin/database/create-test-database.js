@@ -13,7 +13,10 @@ connectionOptions.connection.database = 'postgres';
 const SetUpTestDB = async () => {
 	const knex = await require('knex')(connectionOptions);
 	console.log('New connection to default postgres database made');
-
+	console.log(knex);
+	console.log();
+	console.log();
+	console.log();
 	// Remove all other connections to test database
 	await knex.raw(`select pg_terminate_backend(pid) from pg_stat_activity where datname = '${process.env.PG_TEST_DATABASE}'`)
 		.catch((err) => {
