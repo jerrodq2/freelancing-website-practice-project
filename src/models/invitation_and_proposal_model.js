@@ -7,7 +7,7 @@ const Errors = require(`${process.cwd()}/src/lib/errors`);
 const { toSingular } = require(`${process.cwd()}/src/lib/helper_functions`);
 
 
-// a specific class that extends the MainModel, used only for the invitations and proposals model, to abstract re-used code and improe DRYness
+// a specific class that extends the MainModel, used only for the invitations and proposals model, to abstract re-used code and improve DRYness
 class InvitationAndProposalModel extends MainModel {
 	constructor (tableName) {
 		super(tableName);
@@ -46,7 +46,7 @@ class InvitationAndProposalModel extends MainModel {
 
 	async createInvitation (data, modelType = 'proposal') {
 		const { job_id, freelancer_id, client_id } = data;
-		
+
 		// this message is used in the error message below and differs based on if the model is a proposal or inivtation accordingly
 		let specificMessage;
 		if (modelType === 'proposal') {
