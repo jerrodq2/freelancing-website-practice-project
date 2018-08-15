@@ -11,7 +11,7 @@ const knex = require('knex')(connectionOptions);
 console.log('New connection to default postgres database made');
 
 
-return knex.raw(`DROP DATABASE IF EXISTS ${process.env.PG_TEST_DATABASE};`);
+return knex.raw(`DROP DATABASE IF EXISTS ${process.env.PG_TEST_DATABASE};`)
 	.then(() => {
 		console.log('Dropped test database (if it existed)');
 		// Create test database
