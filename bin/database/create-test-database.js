@@ -11,7 +11,7 @@ const knex = require('knex')(connectionOptions);
 console.log('New connection to default postgres database made');
 console.log();
 console.log();
-console.log(knex.client.config);
+console.log(knex.client);
 console.log();
 console.log();
 
