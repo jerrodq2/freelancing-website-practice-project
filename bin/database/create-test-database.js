@@ -7,16 +7,17 @@ require('dotenv').config();
 const connectionOptions = require(`${process.cwd()}/knexfile.js`)[`${process.env.NODE_ENV}`];
 connectionOptions.connection.database = 'postgres';
 connectionOptions.pool.afterCreate = (conn, done) => {
-
+	console.log('inside');
 	conn.query('SELECT current_database();', (err) => {
 		if (err) {
 			console.log('error? --------------------------------------------------------------------------------------------------------------------------------------------');
 			console.log(err);
+			done();
 		} else {
 			console.log('good !!!!!!!!!!!!!');
+			done();
 		}
 	})
-	done();
 }
 
 const knex = require('knex')(connectionOptions);
