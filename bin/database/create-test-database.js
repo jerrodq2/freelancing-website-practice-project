@@ -17,7 +17,7 @@ console.log();
 
 // Remove all other connections to test database
 console.log('start');
-return knex.raw(`CREATE DATABASE ${process.env.PG_TEST_DATABASE};`);
+return knex.raw(`CREATE DATABASE ${process.env.PG_TEST_DATABASE};`)
 	.then(() => {
 		console.log('Test database created');
 		return process.exit();
