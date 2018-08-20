@@ -31,4 +31,8 @@ knex.raw(`select pg_terminate_backend(pid) from pg_stat_activity where datname =
 	.then(() => {
 		console.log('Test database created');
 		return process.exit();
-	});
+	})
+	.catch((err) => {
+		console.log('error !!!!!!!!!');
+		console.log(err);
+	})
