@@ -64,7 +64,7 @@ describe('Admins Model', () => {
 			admin = record[0];
 		});
 
-		it('should create a new admin record if given valid data, create new created_at and updated_at fields, and return the admin object without the username or password', async () => {
+		it.only('should create a new admin record if given valid data, create new created_at and updated_at fields, and return the admin object without the username or password', async () => {
 			checkFields(result, specificId, specificEmail);
 		});
 
