@@ -33,7 +33,7 @@ jobs:
 
       - run:
         name: Wait for Postgres to start
-        command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done;'
+        command: dockerize -wait tcp://localhost:5432 -timeout 1m
 
       - run:
           name: Create database
