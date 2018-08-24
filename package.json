@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/jerrodq2/freelancing-website-practice-project#readme",
   "scripts": {
-    "test": "lab -m 10000 -I __core-js_shared__",
+    "test": "lab -m 20000 -I __core-js_shared__",
     "server": "nodemon index.js",
     "init": "npm install && bnr db-reset",
     "lint": "node ./node_modules/.bin/eslint .",

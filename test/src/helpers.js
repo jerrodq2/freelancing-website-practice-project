@@ -8,35 +8,6 @@ const _ = require('lodash');
 const checkErr = require('./lib/error_methods');
 
 
-// TODO: Look into more elegant solution to clear/truncate all tables from db besides a hard coded array.
-const pgTables = [
-	'admins',
-	'client_reviews',
-	'clients',
-	'education_history',
-	'employment_history',
-	'fields',
-	'flagged_client_reviews',
-	'flagged_clients',
-	'flagged_freelancer_reviews',
-	'flagged_freelancers',
-	'flagged_invitations',
-	'flagged_jobs',
-	'flagged_proposals',
-	'freelancer_reviews',
-	'freelancer_skills',
-	'freelancers',
-	'invitations',
-	'job_activity',
-	'jobs',
-	'proposals',
-	'saved_clients',
-	'saved_freelancers',
-	'saved_jobs',
-	'skills',
-];
-
-
 const helpers = {
 	knex,
 	random,
@@ -45,13 +16,20 @@ const helpers = {
 
 	db: {
 		// clears all of the tables in the test db
-		resetAll: () => {
-			const queries = [];
-			pgTables.forEach((table) => queries.push(knex.raw(`TRUNCATE ${table} CASCADE;`)));
+		resetAll: async () => {
+			// the two tables we don't want to reset
+			const blacklist = ['_migrations', '_migrations_lock'];
+			// creates an object, which has an array containing all of the tables we want to reset
+			const allTables = await knex.raw('SELECT tablename FROM pg_tables WHERE schemaname=\'public\';');
 
-			return Promise.all(queries);
+			// we take allTables and turn it into just an array of table names (map), and we remove the blacklisted tables (filter)
+			const tables = allTables.rows.map((row) => row.tablename).filter((index) => blacklist.indexOf(index) === -1);
+
+			// truncate all tables in the tables array
+			return knex.raw(`TRUNCATE ${[].concat(tables).join(',')} CASCADE`);
 		},
-		// clears specific table in db
+
+		// resets specific tables in the test db
 		resetTable: (table) => {
 			return knex.raw(`TRUNCATE ${table} CASCADE;`);
 		},
