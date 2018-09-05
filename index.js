@@ -19,6 +19,8 @@ require('./src/config/knex')();
 
 const port = parseInt(process.env.PORT)?  parseInt(process.env.PORT) : 5000;
 
+/* eslint-disable */
 app.listen(port, () => {
-	console.log('Server listening on port: ', port);
+	console.log('The server is listening on port: ', port);
 });
+/* eslint-enable */
