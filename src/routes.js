@@ -5,13 +5,14 @@ const express = require('express'),
 	router = express.Router();
 
 
+// TODO: Leave this global router.use in for now, at least in development. See if you want to keep if in the finished product
+// router.use() is used to define middleware that is appled to all routes/requests that come after it. Any code is applied before the routes, however any routes written before a router.use() block will not be affected by it
 router.use((req, res, next) => {
-
 	/* eslint-disable */
-	console.log('req.method = ', req.method);
-	console.log('req.url = ', req.url);
+	console.log('Request made:', new Date().toString("yyyyMMddHHmmss"));
+	console.log('Method =', req.method);
+	console.log('Url =', req.url);
 	/* eslint-enable */
-
 	next();
 });
 
