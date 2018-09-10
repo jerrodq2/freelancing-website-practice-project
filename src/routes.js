@@ -2,10 +2,11 @@
 
 
 const express = require('express'),
-	router = express.Router();
+	router = express.Router(),
+	controller = require('./controllers');
 
 
-// TODO: Leave this global router.use in for now, at least in development. See if you want to keep if in the finished product
+// TODO: Currently this router.use affects all routes, leave it in for now, at least in development. See if you want to keep if in the finished product
 // router.use() is used to define middleware that is appled to all routes/requests that come after it. Any code is applied before the routes, however any routes written before a router.use() block will not be affected by it
 router.use((req, res, next) => {
 	/* eslint-disable */
@@ -17,10 +18,7 @@ router.use((req, res, next) => {
 });
 
 
-router.get('/test', (req, res) => {
-	return res.status(200).send({
-		message: 'Welcome to the beginning of nothingness.',
-	});
-});
+router.get('/test', controller.starter.test);
+
 
 module.exports = router;

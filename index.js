@@ -11,7 +11,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 
 require('./src/config/knex')();
-const router = require('./src/routes');
+const router = require('./src/routes.js');
 
 app.use('/', router);
 
