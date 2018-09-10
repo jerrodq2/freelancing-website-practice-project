@@ -3,7 +3,7 @@
 
 const express = require('express'),
 	router = express.Router(),
-	controller = require('./controllers');
+	controllers = require('./controllers');
 
 
 // TODO: Currently this router.use affects all routes, leave it in for now, at least in development. See if you want to keep if in the finished product
@@ -18,7 +18,7 @@ router.use((req, res, next) => {
 });
 
 
-router.get('/test', controller.starter.test);
+router.get('/test', controllers.main.homepage);
 
 
 module.exports = router;

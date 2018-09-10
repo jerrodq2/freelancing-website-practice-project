@@ -2,5 +2,5 @@
 
 
 module.exports = {
-	starter: require('./starter.js'),
+	main: require('./main.js'),
 };
