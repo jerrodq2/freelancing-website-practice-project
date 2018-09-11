@@ -1,7 +1,7 @@
 'use strict';
 
 
-const knex = require('../config/knex');
+const knex = require(`${process.cwd()}/src/config/knex`);
 const Errors = require(`${process.cwd()}/src/lib/errors`);
 const { toSingular, findColumn } = require(`${process.cwd()}/src/lib/helper_functions`);
 

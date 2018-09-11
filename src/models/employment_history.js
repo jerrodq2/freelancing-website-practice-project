@@ -1,7 +1,7 @@
 'use strict';
 
 
-const Model = require('./main_model');
+const Model = require(`${process.cwd()}/src/services/main_model`);
 const EmploymentHistory = new Model('employment_history');
 
 

@@ -2,7 +2,7 @@
 
 
 const random = new (require('chance'));
-const Admins = require(`${process.cwd()}/src/models/admins`);
+const Admins = require(`${process.cwd()}/src/services/users/models/admins`);
 
 // used to create a random admin. If given no parameters, randomizes all fields.
 module.exports = (opts = {}) => Admins.create({

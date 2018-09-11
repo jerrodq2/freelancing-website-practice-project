@@ -7,8 +7,8 @@ const lab = exports.lab = Lab.script();
 const { describe, it, before } = lab;
 const FreelancerReviews = require(`${process.cwd()}/src/models/freelancer_reviews`);
 const Jobs = require(`${process.cwd()}/src/models/jobs`);
-const Clients = require(`${process.cwd()}/src/models/clients`);
-const Freelancers = require(`${process.cwd()}/src/models/freelancers`);
+const Clients = require(`${process.cwd()}/src/services/users/models/clients`);
+const Freelancers = require(`${process.cwd()}/src/services/users/models/freelancers`);
 const { db, random, checkErr, _ } = require(`${process.cwd()}/test/src/helpers`);
 
 

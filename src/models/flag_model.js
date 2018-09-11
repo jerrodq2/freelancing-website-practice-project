@@ -1,8 +1,8 @@
 'use strict';
 
 
-const MainModel = require('./main_model');
-const knex = require('../config/knex');
+const MainModel = require(`${process.cwd()}/src/services/main_model`);
+const knex = require(`${process.cwd()}/src/config/knex`);
 const Errors = require(`${process.cwd()}/src/lib/errors`);
 const { toSingular } = require(`${process.cwd()}/src/lib/helper_functions`);
 const _ = require('lodash');

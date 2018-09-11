@@ -1,8 +1,8 @@
 'use strict';
 
 
-const knex = require('../config/knex');
-const Model = require('./main_model');
+const knex = require(`${process.cwd()}/src/config/knex`);
+const Model = require(`${process.cwd()}/src/services/main_model`);
 const Jobs = new Model('jobs');
 const Errors = require(`${process.cwd()}/src/lib/errors`);
 
