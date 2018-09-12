@@ -2,7 +2,7 @@
 
 
 const random = new (require('chance'));
-const FreelancerSkills = require(`${process.cwd()}/src/models/freelancer_skills`);
+const FreelancerSkills = require(`${process.cwd()}/src/services/skills/models/freelancer_skills`);
 
 // used to create a random freelancer_skill. If given no parameters, randomizes all fields
 module.exports = async(opts = {}) => {

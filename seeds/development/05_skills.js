@@ -1,7 +1,7 @@
 'use strict';
 
 
-const Skills = require(`${process.cwd()}/src/models/skills`);
+const Skills = require(`${process.cwd()}/src/services/skills/models/skills`);
 
 exports.seed = async (knex) => {
 	// Deletes ALL existing entries

@@ -2,7 +2,7 @@
 
 
 const freelancerIds = require(`${process.cwd()}/seeds/ids/freelancers`);
-const FreelancerSkills = require(`${process.cwd()}/src/models/freelancer_skills`);
+const FreelancerSkills = require(`${process.cwd()}/src/services/skills/models/freelancer_skills`);
 
 // TODO: perhaps refactor these seeds to be similar to how I intended to make the route. by creating up to 5 skills at a time for freelancers, so perhaps sending an array with up to 5 skills? Though this may only happen in the route, hitting the model once per index of the array. Will become more clear when I work on the route.
 exports.seed = async (knex) => {
