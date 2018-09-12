@@ -2,7 +2,7 @@
 
 
 const Admins = require(`${process.cwd()}/src/services/users/models/admins`);
-const Fields = require(`${process.cwd()}/src/models/fields`);
+const Fields = require(`${process.cwd()}/src/services/fields/models/fields`);
 const fieldIds = require(`${process.cwd()}/seeds/ids/fields`);
 
 const internals = {
