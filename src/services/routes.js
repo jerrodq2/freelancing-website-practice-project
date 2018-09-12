@@ -29,7 +29,9 @@ router.get('/', (req, res) => {
 // example route
 router.get('/test', controllers.main.homepage);
 
-const a = require('./users/routes/test.js');
-app.use(a);
+require('./users/routes/test.js')(router);
+// app.use(a);
 
-module.exports = router;
+module.exports = (app) => {
+	app.use(router);
+};

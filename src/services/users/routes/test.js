@@ -1,15 +1,12 @@
 'use strict';
 
 
-const express = require('express'),
-	app = express(),
-	router = express.Router();
+module.exports = (router) => {
 
-
-router.get('/user', (req, res) => {
-	res.status(200).send({
-		message: 'Welcome to the beginning of nothingness.',
+	router.get('/user', (req, res) => {
+		res.status(200).send({
+			message: 'User router here',
+		});
 	});
-});
-app.use('/', router);
-module.exports = router;
+
+};

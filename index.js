@@ -4,8 +4,7 @@
 const express = require('express'),
 	app = express(),
 	bodyParser = require('body-parser'),
-	listEndpoints = require('express-list-endpoints'),
-	port = parseInt(process.env.PORT)?  parseInt(process.env.PORT) : 5000;
+	listEndpoints = require('express-list-endpoints');
 
 
 app.use(bodyParser.json());
@@ -14,12 +13,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 require('dotenv').config();
 require('./src/config/knex')();
+require('./src/services/routes.js')(app);
 
 
-const router = require('./src/services/routes.js');
-app.use(router);
-
-
+const port = parseInt(process.env.PORT)?  parseInt(process.env.PORT) : 5000;
 app.listen(port, () => {
 	/* eslint-disable */
 
