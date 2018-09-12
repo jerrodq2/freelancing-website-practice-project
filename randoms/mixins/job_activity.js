@@ -2,7 +2,7 @@
 
 
 const random = new (require('chance'));
-const JobActivity = require(`${process.cwd()}/src/models/job_activity`);
+const JobActivity = require(`${process.cwd()}/src/services/jobs/models/job_activity`);
 
 // used to create a random job_activity. If given no parameters, randomizes all fields
 module.exports = async(opts = {}) => {

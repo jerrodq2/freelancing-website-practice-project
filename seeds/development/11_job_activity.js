@@ -4,7 +4,7 @@
 const freelancerIds = require(`${process.cwd()}/seeds/ids/freelancers`);
 const clientIds = require(`${process.cwd()}/seeds/ids/clients`);
 const jobIds = require(`${process.cwd()}/seeds/ids/jobs`);
-const JobActivity = require(`${process.cwd()}/src/models/job_activity`);
+const JobActivity = require(`${process.cwd()}/src/services/jobs/models/job_activity`);
 
 // TODO: Determine when a job should be added to a freelancer's job_activity. When accepted? finishd? TBD, also make sure that the model matches. The below seeds are all for finished job seeds.
 exports.seed = async (knex) => {

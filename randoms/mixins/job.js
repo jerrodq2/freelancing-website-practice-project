@@ -2,7 +2,7 @@
 
 
 const random = new (require('chance'));
-const Jobs = require(`${process.cwd()}/src/models/jobs`);
+const Jobs = require(`${process.cwd()}/src/services/jobs/models/jobs`);
 
 // used to create a random job. If given no parameters, randomizes all fields.
 module.exports = async(opts = {}) => {

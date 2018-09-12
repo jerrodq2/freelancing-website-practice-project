@@ -2,7 +2,7 @@
 
 
 const MainModel = require(`${process.cwd()}/src/services/main_model`);
-const Jobs = require('./jobs');
+const Jobs = require(`${process.cwd()}/src/services/jobs/models/jobs`);
 const knex = require(`${process.cwd()}/src/config/knex`);
 const Errors = require(`${process.cwd()}/src/lib/errors`);
 const { toSingular } = require(`${process.cwd()}/src/lib/helper_functions`);

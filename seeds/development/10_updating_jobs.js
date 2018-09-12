@@ -2,7 +2,7 @@
 
 
 const jobIds = require(`${process.cwd()}/seeds/ids/jobs`);
-const Jobs = require(`${process.cwd()}/src/models/jobs`);
+const Jobs = require(`${process.cwd()}/src/services/jobs/models/jobs`);
 
 exports.seed = async () => {
 	const updateData = {
