@@ -2,7 +2,7 @@
 
 
 const random = new (require('chance'));
-const Invitations = require(`${process.cwd()}/src/models/invitations`);
+const Invitations = require(`${process.cwd()}/src/services/invitations_and_proposals/models/invitations`);
 
 // used to create a random invitation. If given no parameters, randomizes all fields
 module.exports = async(opts = {}) => {

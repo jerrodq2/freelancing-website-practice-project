@@ -5,7 +5,7 @@ const { expect } = require('code');
 const Lab = require('lab');
 const lab = exports.lab = Lab.script();
 const { describe, it, before } = lab;
-const Invitations = require(`${process.cwd()}/src/models/invitations`);
+const Invitations = require(`${process.cwd()}/src/services/invitations_and_proposals/models/invitations`);
 const Jobs = require(`${process.cwd()}/src/services/jobs/models/jobs`);
 const Freelancers = require(`${process.cwd()}/src/services/users/models/freelancers`);
 const Clients = require(`${process.cwd()}/src/services/users/models/clients`);

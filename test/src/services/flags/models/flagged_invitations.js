@@ -7,7 +7,7 @@ const lab = exports.lab = Lab.script();
 const { describe, it, before } = lab;
 const FlaggedInvitations = require(`${process.cwd()}/src/services/flags/models/flagged_invitations`);
 const Freelancers = require(`${process.cwd()}/src/services/users/models/freelancers`);
-const Invitations = require(`${process.cwd()}/src/models/invitations`);
+const Invitations = require(`${process.cwd()}/src/services/invitations_and_proposals/models/invitations`);
 const { db, random, checkErr } = require(`${process.cwd()}/test/src/helpers`);
 
 
