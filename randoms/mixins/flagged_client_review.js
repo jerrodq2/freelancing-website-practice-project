@@ -2,7 +2,7 @@
 
 
 const random = new (require('chance'));
-const FlaggedClientReviews = require(`${process.cwd()}/src/models/flagged_client_reviews`);
+const FlaggedClientReviews = require(`${process.cwd()}/src/services/flags/models/flagged_client_reviews`);
 
 // used to create a random flagged_client_review. If given no parameters, randomizes all fields, creates a flag created by a freelancer by default
 module.exports = async(opts = {}) => {

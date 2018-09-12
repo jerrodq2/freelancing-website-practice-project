@@ -2,7 +2,7 @@
 
 
 const random = new (require('chance'));
-const FlaggedInvitations = require(`${process.cwd()}/src/models/flagged_invitations`);
+const FlaggedInvitations = require(`${process.cwd()}/src/services/flags/models/flagged_invitations`);
 
 // used to create a random flagged_invitation. If given no parameters, randomizes all fields
 module.exports = async(opts = {}) => {
