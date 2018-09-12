@@ -2,7 +2,7 @@
 
 
 const random = new (require('chance'));
-const SavedClients = require(`${process.cwd()}/src/models/saved_clients`);
+const SavedClients = require(`${process.cwd()}/src/services/saved_objects/models/saved_clients`);
 
 // used to create a random saved_client. If given no parameters, randomizes all fields
 module.exports = async(opts = {}) => {
