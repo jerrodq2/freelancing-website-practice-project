@@ -2,7 +2,7 @@
 
 
 const random = new (require('chance'));
-const EmploymentHistory = require(`${process.cwd()}/src/models/employment_history`);
+const EmploymentHistory = require(`${process.cwd()}/src/services/freelancer_history/models/employment_history`);
 
 // used to create a random employment_history. If given no parameters, randomizes all fields.
 module.exports = async(opts = {}) => {
