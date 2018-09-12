@@ -2,7 +2,7 @@
 
 
 const random = new (require('chance'));
-const FreelancerReviews = require(`${process.cwd()}/src/models/freelancer_reviews`);
+const FreelancerReviews = require(`${process.cwd()}/src/services/reviews/models/freelancer_reviews`);
 
 // used to create a random freelancer_review. If given no parameters, randomizes all fields
 module.exports = async(opts = {}) => {

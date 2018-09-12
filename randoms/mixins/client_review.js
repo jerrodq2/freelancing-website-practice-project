@@ -2,7 +2,7 @@
 
 
 const random = new (require('chance'));
-const ClientReviews = require(`${process.cwd()}/src/models/client_reviews`);
+const ClientReviews = require(`${process.cwd()}/src/services/reviews/models/client_reviews`);
 
 // used to create a random client_review. If given no parameters, randomizes all fields
 module.exports = async(opts = {}) => {

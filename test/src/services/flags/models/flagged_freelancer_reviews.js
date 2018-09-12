@@ -8,7 +8,7 @@ const { describe, it, before } = lab;
 const FlaggedFreelancerReviews = require(`${process.cwd()}/src/services/flags/models/flagged_freelancer_reviews`);
 const Clients = require(`${process.cwd()}/src/services/users/models/clients`);
 const Freelancers = require(`${process.cwd()}/src/services/users/models/freelancers`);
-const FreelancerReviews = require(`${process.cwd()}/src/models/freelancer_reviews`);
+const FreelancerReviews = require(`${process.cwd()}/src/services/reviews/models/freelancer_reviews`);
 const { db, random, checkErr } = require(`${process.cwd()}/test/src/helpers`);
 
 
