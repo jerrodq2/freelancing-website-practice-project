@@ -2,9 +2,7 @@
 
 
 const express = require('express'),
-	app = express(),
-	router = express.Router(),
-	controllers = require('../controllers');
+	router = express.Router();
 
 
 // TODO: Currently this router.use affects all routes, leave it in for now, at least in development. See if you want to keep if in the finished product
@@ -20,17 +18,13 @@ router.use((req, res, next) => {
 });
 
 
-// placeholder route for a temporary homepage
+// placeholder route for a temporary homepage. TODO: change to later redirect to react (similar to an angular app)
 router.get('/', (req, res) => {
 	res.sendFile(`${process.cwd()}/public/index.html`);
 });
 
+require('./users/routes/clients.js')(router);
 
-// example route
-router.get('/test', controllers.main.homepage);
-
-require('./users/routes/test.js')(router);
-// app.use(a);
 
 module.exports = (app) => {
 	app.use(router);

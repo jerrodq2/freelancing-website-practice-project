@@ -22,6 +22,7 @@ app.listen(port, () => {
 
 	console.log('The server is listening on port: ', port);
 	// TODO: should we try to format this listEndpoints log statment better? Or remove it in prod?
+	console.log('\nServer Side Endpoints: ');
 	console.log(listEndpoints(app));
 
 	/* eslint-enable */
