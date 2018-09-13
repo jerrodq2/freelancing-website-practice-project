@@ -23,7 +23,7 @@ router.get('/', (req, res) => {
 	res.sendFile(`${process.cwd()}/public/index.html`);
 });
 
-require('./users/routes/clients.js')(router);
+require('./users/routes')(router);
 
 
 module.exports = (app) => {
