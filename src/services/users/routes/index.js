@@ -3,6 +3,6 @@
 
 module.exports = (router) => {
 
-	router.get('/user', require('./clients/test.js'));
-
+	// '/user_client'
+	require('./clients/test.js')(router);
 };

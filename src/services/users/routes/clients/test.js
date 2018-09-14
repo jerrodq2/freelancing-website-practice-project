@@ -1,9 +1,18 @@
 'use strict';
 
 
-// TODO: Where would joi be?
-module.exports = (req, res) => {
+const { celebrate, Joi, errors } = require('celebrate');
 
-	return res.status(200).send({ message: 'User router here' });
-	
-};
+
+module.exports = (router) => router.get('/user_client',
+	celebrate({
+		body: Joi.object().keys({
+
+		}),
+		query: {
+
+		}
+	}), (req, res) => {
+		return res.status(200).send({ message: 'User router here' });
+	}
+);
