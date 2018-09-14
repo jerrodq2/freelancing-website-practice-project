@@ -2,7 +2,7 @@
 
 
 const random = new (require('chance'));
-const Clients = require(`${process.cwd()}/src/models/clients`);
+const Clients = require(`${process.cwd()}/src/services/users/models/clients`);
 const { hashPassword } = require(`${process.cwd()}/src/lib/helper_functions`);
 
 // used to create a random client. If given no parameters, randomizes all fields

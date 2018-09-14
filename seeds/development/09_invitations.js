@@ -5,7 +5,7 @@ const freelancerIds = require(`${process.cwd()}/seeds/ids/freelancers`);
 const clientIds = require(`${process.cwd()}/seeds/ids/clients`);
 const jobIds = require(`${process.cwd()}/seeds/ids/jobs`);
 const otherIds = require(`${process.cwd()}/seeds/ids/misc`);
-const Invitations = require(`${process.cwd()}/src/models/invitations`);
+const Invitations = require(`${process.cwd()}/src/services/invitations_and_proposals/models/invitations`);
 
 const today = new Date();
 // Create a date 2 weeks from now

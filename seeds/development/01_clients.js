@@ -3,7 +3,7 @@
 
 const fieldIds = require(`${process.cwd()}/seeds/ids/fields`);
 const clientIds = require(`${process.cwd()}/seeds/ids/clients`);
-const Clients = require(`${process.cwd()}/src/models/clients`);
+const Clients = require(`${process.cwd()}/src/services/users/models/clients`);
 
 exports.seed = async (knex) => {
 	// Deletes ALL existing entries

@@ -2,7 +2,7 @@
 
 
 const random = new (require('chance'));
-const SavedJobs = require(`${process.cwd()}/src/models/saved_jobs`);
+const SavedJobs = require(`${process.cwd()}/src/services/saved_objects/models/saved_jobs`);
 
 // used to create a random saved_job. If given no parameters, randomizes all fields
 module.exports = async(opts = {}) => {

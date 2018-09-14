@@ -3,7 +3,7 @@
 
 const { format } = require('date-fns');
 const freelancerIds = require(`${process.cwd()}/seeds/ids/freelancers`);
-const EmploymentHistory = require(`${process.cwd()}/src/models/employment_history`);
+const EmploymentHistory = require(`${process.cwd()}/src/services/freelancer_history/models/employment_history`);
 
 exports.seed = async (knex) => {
 	// Deletes ALL existing entries
