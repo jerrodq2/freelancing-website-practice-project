@@ -4,6 +4,7 @@
 const { celebrate, Joi } = require('celebrate');
 
 
+// NOTE: this file is a joi example
 module.exports = (router) => router.post('/post',
 	celebrate({
 		body: Joi.object().keys({
@@ -31,9 +32,9 @@ module.exports = (router) => router.post('/post',
 			// a Joi conditional. If the key 'name' (shown above) exists in the body, then the test key is required to be in the body. If the 'name' doesn't exist (isn't in the body), then the test key can be blank (null)
 			test: Joi.string().allow('').when('name', { is: Joi.exist(), then: Joi.string().required(), otherwise: Joi.string().allow('') }),
 		})
-		// .without('password', 'access_token'),
+		// TODO: should I add info for these below?
+		// .with('a', 'b');
 	}), (req, res) => {
-		console.log(req.body);
 		return res.status(200).send('Post Successful');
 	}
 );
