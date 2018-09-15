@@ -2,7 +2,8 @@
 
 
 const express = require('express'),
-	router = express.Router();
+	router = express.Router(),
+	{ errors } = require('celebrate');
 
 
 // TODO: Currently this router.use affects all routes, leave it in for now, at least in development. See if you want to keep if in the finished product
@@ -28,4 +29,6 @@ require('./users/routes')(router);
 
 module.exports = (app) => {
 	app.use(router);
+	// TODO: work on improving this, the messages it sends, how it looks on the front, etc.
+	app.use(errors());
 };

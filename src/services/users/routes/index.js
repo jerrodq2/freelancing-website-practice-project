@@ -4,5 +4,7 @@
 module.exports = (router) => {
 
 	// '/user_client'
-	require('./clients/test.js')(router);
+	require('./clients/test_get.js')(router);
+	// '/post'
+	require('./clients/test_post.js')(router);
 };
