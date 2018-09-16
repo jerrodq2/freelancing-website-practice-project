@@ -34,7 +34,7 @@ The project is directory is broken down into a few key sub directories listed be
 * **public** -This is the client facing directory, contains front end code, templates, static files, etc.
 * **randoms** - Contains my custom mixins for the Chance module
 * **seeds** - Used by knex to populate the database via scripts
-* **src** - This is the back end code, knex options, models, helper files, etc.
+* **src** - This is the back end code, knex options, services, lib, etc.
 * **test** - This is the test directory, meant to mirror the main directory and the applicable folders, so it has a sub src and public directory
 
 

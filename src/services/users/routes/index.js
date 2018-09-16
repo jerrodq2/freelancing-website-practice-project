@@ -3,6 +3,8 @@
 
 module.exports = (router) => {
 
-	router.get('/user', require('./clients/test.js'));
-
+	// '/user_client/:id' - example of a get route with Joi
+	require('./clients/test_get.js')(router);
+	// '/post' - example of a post route with Joi
+	require('./clients/test_post.js')(router);
 };
