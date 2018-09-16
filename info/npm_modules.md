@@ -107,3 +107,9 @@ Below are the individual npm modules/packages I have installed in the project, s
 	* Why: I use it to create random things, ex: random name, word, paragraph, mainly used in testing.
 	* Where: test and randoms directory
 	* Other: the randoms directory is dedicated to this module and my own custom mixins/methods for it
+
+* **celebrate** - an express middleware function that wraps the joi validation library.
+	* Name: "celebrate": "^8.0.2"
+	* Why: I use it to utilize the Joi validation library, which I use to validate my server side routes. Joi is normally used with the Hapi node framework, celebrate allows you to use it with express.
+	* Where: server side routes
+	* Other: n/a
