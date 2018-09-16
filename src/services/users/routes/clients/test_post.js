@@ -4,7 +4,7 @@
 const { celebrate, Joi } = require('celebrate');
 
 
-// this file is a joi example
+// this file is an example of a post route with Joi validations
 module.exports = (router) => router.post('/post',
 	celebrate({
 		body: Joi.object().keys({
@@ -34,8 +34,6 @@ module.exports = (router) => router.post('/post',
 
 			// using .with() at the end of the body keys({}) object requires the presence of other keys when the specificed key is here. Basically, if the 'a' key exists in the body, then the 'b' key is required. If 'a' isn't in the body, 'b' isn't required. Can accept more than one peer, ex: .with('a', ['b', 'c'])
 		}).with('a', 'b')
-		// TODO: should I add info for these below?
-		// .with('a', 'b');
 	}), (req, res) => {
 		return res.status(200).send('Post Successful');
 	}
