@@ -1,7 +1,7 @@
 'use strict';
 
 
-//The below code assumes that the main database doesn't currently exists. Therefore, we start by connecting to the default empty postgres database so we can make queries without any errors
+// This file is used in the db:reset npm script. It creates the main and test databases used in the project. This can be used to drop and then re-create them or create them from scratch. The below code assumes that the databases don't currently exists. Therefore, we start by connecting to the default empty postgres database so we can make queries without any errors
 require('dotenv').config();
 
 const connectionOptions = require(`${process.cwd()}/knexfile.js`)[`${process.env.NODE_ENV}`];
