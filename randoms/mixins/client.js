@@ -1,11 +1,12 @@
 'use strict';
 
 
+// This file is used to create a random client record for testing. If given no parameters, randomizes all fields
 const random = new (require('chance'));
 const Clients = require(`${process.cwd()}/src/services/users/models/clients`);
 const { hashPassword } = require(`${process.cwd()}/src/lib/helper_functions`);
 
-// used to create a random client. If given no parameters, randomizes all fields
+
 module.exports = async(opts = {}) => {
 	let password;
 

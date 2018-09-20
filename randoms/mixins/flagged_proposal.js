@@ -1,10 +1,11 @@
 'use strict';
 
 
+// This file is used to create a random flagged_proposal record for testing. If given no parameters, randomizes all fields
 const random = new (require('chance'));
 const FlaggedProposals = require(`${process.cwd()}/src/services/flags/models/flagged_proposals`);
 
-// used to create a random flagged_proposal. If given no parameters, randomizes all fields
+
 module.exports = async(opts = {}) => {
 	// incase we need a field_id for the below client and freelancers, we only have to create a field once
 	const createFieldId = async() => {

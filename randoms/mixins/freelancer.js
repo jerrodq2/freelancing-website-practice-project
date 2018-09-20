@@ -1,11 +1,12 @@
 'use strict';
 
 
+// This file is used to create a random freelancer record for testing. If given no parameters, randomizes all fields
 const random = new (require('chance'));
 const Freelancers = require(`${process.cwd()}/src/services/users/models/freelancers`);
 const { hashPassword } = require(`${process.cwd()}/src/lib/helper_functions`);
 
-// used to create a random freelancer. If given no parameters, randomizes all fields
+
 module.exports = async(opts = {}) => {
 	let password;
 

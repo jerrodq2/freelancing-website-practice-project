@@ -1,10 +1,11 @@
 'use strict';
 
 
+// This file is used to create a random freelancer_review record for testing. If given no parameters, randomizes all fields
 const random = new (require('chance'));
 const FreelancerReviews = require(`${process.cwd()}/src/services/reviews/models/freelancer_reviews`);
 
-// used to create a random freelancer_review. If given no parameters, randomizes all fields
+
 module.exports = async(opts = {}) => {
 	// incase we need a field_id for the three below conditionals, we only have to create a field once
 	const createFieldId = async() => {

@@ -1,10 +1,11 @@
 'use strict';
 
 
+// This file is used to create a random job_activity record for testing. If given no parameters, randomizes all fields
 const random = new (require('chance'));
 const JobActivity = require(`${process.cwd()}/src/services/jobs/models/job_activity`);
 
-// used to create a random job_activity. If given no parameters, randomizes all fields
+
 module.exports = async(opts = {}) => {
 	// incase we need a field_id for the below conditionals, we only have to create a field once
 	const createFieldId = async() => {

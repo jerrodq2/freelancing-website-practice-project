@@ -1,10 +1,11 @@
 'use strict';
 
 
+// This file is used to create a random flagged_invitation record for testing. If given no parameters, randomizes all fields record for testing
 const random = new (require('chance'));
 const FlaggedInvitations = require(`${process.cwd()}/src/services/flags/models/flagged_invitations`);
 
-// used to create a random flagged_invitation. If given no parameters, randomizes all fields
+
 module.exports = async(opts = {}) => {
 	// incase we need a field_id for the below client and freelancers, we only have to create a field once
 	const createFieldId = async() => {

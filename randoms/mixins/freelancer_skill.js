@@ -1,10 +1,11 @@
 'use strict';
 
 
+// This file is used to create a random freelancer_skill record for testing. If given no parameters, randomizes all fields
 const random = new (require('chance'));
 const FreelancerSkills = require(`${process.cwd()}/src/services/skills/models/freelancer_skills`);
 
-// used to create a random freelancer_skill. If given no parameters, randomizes all fields
+
 module.exports = async(opts = {}) => {
 	// if the needed keys aren't given, we create them here
 	if (!opts.freelancer_id) {

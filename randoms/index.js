@@ -1,12 +1,15 @@
 'use strict';
 
 
+// This file loads all of the random mixins we created in the mixins folder and adds them to the random/chance npm module. This allows us to add customized mixins to quickly create db records for testing. This file also creates mixins that allow for than one random record to be created at a time.
 const random = new (require('chance'));
 const { hashPassword } = require(`${process.cwd()}/src/lib/helper_functions`);
 const _ = require('lodash');
 
-// Loads all of the mixins we created and adds them to random/chance, this has to happen first
+
+// this has to happen first
 random.mixin(require('./mixins'));
+
 
 // methods that create multiple records, ex: 10 clients, 20 skills, etc.
 random.mixin({
