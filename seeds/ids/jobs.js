@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This file holds the guid id's created for the job seeds. Since the created jobs are used in multiple files, creating the id's here and re-using them makes things simpler
 module.exports = {
 	basic_website: 'c5998f2e-0616-4894-bbee-affb5937f871',
 	wordpress: 'f9aba5a4-62c6-4af0-a187-b0b21a585e8b',

@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This file holds the guid id's created for the client seeds. Since the created clients are used in multiple files, creating the id's here and re-using them makes things simpler
 module.exports = {
 	jack: '48fdaefc-e634-42db-9867-a799dee0fe78',
 	sherlock: '71d78bd0-226c-4f99-9e1c-80959bf7d3a4',

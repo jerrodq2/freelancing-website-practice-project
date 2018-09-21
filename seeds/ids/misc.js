@@ -1,6 +1,6 @@
 'use strict';
 
-// ids for specific records across different tables. Mainly used to create seed data for inappropriate_flags
+// This file holds the guid id's created for the invitations and review seeds. Since they are used to create seed data for inappropriate_flags, creating the id's here and re-using them makes things simpler
 module.exports = {
 	joker_proposal: '4cccb5af-1a49-4101-9491-596687db18e8',
 	loki_invitation: 'e3107378-5dc0-4fd9-a936-426280f1e2c9',
