@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This file seeds the database with starting flagged invitations using the already inserted freelancers, and invitations
 const miscIds = require(`${process.cwd()}/seeds/ids/misc`);
 const freelancerIds = require(`${process.cwd()}/seeds/ids/freelancers`);
 const FlaggedInvitations = require(`${process.cwd()}/src/services/flags/models/flagged_invitations`);

@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This file seeds the database with starting saved jobs using the already inserted jobs and freelancers
 const freelancerIds = require(`${process.cwd()}/seeds/ids/freelancers`);
 const jobIds = require(`${process.cwd()}/seeds/ids/jobs`);
 const SavedJobs = require(`${process.cwd()}/src/services/saved_objects/models/saved_jobs`);

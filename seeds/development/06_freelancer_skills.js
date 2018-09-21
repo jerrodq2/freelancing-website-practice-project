@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This file seeds the database with freelancer_skills for the already inserted freelancers and skills
 const freelancerIds = require(`${process.cwd()}/seeds/ids/freelancers`);
 const FreelancerSkills = require(`${process.cwd()}/src/services/skills/models/freelancer_skills`);
 

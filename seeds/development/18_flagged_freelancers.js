@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This file seeds the database with starting flagged freelancers using the already inserted clients, and freelancers
 const freelancerIds = require(`${process.cwd()}/seeds/ids/freelancers`);
 const clientIds = require(`${process.cwd()}/seeds/ids/clients`);
 const FlaggedFreelancers = require(`${process.cwd()}/src/services/flags/models/flagged_freelancers`);

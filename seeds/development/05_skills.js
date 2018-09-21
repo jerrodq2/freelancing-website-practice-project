@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This file seeds the database with starting skills
 const Skills = require(`${process.cwd()}/src/services/skills/models/skills`);
 
 exports.seed = async (knex) => {
