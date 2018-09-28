@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This file creates the review_model, which extends the main_model with specifc methods that are used by the freelancer_review and client_review models
 const MainModel = require(`${process.cwd()}/src/services/main_model`);
 const Jobs = require(`${process.cwd()}/src/services/jobs/models/jobs`);
 const knex = require(`${process.cwd()}/src/config/knex`);

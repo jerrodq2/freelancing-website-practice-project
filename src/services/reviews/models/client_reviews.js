@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This file creates the client_review model as a new instance of the review_model
 const Model = require('./review_model');
 const ClientReviews = new Model('client_reviews');
 

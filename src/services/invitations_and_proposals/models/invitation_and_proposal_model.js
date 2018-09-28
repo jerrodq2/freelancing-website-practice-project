@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This file creates the invitation_and_proposal_model, which extends the main_model with specifc methods that are used by the inivtation and proposal models
 const MainModel = require(`${process.cwd()}/src/services/main_model`);
 const knex = require(`${process.cwd()}/src/config/knex`);
 const Errors = require(`${process.cwd()}/src/lib/errors`);
