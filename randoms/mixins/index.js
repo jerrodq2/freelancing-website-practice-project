@@ -1,6 +1,7 @@
 'use strict';
 
 
+// this file gathers all of the custom mixins in the this directory and exports it to be used by randoms/index.js
 module.exports = {
 	admin: require('./admin'),
 	client_review: require('./client_review'),

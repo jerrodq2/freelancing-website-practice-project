@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This file tests the freelancer_skills src model. It tests what should work, how it should work, and what should cause errors
 const { expect } = require('code');
 const Lab = require('lab');
 const lab = exports.lab = Lab.script();

@@ -49,6 +49,8 @@ npm run test
 ## General Info
 You can see more detailed information about both the database, and npm modules I use in this project in the info folder.
 
+I also add comments to the top of all files as a general description of the file, this servers as a reminder to myself and makes it easier for someone else to understand the purpose of the file without having to go through all of the code.
+
 A note about the general syntax of the project. I prefer to add spaces throughout the project for readability and to make things clearer, just a preference. I also added comments throughout the project, both for the understanding of anyone who isn't familiar with the project and for myself when I inevitably come back to this code weeks later and don't remember what I wrote.
 
 Last updated: 6/11/18

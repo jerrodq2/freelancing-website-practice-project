@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This file creates the job_activity model
 const knex = require(`${process.cwd()}/src/config/knex`);
 const Model = require(`${process.cwd()}/src/services/main_model`);
 const JobActivity = new Model('job_activity');

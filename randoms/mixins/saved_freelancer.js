@@ -1,10 +1,11 @@
 'use strict';
 
 
+// This file is used to create a random saved_freelancer record for testing. If given no parameters, randomizes all fields
 const random = new (require('chance'));
 const SavedFreelancers = require(`${process.cwd()}/src/services/saved_objects/models/saved_freelancers`);
 
-// used to create a random saved_freelancer. If given no parameters, randomizes all fields
+
 module.exports = async(opts = {}) => {
 	// incase we need a field_id for the two below conditionals, we only have to create a field once
 	const createFieldId = async() => {

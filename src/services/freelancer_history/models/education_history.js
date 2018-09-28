@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This file creates the education_history model with the standard methods
 const Model = require(`${process.cwd()}/src/services/main_model`);
 const EducationHistory = new Model('education_history');
 

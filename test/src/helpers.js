@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This file creates useful methods used throughout the src test files. It also gathers useful files and modules such as knex and random which can then be exported and used in the test files, just a way to focus the useful methods and modules in one file
 const connectionOptions = require(`${process.cwd()}/knexfile.js`)[`${process.env.NODE_ENV}`];
 const knex = require('knex')(connectionOptions);
 const random = require(`${process.cwd()}/randoms`);

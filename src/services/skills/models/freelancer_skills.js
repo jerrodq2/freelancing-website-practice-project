@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This file creates the freelancer_skills model with the standard methods
 const knex = require(`${process.cwd()}/src/config/knex`);
 const Model = require(`${process.cwd()}/src/services/main_model`);
 const Skills = require('./skills');

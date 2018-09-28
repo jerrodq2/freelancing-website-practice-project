@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This file creates the main model. This is the original model, creating the standard CRUD methods, all other models use. All other models either extend this model or are new instances of it
 const knex = require(`${process.cwd()}/src/config/knex`);
 const Errors = require(`${process.cwd()}/src/lib/errors`);
 const { toSingular, findColumn } = require(`${process.cwd()}/src/lib/helper_functions`);

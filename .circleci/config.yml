@@ -1,22 +1,24 @@
+# This file is used by circleci, it is used in each circleci build. It details what to install, variables used, commands to run, etc.
 version: 2
 jobs:
   build:
     working_directory: ~/project
     docker:
       - image: circleci/node:8.9.4
-      # The below environemnt is where you set the .env variables used throughout node
+      # The below environemnt is where you set the .env variables used throughout node during the build, it won't read a .env file
         environment:
           NODE_ENV: test
           PG_USER: jerrodq2
           PG_DATABASE: freelancing_project
           PG_TEST_DATABASE: freelancing_project_test
           PG_PORT: 5432
-
+      # this image installs postgres and gives it the user and database name
       - image: postgres:10.3
         environment:
           POSTGRES_USER: jerrodq2
           POSTGRES_DB: freelancing_project
 
+    # steps are the commands that are run during the build, in the order they are written
     steps:
       - checkout
 
@@ -26,27 +28,25 @@ jobs:
           - v1-dependencies-{{ checksum "package.json" }}
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
-
+      # install npm moudles
       - run:
           name: Install local dependencies
           command: npm install
-
+      # this command tells circleci to wait until postgres (which was installed above) is up and running before moving on
       - run:
           name: Wait for Postgres to start
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
-
+      # runs the command to setup the test databse
       - run:
           name: Create database
           command: npm run db:reset:test
-
-
 
       - save_cache:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
-      # run tests!
+      # runs the tests
       - run:
           name: Running Tests
           command: npm run test

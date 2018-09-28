@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This file seeds the database with starting saved clients using the already inserted clients and freelancers
 const freelancerIds = require(`${process.cwd()}/seeds/ids/freelancers`);
 const clientIds = require(`${process.cwd()}/seeds/ids/clients`);
 const SavedClients = require(`${process.cwd()}/src/services/saved_objects/models/saved_clients`);

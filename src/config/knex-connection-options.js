@@ -1,5 +1,7 @@
 'use strict';
 
+
+// This file defines the options to connect to knex used throughout the project, for both normal and test database. It is required by the knexfile in the main directory, which all other files go through.
 const connectionOptions = {
 	client: 'pg',
 	version: '7.4.1',

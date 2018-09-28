@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This file creates the proposals model as a new instance of the invitation_and_proposal_model
 const Model = require('./invitation_and_proposal_model');
 const Proposals = new Model('proposals');
 

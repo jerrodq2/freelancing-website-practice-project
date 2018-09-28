@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This file creates the freelancer_review model as a new instance of the review_model
 const Model = require('./review_model');
 const FreelancerReviews = new Model('freelancer_reviews');
 

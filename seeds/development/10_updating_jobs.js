@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This file updates the already inserted jobs so some are closed. This is done after the invitations and proposal seeds are created to avoid errors
 const jobIds = require(`${process.cwd()}/seeds/ids/jobs`);
 const Jobs = require(`${process.cwd()}/src/services/jobs/models/jobs`);
 

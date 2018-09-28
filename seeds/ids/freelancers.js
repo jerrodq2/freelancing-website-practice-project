@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This file holds the guid id's created for the freelancer seeds. Since the created freelancers are used in multiple files, creating the id's here and re-using them makes things simpler
 module.exports = {
 	jerrod: 'dc8158d4-58d5-4bb6-a18e-b713caca7530',
 	ryan: '0946a4f0-4e47-4f5d-b189-7c559af5733f',

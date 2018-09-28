@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This file contains helper functions that can be used throughout the password for a variety of reasons.
 const bcrypt = require('bcrypt'),
 	pluralize = require('pluralize');
 

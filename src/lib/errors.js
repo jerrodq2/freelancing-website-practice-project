@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This file creates error methods I can use throughout the project. Basically, by using Boom, the methods below give more specific error messages. Some of the methods determine the reason for the error, the rest send an appropriate error message
 const Boom = require('boom');
 
 // I use boom for http friendly error objects. This file creates some useful boom methods we can use throughout the project.
@@ -8,6 +9,7 @@ const Boom = require('boom');
 module.exports = {
 	Boom,
 
+	// The below methods check to see what caused the error
 	// checks if the id is in proper uuid format
 	violatesIdSyntax: (err) => err.message.indexOf('invalid input syntax') >= 0,
 	// checks if a not-null constraint was violated, ex: try to create a client without a field_id, which is a nonNullable field
@@ -18,6 +20,7 @@ module.exports = {
 	violatesUnique: (err) => err.message.indexOf('violates unique constraint') >= 0,
 
 
+	// The rest of the methods below send a more specific error message once the reason has been determined.
 	// returns a bad id format message with the table and action as injected parameters
 	badId: (table, action, data = {}) => {
 		const message = `The ${table} you are attempting to ${action} couldn't be completed. You gave an id that wasn't in proper uuid format`;

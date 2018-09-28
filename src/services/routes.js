@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This file is the main routes file. It sets up the variables needed for express routing and all server side routes are required/are compiled in this file.
 const express = require('express'),
 	router = express.Router(),
 	{ errors } = require('celebrate');

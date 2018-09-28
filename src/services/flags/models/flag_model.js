@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This file creates the flag_model, which extends the main_model with specifc methods that are used by all the other flag models (flagged_jobs, flagged_clients, etc.), to abstract re-used code and improve DRYness
 const MainModel = require(`${process.cwd()}/src/services/main_model`);
 const knex = require(`${process.cwd()}/src/config/knex`);
 const Errors = require(`${process.cwd()}/src/lib/errors`);
@@ -13,7 +14,6 @@ const flaggingClientColumns = ['fc.id as client_who_flagged', 'fc.first_name as 
 const flaggingFreelancerColumns = ['ff.id as freelancer_who_flagged', 'ff.first_name as flagging_freelancer_first_name', 'ff.last_name as flagging_freelancer_last_name'];
 
 
-// a specific class that extends the MainModel, used only for flag models (flagged_clients, flagged_jobs, etc.), to abstract re-used code and improve DRYness
 class FlagModel extends MainModel {
 	constructor (tableName) {
 		super(tableName);

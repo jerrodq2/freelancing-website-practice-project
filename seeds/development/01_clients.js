@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This file seeds the database with starting clients
 const fieldIds = require(`${process.cwd()}/seeds/ids/fields`);
 const clientIds = require(`${process.cwd()}/seeds/ids/clients`);
 const Clients = require(`${process.cwd()}/src/services/users/models/clients`);

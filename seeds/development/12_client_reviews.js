@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This file seeds the database with starting client reviews using the already inserted clients, freelancers, and jobs
 const freelancerIds = require(`${process.cwd()}/seeds/ids/freelancers`);
 const clientIds = require(`${process.cwd()}/seeds/ids/clients`);
 const jobIds = require(`${process.cwd()}/seeds/ids/jobs`);

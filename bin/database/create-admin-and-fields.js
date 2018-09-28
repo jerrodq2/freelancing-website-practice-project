@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This file is used in the db:reset npm script. It creates an admin and the standard fields used in the Field db table
 const Admins = require(`${process.cwd()}/src/services/users/models/admins`);
 const Fields = require(`${process.cwd()}/src/services/fields/models/fields`);
 const fieldIds = require(`${process.cwd()}/seeds/ids/fields`);

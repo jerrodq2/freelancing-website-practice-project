@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This file seeds the database with starting freelancers
 const fieldIds = require(`${process.cwd()}/seeds/ids/fields`);
 const freelancerIds = require(`${process.cwd()}/seeds/ids/freelancers`);
 const Freelancers = require(`${process.cwd()}/src/services/users/models/freelancers`);

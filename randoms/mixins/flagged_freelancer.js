@@ -1,10 +1,11 @@
 'use strict';
 
 
+// This file is used to create a random flagged_freelancer record for testing. If given no parameters, randomizes all fields, creates a flag created by a client by default
 const random = new (require('chance'));
 const FlaggedFreelancers = require(`${process.cwd()}/src/services/flags/models/flagged_freelancers`);
 
-// used to create a random flagged_freelancer. If given no parameters, randomizes all fields, creates a flag created by a client by default
+
 module.exports = async(opts = {}) => {
 	// incase we need a field_id for the below client and freelancer, we only have to create a field once
 	const createFieldId = async() => {

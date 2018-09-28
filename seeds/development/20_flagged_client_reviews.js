@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This file seeds the database with starting flagged client reviews using the already inserted clients and client reviews
 const miscIds = require(`${process.cwd()}/seeds/ids/misc`);
 const clientIds = require(`${process.cwd()}/seeds/ids/clients`);
 const FlaggedClientReviews = require(`${process.cwd()}/src/services/flags/models/flagged_client_reviews`);

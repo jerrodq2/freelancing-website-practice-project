@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This file seeds the database with starting flagged freelancers reviews using the already inserted freelancers and freelancer reviews
 const miscIds = require(`${process.cwd()}/seeds/ids/misc`);
 const freelancerIds = require(`${process.cwd()}/seeds/ids/freelancers`);
 const FlaggedFreelancerReviews = require(`${process.cwd()}/src/services/flags/models/flagged_freelancer_reviews`);

@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This file seeds the database with education history for the already inserted freelancers
 const { format } = require('date-fns');
 const freelancerIds = require(`${process.cwd()}/seeds/ids/freelancers`);
 const EducationHistory = require(`${process.cwd()}/src/services/freelancer_history/models/education_history`);

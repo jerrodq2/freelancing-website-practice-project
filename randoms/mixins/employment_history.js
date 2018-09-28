@@ -1,10 +1,11 @@
 'use strict';
 
 
+// This file is used to create a random employment_history record for testing. If given no parameters, randomizes all fields.
 const random = new (require('chance'));
 const EmploymentHistory = require(`${process.cwd()}/src/services/freelancer_history/models/employment_history`);
 
-// used to create a random employment_history. If given no parameters, randomizes all fields.
+
 module.exports = async(opts = {}) => {
 	// if the needed foreign keys aren't given, we create them here
 	if (!opts.freelancer_id) {

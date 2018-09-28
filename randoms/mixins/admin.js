@@ -1,10 +1,11 @@
 'use strict';
 
 
+// This file is used to create a random admin record for testing. If given no parameters, randomizes all fields.
 const random = new (require('chance'));
 const Admins = require(`${process.cwd()}/src/services/users/models/admins`);
 
-// used to create a random admin. If given no parameters, randomizes all fields.
+
 module.exports = (opts = {}) => Admins.create({
 	id: opts.id || random.guid(),
 	first_name: opts.first_name || random.name(),
