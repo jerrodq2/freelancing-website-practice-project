@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This is the main index.js file used in the project. When node is started up, it goes to this file which controls the project and requires the other necessary files and npm modules
 const express = require('express'),
 	app = express(),
 	bodyParser = require('body-parser'),

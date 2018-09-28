@@ -1,3 +1,4 @@
+/* This file tells eslint what rules to ignore, which rules to follow, and how to follow them */
 {
     "env": {
         "browser": true,
