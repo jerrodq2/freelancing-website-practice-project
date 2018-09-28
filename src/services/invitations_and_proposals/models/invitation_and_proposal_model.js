@@ -1,14 +1,13 @@
 'use strict';
 
 
-// This file creates the invitation_and_proposal_model, which extends the main_model with specifc methods that are used by the inivtation and proposal models
+// This file creates the invitation_and_proposal_model, which extends the main_model with specifc methods that are used by the inivtation and proposal models, to abstract re-used code and improve DRYness
 const MainModel = require(`${process.cwd()}/src/services/main_model`);
 const knex = require(`${process.cwd()}/src/config/knex`);
 const Errors = require(`${process.cwd()}/src/lib/errors`);
 const { toSingular } = require(`${process.cwd()}/src/lib/helper_functions`);
 
 
-// a specific class that extends the MainModel, used only for the invitations and proposals model, to abstract re-used code and improve DRYness
 class InvitationAndProposalModel extends MainModel {
 	constructor (tableName) {
 		super(tableName);

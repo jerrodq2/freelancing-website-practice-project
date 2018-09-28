@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This file creates the freelancers model as a new instance of the user_model
 const UserModel = require('./user_model');
 const Freelancers = new UserModel('freelancers');
 

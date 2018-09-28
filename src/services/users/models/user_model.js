@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This file creates the user_model, which extends the main_model with specifc methods that are used by the client, freelancer, and admin models, to abstract re-used code and improve DRYness
 const MainModel = require(`${process.cwd()}/src/services/main_model`);
 const knex = require(`${process.cwd()}/src/config/knex`);
 const { hashPassword } = require(`${process.cwd()}/src/lib/helper_functions`);
@@ -9,7 +10,6 @@ const { toSingular } = require(`${process.cwd()}/src/lib/helper_functions`);
 const _ = require('lodash');
 
 
-// A specific class that extends the MainModel, used only for users (clients, freelancers, and admins), to abstract re-used code and improve DRYness
 class UserModel extends MainModel {
 	constructor (tableName) {
 		super(tableName);
