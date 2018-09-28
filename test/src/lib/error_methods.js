@@ -1,11 +1,11 @@
 'use strict';
 
 
+// This file contains the methods that are used in the src unit tests to test error messages/handling, it was abstracted out of the helpers.js file due to its bulkiness. The Models return the same error messages, so they were abstracted to here for DRYness, each method below has comments to explain the parameters and give examples.
 const { expect } = require('code');
 const _ = require('lodash');
 
 
-// This file contaains the methods that are used in the unit tests to test error messages/handling, it was abstracted out of the helpers.js file due to its bulkiness. The Models return the same error messages, so they were abstracted to here for DRYness, each method below has comments to explain the parameters and give examples.
 const checkErr = {
 
 	// checks the actual error message to determine the cause, what it was attempting, etc. used by all below checkErr methods
@@ -25,7 +25,7 @@ const checkErr = {
 
 			cause: the specific reason that caused the error, ex: not found, violated the not-null constraint
 		*/
-		
+
 		expect(err).to.be.an.object();
 		const { message } = err;
 
