@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This file creates the flagged_jobs model as a new instance of the flag_model
 const Model = require('./flag_model');
 const FlaggedJobs = new Model('flagged_jobs');
 const Errors = require(`${process.cwd()}/src/lib/errors`);

@@ -1,6 +1,7 @@
 'use strict';
 
 
+// This file creates the employment_history model with the standard methods
 const Model = require(`${process.cwd()}/src/services/main_model`);
 const EmploymentHistory = new Model('employment_history');
 
