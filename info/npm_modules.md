@@ -73,7 +73,7 @@ Below are the individual npm modules/packages I have installed in the project, s
 	* Other: N/A
 
 * **bcrypt** - Used to hash passwords
-	* Name: "bcrypt": "^1.0.3"
+	* Name: "bcrypt": "^3.0.1"
 	* Why: hash my user passwords
 	* Where: in the models
 	* Other: N/A

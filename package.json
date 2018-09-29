@@ -47,7 +47,7 @@
     "lab": "^15.3.1"
   },
   "dependencies": {
-    "bcrypt": "^1.0.3",
+    "bcrypt": "^3.0.1",
     "better-npm-run": "^0.1.0",
     "body-parser": "^1.18.2",
     "boom": "^7.2.0",
