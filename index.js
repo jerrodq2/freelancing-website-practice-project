@@ -5,8 +5,11 @@
 const express = require('express'),
 	app = express(),
 	bodyParser = require('body-parser'),
-	listEndpoints = require('express-list-endpoints');
-
+	listEndpoints = require('express-list-endpoints'),
+	bunyan = require('bunyan'),
+	log = bunyan.createLogger({ name: 'freelancer-website-practice-project' });
+log.info('Hello World');
+log.warn({ lang: 'fr' }, 'au revoir');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
