@@ -7,7 +7,16 @@ const express = require('express'),
 	bodyParser = require('body-parser'),
 	listEndpoints = require('express-list-endpoints'),
 	bunyan = require('bunyan'),
-	log = bunyan.createLogger({ name: 'freelancer-website-practice-project' });
+	// log = bunyan.createLogger({ name: 'freelancer-website-practice-project' });
+	log = bunyan.createLogger({
+		name: 'freelancer-website-practice-project',
+		// `type: 'file'` is implied
+		type: 'rotating-file',
+		streams: [{ path: './logs/bunyan-logs.log', }],
+		period: '1d',   // daily rotation
+		count: 3        // keep 3 back copies
+	});
+
 log.info('Hello World');
 log.warn({ lang: 'fr' }, 'au revoir');
 
