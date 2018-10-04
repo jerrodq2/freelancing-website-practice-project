@@ -7,7 +7,7 @@ const express = require('express'),
 	bodyParser = require('body-parser'),
 	listEndpoints = require('express-list-endpoints'),
 	bunyan = require('bunyan'),
-	// log = bunyan.createLogger({ name: 'freelancer-website-practice-project' });
+	// the below code may be moved or changed when I actually start logging info
 	log = bunyan.createLogger({
 		name: 'freelancer-website-practice-project',
 		// `type: 'file'` is implied
@@ -17,8 +17,8 @@ const express = require('express'),
 		count: 3        // keep 3 back copies
 	});
 
-log.info('Hello World');
-log.warn({ lang: 'fr' }, 'au revoir');
+// log.info('Hello World');
+// log.warn({ lang: 'fr' }, 'au revoir');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
