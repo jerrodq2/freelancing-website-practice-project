@@ -5,8 +5,20 @@
 const express = require('express'),
 	app = express(),
 	bodyParser = require('body-parser'),
-	listEndpoints = require('express-list-endpoints');
+	listEndpoints = require('express-list-endpoints'),
+	bunyan = require('bunyan'),
+	// the below code may be moved or changed when I actually start logging info
+	log = bunyan.createLogger({
+		name: 'freelancer-website-practice-project',
+		// `type: 'file'` is implied
+		type: 'rotating-file',
+		streams: [{ path: './logs/bunyan-logs.log', }],
+		period: '1d',   // daily rotation
+		count: 3        // keep 3 back copies
+	});
 
+// log.info('Hello World');
+// log.warn({ lang: 'fr' }, 'au revoir');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

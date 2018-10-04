@@ -30,6 +30,7 @@ The project is directory is broken down into a few key sub directories listed be
 * **.github** - Used by github, contains PR template
 * **bin** - Contains executable scripts, such as the scripts to create the database and initial admin
 * **info** - This is only used for information purposes. Gives a more detailed explanations about the db, tables, and npm modules used in this project, for understanding and a refresher incase I or anyone else needs it
+* **logs** - This folder is where logs from bunyan are sent. In the event of bunyan logging something, it creates a file and puts it in the logs folder. All log files are ignored by git by default
 * **migrations** - The migrations files used by knex to structure the databases
 * **public** -This is the client facing directory, contains front end code, templates, static files, etc.
 * **randoms** - Contains my custom mixins for the Chance module
