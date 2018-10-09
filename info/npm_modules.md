@@ -37,7 +37,7 @@ Below are the individual npm modules/packages I have installed in the project, s
 	* Other: I have special files dedicated to setting up my connection to postgres, though they all go through the knex module below.
 
 * **knex** - A batteries-included, multi-dialect (MSSQL, MySQL, PostgreSQL, SQLite3, Oracle(including Oracle Wallet Authentication), WebSQL) query builder for Node.js and the Browser.
-	* Name: "knex": "^0.14.4"
+	* Name: "knex": "^0.15.2"
 	* Why: I use to knex for query building, better structure, clean code and to manage my migrations and seeds. It acts as the middle man between my project and knex, I give it the connection options and it connects me to the db (postgres in this case)
 	* Where: Like pg above, it is the backbone of my project, anywhere the database is touched knex is there. But it is heavily used in migrations, seeds, the models, and setting up/configuring the database.
 	* Other: I have special files dedicated to setting up and configuring knex/pg/postgres, such as the knexfile in the main directory, the config folder in src/config, and database folder in bin/database
