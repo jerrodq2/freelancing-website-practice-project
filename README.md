@@ -32,11 +32,11 @@ The project is directory is broken down into a few key sub directories listed be
 * **info** - This is only used for information purposes. Gives a more detailed explanations about the db, tables, and npm modules used in this project, for understanding and a refresher incase I or anyone else needs it
 * **logs** - This folder is where logs from bunyan are sent. In the event of bunyan logging something, it creates a file and puts it in the logs folder. All log files are ignored by git by default
 * **migrations** - The migrations files used by knex to structure the databases
-* **public** -This is the client facing directory, contains front end code, templates, static files, etc.
+* **client** -This is the client facing directory, contains front end code, templates, static files, etc.
 * **randoms** - Contains my custom mixins for the Chance module
 * **seeds** - Used by knex to populate the database via scripts
 * **src** - This is the back end code, knex options, services, lib, etc.
-* **test** - This is the test directory, meant to mirror the main directory and the applicable folders, so it has a sub src and public directory
+* **test** - This is the test directory, meant to mirror the main directory and the applicable folders, so it has a sub src and client directory
 
 
 ## Testing
