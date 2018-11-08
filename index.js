@@ -22,15 +22,9 @@ const express = require('express'),
 // log.warn({ lang: 'fr' }, 'au revoir');
 
 
-import webpack from 'webpack';
-import webpackMiddleware from 'webpack-dev-middleware';
-import webpackConfig from './webpack.config.js';
-
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('client'));
-app.use(webpackMiddleware(webpack(webpackConfig)));
 
 require('dotenv').config();
 require('./src/config/knex')();

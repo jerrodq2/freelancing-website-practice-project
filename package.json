@@ -34,7 +34,7 @@
     "db:seeds:run": "bnr knex seed:run",
     "start": "nodemon --exec babel-node index.js",
     "build": "webpack",
-    "new-start": "webpack-dev-server",
+    "new-start": "webpack-dev-server"
   },
   "betterScripts": {
     "knex": "./node_modules/.bin/knex",
