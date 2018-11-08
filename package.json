@@ -32,7 +32,9 @@
     "db:migrate:test:rollback": "bnr knex migrate:rollback --env test",
     "db:create-seed": "bnr knex seed:make",
     "db:seeds:run": "bnr knex seed:run",
-    "start": "nodemon --exec babel-node index.js  --ignore client"
+    "start": "nodemon --exec babel-node index.js",
+    "build": "webpack",
+    "new-start": "webpack-dev-server",
   },
   "betterScripts": {
     "knex": "./node_modules/.bin/knex",
@@ -56,7 +58,9 @@
     "lab": "^15.3.1",
     "style-loader": "^0.23.1",
     "webpack": "^4.25.1",
+    "webpack-cli": "^3.1.2",
     "webpack-dev-middleware": "^3.4.0",
+    "webpack-dev-server": "^3.1.10",
     "webpack-livereload-plugin": "^2.1.1"
   },
   "dependencies": {

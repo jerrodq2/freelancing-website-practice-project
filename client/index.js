@@ -31,12 +31,16 @@ class App extends React.Component {
 		if (this.state.liked) {
 			return 'You liked this';
 		}
-
-		return e(
-			'button',
-			{ onClick: () => this.setState({ liked: true }) },
-			'Like'
+		return (
+			<button onClick={() => this.setState({ liked: true })}>
+				'Like'
+			</button>
 		);
+		// return e(
+		// 	'button',
+		// 	{ onClick: () => this.setState({ liked: true }) },
+		// 	'Like'
+		// );
 	}
 }
 // ReactDOM.render(
@@ -44,5 +48,13 @@ class App extends React.Component {
 // 	document.querySelector('#app')
 // );
 
-const domContainer = document.querySelector('#like_button_container');
-ReactDOM.render(e(App), domContainer);
+// const domContainer = document.querySelector('#like_button_container');
+ReactDOM.render(
+	<App />,
+	// document.getElementById('#like_button_container')
+	document.querySelector('#like_button_container')
+);
+
+
+//
+//
