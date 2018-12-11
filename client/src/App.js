@@ -1,3 +1,5 @@
+// this file was a starting example, can change as necessary
+
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
