@@ -7,6 +7,7 @@ const express = require('express'),
 	bodyParser = require('body-parser'),
 	listEndpoints = require('express-list-endpoints'),
 	bunyan = require('bunyan'),
+
 	// the below code may be moved or changed when I actually start logging info
 	log = bunyan.createLogger({
 		name: 'freelancer-website-practice-project',
@@ -20,13 +21,15 @@ const express = require('express'),
 // log.info('Hello World');
 // log.warn({ lang: 'fr' }, 'au revoir');
 
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use(express.static('client'));
 
 require('dotenv').config();
 require('./src/config/knex')();
 require('./src/services/routes.js')(app);
+'use strict';
 
 
 const port = parseInt(process.env.PORT)?  parseInt(process.env.PORT) : 5000;

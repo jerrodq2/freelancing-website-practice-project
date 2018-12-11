@@ -22,7 +22,7 @@ router.use((req, res, next) => {
 
 // placeholder route for a temporary homepage. TODO: change to later redirect to react (similar to an angular app)
 router.get('/', (req, res) => {
-	res.sendFile(`${process.cwd()}/public/index.html`);
+	res.sendFile(`${process.cwd()}/client/public/index.html`);
 });
 
 require('./users/routes')(router);
