@@ -12,6 +12,7 @@ module.exports = {
 
 	getAll () {
 		// TODO: to be setup with pagination later
+		return knex.table('jobs').select();
 	},
 
 
