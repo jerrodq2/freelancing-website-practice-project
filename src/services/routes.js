@@ -5,7 +5,20 @@
 const express = require('express'),
 	router = express.Router(),
 	{ errors } = require('celebrate'),
-	cors = require('cors');
+	cors = require('cors'),
+	// Set up a list of approved origins (servers) for cors and check against it
+	whitelist = ['http://localhost:3000'],
+	corsOptions = {
+		origin: function (origin, callback) {
+			if (whitelist.indexOf(origin) === -1) {
+				// throw an error if the request came from an unrecognized/unapproved origin
+				callback(new Error(`The Request origin came from ${origin}, which isn't allowed by CORS`));
+			} else {
+				// else we approve it and let the request continue
+				callback(null, true);
+			}
+		}
+	};
 
 
 // TODO: Currently this router.use affects all server routes, leave it in for now, at least in development. See if you want to keep if in the finished product
@@ -27,8 +40,8 @@ require('./users/routes')(router);
 
 
 module.exports = (app) => {
-	// Then use it before your routes are set up:
-	app.use(cors());
+	// this must be before the app.use router line, so we can accept request from different servers, aka, the react server
+	app.use(cors(corsOptions));
 	app.use(router);
 	// TODO: work on improving this, the messages it sends, how it looks on the front, etc.
 	app.use(errors());
