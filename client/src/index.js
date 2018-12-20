@@ -14,7 +14,7 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App.js';
+import App from './components/app/App.js';
 
 
 // class LikeButton extends React.Component {

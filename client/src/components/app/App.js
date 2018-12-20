@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import Header from './components/UI/header';
+import Header from '../UI/navbar';
+import './App.css'
 
 
 class App extends Component {
