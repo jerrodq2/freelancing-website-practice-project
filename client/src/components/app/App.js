@@ -52,7 +52,7 @@ class App extends Component {
 								<div key={ index.id }>
 									<h4>{index.title}</h4>
 									<p>{index.description}</p>
-									<p>Experience Level Requested: {index.experience_level_requested}</p>
+									<p><i>Experience Level Requested:</i> {index.experience_level_requested}</p>
 								</div>
 							);
 						}) }
