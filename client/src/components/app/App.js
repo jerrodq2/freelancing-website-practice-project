@@ -46,12 +46,16 @@ class App extends Component {
 				<Header />
 
 				<div className="container">
-					<h1>Data below:</h1>
-					<ul>
+					<h1>Jobs below:</h1>
 						{ this.state.data.map((index) => {
-							return <li key={ index.id }>{index.title}</li>;
+							return (
+								<div key={ index.id }>
+									<h4>{index.title}</h4>
+									<p>{index.description}</p>
+									<p>Experience Level Requested: {index.experience_level_requested}</p>
+								</div>
+							);
 						}) }
-					</ul>
 				</div>
 
 			</div>
