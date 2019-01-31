@@ -11,36 +11,37 @@
 // Learn more about service workers: http://bit.ly/CRA-PWA
 // serviceWorker.unregister();
 
-
+import 'bootstrap/dist/css/bootstrap.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import App from './App.js';
-
-const e = React.createElement;
+import App from './components/app/App.js';
 
 
-class LikeButton extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = { liked: false };
-	}
+// class LikeButton extends React.Component {
+// 	constructor(props) {
+// 		super(props);
+// 		this.state = { liked: false };
+// 	}
+//
+// 	render() {
+// 		if (this.state.liked) {
+// 			return (
+// 				<button onClick={() => this.setState({ liked: false })}>
+// 			    You liked this
+// 			  </button>
+// 			);
+// 		}
+//
+// 		return (
+// 		  <button onClick={() => this.setState({ liked: true })}>
+// 		    Like
+// 		  </button>
+// 		);
+// 	}
+// }
 
-	render() {
-		if (this.state.liked) {
-			return (
-				<button onClick={() => this.setState({ liked: false })}>
-			    You liked this
-			  </button>
-			);
-		}
 
-		return (
-		  <button onClick={() => this.setState({ liked: true })}>
-		    Like
-		  </button>
-		);
-	}
-}
-
-const domContainer = document.querySelector('#root');
-ReactDOM.render(e(LikeButton), domContainer);
+ReactDOM.render(
+    <App />,
+    document.getElementById("root"),
+);

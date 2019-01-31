@@ -8,9 +8,10 @@ const { celebrate, Joi } = require('celebrate');
 module.exports = (router) => router.get('/user_client/:id',
 	celebrate({
 		params: Joi.object().keys({
-			id: Joi.number().required().min(1),
+			id: Joi.string().guid().required().min(1),
 		})
 	}), (req, res) => {
+		console.log('req = ', req.params);
 		return res.status(200).send({ message: 'User router here' });
 	}
 );

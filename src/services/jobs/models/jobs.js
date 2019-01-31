@@ -12,6 +12,8 @@ module.exports = {
 
 	getAll () {
 		// TODO: to be setup with pagination later
+		// TODO: Need to add testing if I keep this as is
+		return knex.table('jobs').select();
 	},
 
 

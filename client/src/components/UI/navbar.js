@@ -1,0 +1,18 @@
+import React, { Component } from 'react';
+import './navbar.css'
+
+
+class Header extends Component {
+	render() {
+		return (
+		  <nav className="navbar navbar-dark  bg-dark ">
+				<div className="container">
+					<h1 className="navbar-brand ">Navbar</h1>
+				</div>
+		  </nav>
+		)
+	}
+};
+
+
+export default Header;
