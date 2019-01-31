@@ -17,6 +17,6 @@ module.exports = (router) => router.get('/user_client/:id',
 		const client = await Clients.findOne(req.params.id);
 		console.log('client found: ', client);
 
-		return res.status(200).send({ message: 'User router here' });
+		return res.status(200).send(client);
 	}
 );

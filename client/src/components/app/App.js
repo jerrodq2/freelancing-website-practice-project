@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
 import Header from '../UI/Navbar';
 import JobSearch from '../jobs/JobSearch'
+import TestClient from '../jobs/TestClient'
+import {
+  Route,
+  NavLink,
+  HashRouter
+} from "react-router-dom";
 import './app.css'
 
 
@@ -17,14 +23,21 @@ class App extends Component {
 
 	render() {
 		return(
-			<div className="App">
-				<Header />
+			// this defines our routing region for react-router
+			<HashRouter>
+				<div className="App">
+					<Header />
 
-				<div className="container">
-					<JobSearch />
+					<div className="container">
+						<p><NavLink to="/jobsearch">Job Search</NavLink></p>
+						<p><NavLink to="/client">Client</NavLink></p>
+
+						<Route path="/jobsearch" component={JobSearch}/>
+						<Route path="/client" component={TestClient}/>
+					</div>
+
 				</div>
-
-			</div>
+			</HashRouter>
 		);
 	}
 }
