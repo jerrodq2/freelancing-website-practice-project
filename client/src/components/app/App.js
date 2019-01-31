@@ -16,6 +16,7 @@ class App extends Component {
 
 	async componentDidMount() {
 
+		// The Below code is an example of a GET route that requires an id in the url (url parameters)
 		// const encodedValue = encodeURIComponent('149b4f3b-768e-4372-ab37-121e7c551364');
 		// // /user_client/:id
     // fetch(`http://localhost:7000/user_client/${encodedValue}`, {
@@ -25,7 +26,6 @@ class App extends Component {
     //   .then(response => {
 		// 		console.log(response.status);
 		// 		console.log(response);
-		//
 		// 	})
 
 

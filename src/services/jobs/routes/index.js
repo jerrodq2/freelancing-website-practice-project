@@ -5,5 +5,5 @@
 module.exports = (router) => {
 
 	// '/jobs/' - get all route for jobs
-	require('./get-all.js')(router);
+	require('./jobs/get-all.js')(router);
 };

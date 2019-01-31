@@ -2,7 +2,7 @@
 
 
 const { celebrate, Joi } = require('celebrate'),
-	Jobs = require('../models/jobs.js');
+	Jobs = require('../../models/jobs.js');
 
 
 // this file is an example of a get route with Joi validations
