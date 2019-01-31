@@ -114,8 +114,8 @@ Below are the individual npm modules/packages I have installed in the project, s
 	* Where: server side routes
 	* Other: n/a
 
-* **cors** - a node.js package for providing a Connect/Express middleware that can be used to enable CORS with various options. 
+* **cors** - a node.js package for providing a Connect/Express middleware that can be used to enable CORS with various options.
 	* Name: "cors": "^2.8.5"
-	* Why: I use it to allow my React server to make get/post requests. This is necessary due to it being on a different server, and thus being form a different origin
+	* Why: I use it to allow my React server to make get/post requests. This is necessary due to it being on a different server, and thus being from a different origin
 	* Where: server side routes
 	* Other: n/a

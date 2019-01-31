@@ -12,7 +12,6 @@ module.exports = (router) => router.get('/jobs/',
 			// token: Joi.string().token().required()
 		}
 	}), async (req, res) => {
-		console.log('hi?');
 		console.log('params = ', req.params);
 		console.log('query = ', req.query);
 
