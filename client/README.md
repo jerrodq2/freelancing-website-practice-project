@@ -42,3 +42,8 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+# Need to Clean This file up
+
+## General Info
+For file structure for the client/src directory, I grouped the different files (js, css, etc.) by feature/component for the most pair, and only the files containing react component have their file names in pascal case (ex: HeaderNav)

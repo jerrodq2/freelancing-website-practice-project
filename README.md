@@ -54,4 +54,6 @@ I also add comments to the top of all files as a general description of the file
 
 A note about the general syntax of the project. I prefer to add spaces throughout the project for readability and to make things clearer, just a preference. I also added comments throughout the project, both for the understanding of anyone who isn't familiar with the project and for myself when I inevitably come back to this code weeks later and don't remember what I wrote.
 
+For info on the React part of this project, go to the client/README file 
+
 Last updated: 6/11/18
