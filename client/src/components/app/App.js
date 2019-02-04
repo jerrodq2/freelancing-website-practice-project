@@ -32,8 +32,8 @@ class App extends Component {
 						<p><NavLink to="/jobsearch">Job Search</NavLink></p>
 						<p><NavLink to="/client">Client</NavLink></p>
 
-						<Route path="/jobsearch" component={JobSearch}/>
-						<Route path="/client" component={TestClient}/>
+						<Route exact path="/jobsearch" component={JobSearch}/>
+						<Route exact path="/client" component={TestClient}/>
 					</div>
 
 				</div>
