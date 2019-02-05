@@ -33,8 +33,9 @@ class Jobs extends Component {
 					return (
 						<div key={ index.id }>
 							<h4>{index.title}</h4>
-							<p>{index.description}</p>
+							<p>Description: {index.description}</p>
 							<p><i>Experience Level Requested:</i> {index.experience_level_requested}</p>
+							<hr/>
 						</div>
 					);
 				})}

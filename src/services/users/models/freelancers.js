@@ -2,6 +2,7 @@
 
 
 // This file creates the freelancers model as a new instance of the user_model
+const knex = require(`${process.cwd()}/src/config/knex`);
 const UserModel = require('./user_model');
 const Freelancers = new UserModel('freelancers');
 
@@ -10,6 +11,8 @@ module.exports = {
 	// TODO: method to switch from active to inactive or should we just use the update method? Should there be one for both, or just one that switches back and forth? Here or in say the admin model?
 	getAll () {
 		// TODO: to be setup with pagination later, make sure to include the active field in the getAll search
+		// TODO: Need to add testing if I keep this as is
+		return knex.table('freelancers').select();
 	},
 
 

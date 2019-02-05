@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-
+// Currently this file just serves as an example for the url below, not currently in use and will either be removed or updated and moved to a different folder later
 class TestClient extends Component {
 	constructor(props) {
 		super(props);

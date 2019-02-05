@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import Header from '../UI/Navbar';
 import Jobs from '../jobs/Jobs';
+import Freelancers from '../freelancers/Freelancers';
 import Login from '../login/Login';
 import SignUp from '../login/SignUp';
-import TestClient from '../jobs/TestClient';
 import {
   Route,
   HashRouter
@@ -32,7 +32,7 @@ class App extends Component {
 					<div className="container">
 
 						<Route exact path="/jobs" component={Jobs}/>
-						<Route exact path="/client" component={TestClient}/>
+						<Route exact path="/freelancers" component={Freelancers}/>
 						<Route exact path="/login" component={Login}/>
 						<Route exact path="/sign_up" component={SignUp}/>
 					</div>

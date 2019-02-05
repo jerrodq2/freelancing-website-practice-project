@@ -13,7 +13,7 @@ class Header extends Component {
 					<h1 className="navbar-brand ">Navbar</h1>
 
 					<NavLink to="/jobs">Browse Jobs</NavLink>
-					<NavLink to="/client">Client</NavLink>
+					<NavLink to="/freelancers">Browse Freelancers</NavLink>
 					<NavLink to="/login">Login</NavLink>
 					<NavLink to="/sign_up">Sign Up</NavLink>
 				</div>
