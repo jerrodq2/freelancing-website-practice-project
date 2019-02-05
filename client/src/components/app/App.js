@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import Header from '../UI/Navbar';
-import JobSearch from '../jobs/JobSearch'
-import TestClient from '../jobs/TestClient'
+import Jobs from '../jobs/Jobs';
+import Login from '../login/Login';
+import SignUp from '../login/SignUp';
+import TestClient from '../jobs/TestClient';
 import {
   Route,
-  NavLink,
   HashRouter
 } from "react-router-dom";
-import './app.css'
+import './app.css';
 
 
 class App extends Component {
@@ -29,11 +30,11 @@ class App extends Component {
 					<Header />
 
 					<div className="container">
-						<p><NavLink to="/jobsearch">Job Search</NavLink></p>
-						<p><NavLink to="/client">Client</NavLink></p>
 
-						<Route exact path="/jobsearch" component={JobSearch}/>
+						<Route exact path="/jobs" component={Jobs}/>
 						<Route exact path="/client" component={TestClient}/>
+						<Route exact path="/login" component={Login}/>
+						<Route exact path="/sign_up" component={SignUp}/>
 					</div>
 
 				</div>
