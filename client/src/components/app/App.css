@@ -1,1 +1,14 @@
+*{
+	margin: 0;
+}
 
+#app_body{
+	position: static;
+	background-color: #f2f2f2;
+  min-height: 100vh;
+}
+
+.content{
+	background-color: white;
+	padding: 15px;
+}

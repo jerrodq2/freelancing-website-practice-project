@@ -24,9 +24,9 @@ class App extends Component {
 
 	render() {
 		return(
-			// this defines our routing region for react-router
+			// this defines our routing region for react-router, putting it here, wraps the entire front end app in it
 			<HashRouter>
-				<div className="App">
+				<div id="app_body">
 					<Header />
 
 					<div className="container">

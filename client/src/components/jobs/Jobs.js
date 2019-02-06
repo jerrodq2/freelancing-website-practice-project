@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import 'components/app/app.css';
 
 class Jobs extends Component {
 	constructor(props) {
@@ -27,7 +27,7 @@ class Jobs extends Component {
 
 	render() {
 		return (
-		  <div>
+		  <div className="content">
 				<h1>Jobs below:</h1>
 				{ this.state.data.map((index) => {
 					return (
