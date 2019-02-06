@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import 'components/app/app.css';
+
 
 class Jobs extends Component {
 	constructor(props) {

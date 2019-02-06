@@ -13,7 +13,7 @@ class SignUp extends Component {
 
 	render() {
 		return (
-		  <div>
+		  <div className="content">
 				<h1>Sign Up</h1>
 				<p>To Be Updated Later</p>
 			</div>

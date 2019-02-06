@@ -26,7 +26,7 @@ class Freelancers extends Component {
 
 	render() {
 		return (
-		  <div>
+		  <div className="content">
 				<h1>Freelancers below:</h1>
 				{ this.state.data.map((index) => {
 					return (
