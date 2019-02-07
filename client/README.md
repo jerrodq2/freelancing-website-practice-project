@@ -1,21 +1,47 @@
+# Front End React App
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+# About
+This is the front end part of the app, currently built with React. In order to be a single page app, it utilizes react-routing.
 
-In the project directory, you can run:
+## Getting Started
+These steps are to get the frontend server started, If you follow the steps detailed in the root directory's README, this section is already covered.
 
-### `npm start`
+You need to follow the steps in root directory README, to get the express server running on one terminal, then open another terminal to run the react server. Just like for the main directory, you need to create a '.env' file in client project directory. Model it after the .env.example file.
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Next, setup the project by running the following command to install the node modules.
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+```
+npm install
+```
 
-### `npm test`
+Now, you can run the server in development mode with the following command. The server starts on port 3000 by default. If the express server isn't started, you won't be able to grab any data from the back end.
+```
+npm start
+```
+To start the react server in production mode, run this command instead
+```
+npm run build
+```
 
+## Overall Directory
+To be updated....
+
+## Testing
+To be updated....
+```
+npm test
+```
 Launches the test runner in the interactive watch mode.<br>
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+
+# Review the below code and see what you want to keep
+
+
+
+
+
+
 
 ### `npm run build`
 

@@ -19,9 +19,13 @@ Once that is done, you can start the express server with the following command. 
 npm run server
 ```
 
-Next, open a second terminal, navigate to the client directory, and start the react server with the following command. The react server starts on port 3000 by default.
+Next, open a second terminal, navigate to the client directory, and start the react server in development mode with the following command. The react server starts on port 3000 by default.
 ```
 npm start
+```
+To start the react server in production mode, run this command instead
+```
+npm run build
 ```
 
 All Setup! Now navigate to http://localhost:3000/ to see the project.
