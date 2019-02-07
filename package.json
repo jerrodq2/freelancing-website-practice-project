@@ -21,6 +21,7 @@
     "test": "lab -m 20000 -I __core-js_shared__",
     "server": "nodemon server.js",
     "init": "npm install && bnr db-reset",
+    "setup": "npm install && bnr db-reset && npm --prefix ./client install",
     "lint": "node ./node_modules/.bin/eslint .",
     "db:reset": "bnr db-reset",
     "db:reset:test": "bnr create-test-db && bnr knex migrate:latest --env test",

@@ -5,19 +5,26 @@ Created 02/27/2018
 A freelancing website based off of the concepts of sites such as upwork. This is a practice project, it is not intended to become an in production website. The technologies used are Node.js with Express.js for the backend, Postgres for the database, and ReactJS for the front end. The starting focus of this project is on code quality, enforcing code standards with ESLint, connecting Node.js with React.js, unit testing, stronger github practices, and continous integration via Circleci. Currently, it is designed to run on two different servers/ports, the backend (express) runs on one, and the frontend (react) runs on another.
 
 ## Getting Started
-You need Node.js, nodemon, npm, and postgres installed on your system to use this project locally. These steps gets the backend server running, you also need to follow the steps detailed in clients/README to get the frontend server started.
+You need Node.js, nodemon, npm, and postgres installed on your system to use this project locally. These steps gets the backend server running, you also need to follow the steps detailed in client/README to get the frontend server started.
 
 To get started, you need to create a '.env' file in the main project directory. Model it after the .env.example file, simply create necessary variables for your database and starting admin.
 
-Next, setup the project by running the following command to install the node modules, create the main and test db, run migrations and seed data.
+Next, setup the project by running the following command to install the node modules in the main directory, create the main and test db, run migrations and seed data, and then install the node modules for react in the /client directory.
 ```
-npm run init
+npm run setup
 ```
 
 Once that is done, you can start the express server with the following command. The server starts on the port specified in the .env file or 5000 if not specified, it also displays the port it is on, and the server side endpoints to the terminal on start up, just something I like.
 ```
 npm run server
 ```
+
+Next, open a second terminal, navigate to the client directory, and start the react server with the following command. The react server starts on port 3000 by default.
+```
+npm start
+```
+
+All Setup! Now navigate to http://localhost:3000/ to see the project.
 
 Another useful script is below, with it you can reset the database back to it's starting state with migrations and seed data at any time.
 ```
