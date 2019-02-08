@@ -37,7 +37,7 @@ npm run db:reset
 
 
 ## Overall Directory
-The project is directory is broken down into a few key sub directories listed below.
+The project directory is broken down into a few key sub directories listed below.
 * **.circleci** - Used by CircleCi
 * **.github** - Used by github, contains PR template
 * **bin** - Contains executable scripts, such as the scripts to create the database and initial admin
