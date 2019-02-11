@@ -6,7 +6,8 @@ import Login from '../login/Login';
 import SignUp from '../login/SignUp';
 import {
   Route,
-  HashRouter
+  HashRouter,
+	Redirect,
 } from "react-router-dom";
 import './app.css';
 
@@ -35,6 +36,8 @@ class App extends Component {
 						<Route exact path="/freelancers" component={Freelancers}/>
 						<Route exact path="/login" component={Login}/>
 						<Route exact path="/sign_up" component={SignUp}/>
+
+						<Redirect from="/" to="/jobs" />
 					</div>
 
 				</div>
