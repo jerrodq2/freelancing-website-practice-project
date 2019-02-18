@@ -21,6 +21,7 @@
     "test": "lab -m 20000 -I __core-js_shared__",
     "server": "nodemon server.js",
     "init": "npm install && bnr db-reset",
+    "setup": "npm install && bnr db-reset && npm --prefix ./client install",
     "lint": "node ./node_modules/.bin/eslint .",
     "db:reset": "bnr db-reset",
     "db:reset:test": "bnr create-test-db && bnr knex migrate:latest --env test",
@@ -63,5 +64,32 @@
     "lodash": "^4.17.5",
     "pg": "^7.4.1",
     "pluralize": "^7.0.0"
+  },
+
+
+	"ScriptsComments": {
+		"Info": "These are just comments for the above scripts for understanding. Written in same order as the scripts and uses the same name",
+    "test": "Runs the tests for the server, timeouts at 20 seconds, and ignores global variable leaks.",
+		"init": "Script to setup the backend. Installs node modules, creates main and test dbs, runs migrations, and seeds",
+		"setup": "Same as init, but also installs the node modules for the client directory, the front end facing react app.",
+		"lint": "Runs eslint to check for any lint errors",
+		"db:reset": "Runs the bnr script to create/reset the main database, run migrations, create admin and fields table and inital records, run seeds, and create/reset the test database",
+		"db:reset:test": "This script creates/resets the test database and runs migrations for the that database, used mainly for testing and by circleci",
+		"db:create": "creates/resets the main database",
+		"db:create:migration": "Uses knex to create a new migrations file, should be written in 'npm run db:create:migration file_name' format.",
+		"db:migrate": "Runs the latest migrations for the main database",
+		"db:migrate:rollback": "Rollsback the latest migrations for the main database",
+		"db:migrate:test": "Runs the latest migrations for the test database",
+		"db:migrate:test:rollback": "Rollsback the latest migrations for the test database",
+		"db:create-seed": "Uses knex to create a new seed file. Should be written in 'npm run db:create-seed file_name' format.",
+		"db:seeds:run": "Runs seeds for the main database"
+  },
+	"BetterScriptsComments": {
+		"Info": "These are just comments for the above betterScripts section for understanding. Written in same order as the scripts and uses the same name",
+		"knex": "This script is just a shortcut to access knex, basically a variable for the file path, keeps scripts shorter.",
+		"db-reset": "Creates/resets the main database, run migrations for it, create the admin and fields table and inital records, run seeds, and creates/resets the test database",
+		"create-db": "Creates/resets the main database",
+		"create-test-db": "Creates/resets the test database",
+		"create-admin-and-fields": "Runs a file to create the inital admin record and the inital field records for their respective tables."
   }
 }

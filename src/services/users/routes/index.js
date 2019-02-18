@@ -8,4 +8,6 @@ module.exports = (router) => {
 	require('./clients/test_get.js')(router);
 	// '/post' - example of a post route with Joi
 	require('./clients/test_post.js')(router);
+	// '/freelancers' - get all route for freelancers
+	require('./freelancers/get_all.js')(router);
 };

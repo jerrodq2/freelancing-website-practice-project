@@ -2,11 +2,11 @@
 
 
 const { celebrate, Joi } = require('celebrate'),
-	Jobs = require('../models/jobs.js');
+	Freelancers = require('../../models/freelancers.js');
 
 
 // this file is an example of a get route with Joi validations
-module.exports = (router) => router.get('/jobs/',
+module.exports = (router) => router.get('/freelancers/',
 	celebrate({
 		query: {
 			// token: Joi.string().token().required()
@@ -15,8 +15,8 @@ module.exports = (router) => router.get('/jobs/',
 		console.log('params = ', req.params);
 		console.log('query = ', req.query);
 
-		const jobs = await Jobs.getAll();
-		console.log('jobs =', jobs);
-		return res.status(200).send(jobs);
+		const freelancers = await Freelancers.getAll();
+		console.log('freelancers =', freelancers);
+		return res.status(200).send(freelancers);
 	}
 );
