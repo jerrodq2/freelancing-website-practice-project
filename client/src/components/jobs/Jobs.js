@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import LoadingSpinner from 'components/UI/LoadingSpinner.js'
+import LoadingSpinner from 'components/UI/LoadingSpinner.js';
 
 
 class Jobs extends Component {
@@ -23,9 +23,9 @@ class Jobs extends Component {
 
 		this.setState({
 			data: data,
-			// loading: false,
+			loading: false,
 		});
-	}
+	};
 
 
 	render() {

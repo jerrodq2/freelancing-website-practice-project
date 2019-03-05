@@ -7,7 +7,6 @@ import SignUp from '../login/SignUp';
 import {
   Route,
   HashRouter,
-	Redirect,
 } from "react-router-dom";
 import './app.css';
 
@@ -31,13 +30,11 @@ class App extends Component {
 					<Header />
 
 					<div className="container">
-
+						{/* for now, upon going to localhost, you are brought to '/' which is a blank page, make home page later */}
 						<Route exact path="/jobs" component={Jobs}/>
 						<Route exact path="/freelancers" component={Freelancers}/>
 						<Route exact path="/login" component={Login}/>
 						<Route exact path="/sign_up" component={SignUp}/>
-
-						<Redirect from="/" to="/jobs" />
 					</div>
 
 				</div>

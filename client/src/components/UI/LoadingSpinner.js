@@ -1,16 +1,21 @@
 import React, { Component } from 'react';
+import { css } from '@emotion/core';
 import { FadeLoader } from 'react-spinners';
-import './loadingspinner.css';
 
+
+const override = css`
+    display: block;
+    margin: 0 auto;
+    border-color: red;
+`;
 
 class LoadingSpinner extends Component{
 	render() {
 		return(
 			<div>
 				<FadeLoader
-					css='test'
+					css={override}
 					sizeUnit={'px'}
-					size={150}
 					color={'#123abc'}
 					loading={this.props.loading}
 				/>
