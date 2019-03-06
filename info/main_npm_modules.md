@@ -1,4 +1,4 @@
-# This file explains the basic purpose of the node modules I have installed in the project, what they do, and why/how I use them
+# This file explains the basic purpose of the node modules I have installed in the top project directory, what they do, and why/how I use them
 
 Example Bullet: Just demonstrating the format for the below modules
 * **Module_name** - Basic description
@@ -10,7 +10,7 @@ Example Bullet: Just demonstrating the format for the below modules
 
 
 ## Node Modules
-Below are the individual npm modules/packages I have installed in the project, short description about them, why I have them, and how I use them
+Below are the individual npm modules/packages I have installed in the top project directory (those used by express), short description about them, why I have them, and how I use them
 
 * **dotenv** - A zero-dependency module that loads environment variables from a .env file into process.env.
 	* Name: "dotenv": "^5.0.1"
