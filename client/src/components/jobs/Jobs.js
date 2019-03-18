@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import LoadingSpinner from 'components/UI/LoadingSpinner.js';
 
 
 class Jobs extends Component {
@@ -8,6 +9,7 @@ class Jobs extends Component {
 		// remember, the below componentDidMount is asynchronous, it triggers after the page loads. So make sure to declare state.data here, otherwise it will error out in the render below, since it tries to use .map() on an array that doesn't exist. This way, didMount, doesn't try to create state.data, only updates it
 		this.state = {
 			data: [],
+			loading: true,
 		}
 	}
 
@@ -21,14 +23,18 @@ class Jobs extends Component {
 
 		this.setState({
 			data: data,
+			loading: false,
 		});
-	}
+	};
 
 
 	render() {
 		return (
 		  <div className="content">
 				<h1>Jobs below:</h1>
+
+				<LoadingSpinner loading={this.state.loading}/>
+
 				{ this.state.data.map((index) => {
 					return (
 						<div key={ index.id }>

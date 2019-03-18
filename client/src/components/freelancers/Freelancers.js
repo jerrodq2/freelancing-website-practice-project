@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import LoadingSpinner from 'components/UI/LoadingSpinner.js';
 
 
 class Freelancers extends Component {
@@ -7,6 +8,7 @@ class Freelancers extends Component {
 
 		this.state = {
 			data: [],
+			loading: true,
 		}
 	}
 
@@ -20,14 +22,19 @@ class Freelancers extends Component {
 
 		this.setState({
 			data: data,
+			loading: false,
 		});
-	}
+	};
 
 
 	render() {
 		return (
 		  <div className="content">
 				<h1>Freelancers below:</h1>
+
+				<LoadingSpinner loading={this.state.loading}/>
+
+
 				{ this.state.data.map((index) => {
 					return (
 						<div key={ index.id }>
