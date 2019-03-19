@@ -61,7 +61,7 @@ Below are the individual npm modules/packages I have installed in the top projec
 	* Other: N/A
 
 * **lodash** - A modern JavaScript utility library delivering modularity, performance, & extras.
-	* Name: "lodash": "^4.17.5"
+	* Name: "lodash": "^4.17.11"
 	* Why: I use lodash for it's helpful methods, such as omitting certain keys in an object with .omit
 	* Where: currently is is used in the models and tests
 	* Other: N/A
